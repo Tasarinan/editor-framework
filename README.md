@@ -1,5 +1,5 @@
-# app-framework
-A simple framework for easily making fireball like app
+# Editor Framework
+A simple framework for easily making multi-panel editor.
 
 ## What we need in this framework?
 
