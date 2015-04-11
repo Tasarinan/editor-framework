@@ -11,7 +11,6 @@ function EditorWindow ( name, options ) {
     // init options
     this.name = name;
     this.closeWhenBlur = options['close-when-blur'] || false;
-    this.isPanelWindow = options['panel-window'] || false;
 
     this.nativeWin = new BrowserWindow(options);
 
@@ -29,9 +28,7 @@ function EditorWindow ( name, options ) {
     this.nativeWin.on ( 'closed', function () {
         Editor.Panel._onWindowClosed(this);
         if ( this.isMainWindow ) {
-            if ( this.isPanelWindow ) {
-                EditorWindow.saveLayout();
-            }
+            EditorWindow.saveLayout();
             EditorWindow.removeWindow(this);
             Editor.mainWindow = null;
             Editor.quit();
@@ -146,6 +143,22 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
     else {
         this.nativeWin.setPosition( x, y );
     }
+};
+
+EditorWindow.prototype.restorePositionAndSize = function () {
+    // restore window size and position
+    var size = this.nativeWin.getSize();
+    var winPosX, winPosY, winSizeX = size[0], winSizeY = size[1];
+
+    var profile = Editor.loadProfile('layout', 'local');
+    if ( profile.windows && profile.windows[this.name] ) {
+        var winInfo = profile.windows[this.name];
+        winPosX = winInfo.x;
+        winPosY = winInfo.y;
+        winSizeX = winInfo.width;
+        winSizeY = winInfo.height;
+    }
+    this.adjust( winPosX, winPosY, winSizeX, winSizeY );
 };
 
 // static window operation

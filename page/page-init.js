@@ -41,12 +41,12 @@ try {
         if ( Editor && Editor.Panel ) {
             Editor.sendToCore( 'window:save-layout',
                                Editor.Panel.getLayout(),
-                               Editor.RequireIpcEvent );
+                               Editor.requireIpcEvent );
         }
         else {
             Editor.sendToCore( 'window:save-layout',
                                null,
-                               Editor.RequireIpcEvent );
+                               Editor.requireIpcEvent );
         }
     };
 

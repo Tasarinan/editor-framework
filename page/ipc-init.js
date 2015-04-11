@@ -6,18 +6,18 @@ var Editor = Editor || {};
  * This option is used to indicate that the message should not send to self.
  * It must be supplied as the last argument of your message if you want.
  */
-Editor.SelfExcluded = {
-    'EDITOR_MSG_OPTIONS': true,
-    'SelfExcluded': true,
+Editor.selfExcluded = {
+    '__is_ipc_option__': true,
+    'self-excluded': true,
 };
 
 /**
  * This option is used to indicate that the message listener should receive a ipc event as its first argument.
  * It must be supplied as the last argument of your message if you want.
  */
-Editor.RequireIpcEvent = {
-    'EDITOR_MSG_OPTIONS': true,
-    'RequireIpcEvent': true,
+Editor.requireIpcEvent = {
+    '__is_ipc_option__': true,
+    'require-ipc-event': true,
 };
 
 // messages
@@ -43,7 +43,7 @@ Editor.sendToCore = function ( message ) {
  * The page is so called as atom shell's web side. Each application window is an independent page and has its own JavaScript context.
  * @param {string} message - the message to send
  * @param {...*} [arg] - whatever arguments the message needs
- * @param {object} [options] - you can indicate the options such as Editor.SelfExcluded
+ * @param {object} [options] - you can indicate the options such as Editor.selfExcluded
  */
 Editor.sendToWindows = function ( message ) {
     'use strict';
@@ -77,7 +77,7 @@ Editor.sendToMainWindow = function ( message ) {
  * Broadcast message to all pages and editor-core
  * @param {string} message - the message to send
  * @param {...*} [arg] - whatever arguments the message needs
- * @param {object} [options] - you can indicate the options such as Editor.SelfExcluded
+ * @param {object} [options] - you can indicate the options such as Editor.selfExcluded
  */
 Editor.sendToAll = function ( message ) {
     'use strict';

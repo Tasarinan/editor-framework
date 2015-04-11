@@ -4,25 +4,25 @@
  * This option is used to indicate that the message should not send to self.
  * It must be supplied as the last argument of your message if you want.
  */
-Editor.SelfExcluded = {
-    'EDITOR_MSG_OPTIONS': true,
-    'SelfExcluded': true,
+Editor.selfExcluded = {
+    '__is_ipc_option__': true,
+    'self-excluded': true,
 };
 
 /**
  * This option is used to indicate that the message listener should receive a ipc event as its first argument.
  * It must be supplied as the last argument of your message if you want.
  */
-Editor.RequireIpcEvent = {
-    'EDITOR_MSG_OPTIONS': true,
-    'RequireIpcEvent': true,
+Editor.requireIpcEvent = {
+    '__is_ipc_option__': true,
+    'require-ipc-event': true,
 };
 
 // message operation
 
 function getOptions (args) {
     var options = args[args.length - 1];
-    return (options && typeof options === 'object' && options.EDITOR_MSG_OPTIONS) && options;
+    return (options && typeof options === 'object' && options.__is_ipc_option__) && options;
 }
 
 function _sendToCore ( event, message ) {
@@ -33,7 +33,7 @@ function _sendToCore ( event, message ) {
         // check options
         var options = getOptions(arguments);
         if (options) {
-            if (!options.RequireIpcEvent) {
+            if (!options['require-ipc-event']) {
                 // discard event and options arg
                 args = [].slice.call( arguments, 1, -1 );
             }
@@ -74,7 +74,7 @@ function _sendToWindows ( event, message ) {
         if (options) {
             // discard event and options arg
             args = [].slice.call( arguments, 1, -1 );
-            if (options.SelfExcluded) {
+            if (options['self-excluded']) {
                 // dont send to sender
                 Editor.sendToWindowsExclude( args, event.sender );
                 return;
@@ -177,7 +177,7 @@ Editor.sendToAll = function () {
         if (options) {
             // discard options arg
             args = [].slice.call( arguments, 0, -1 );
-            if (options.SelfExcluded) {
+            if (options['self-excluded']) {
                 toSelf = false;
             }
         }

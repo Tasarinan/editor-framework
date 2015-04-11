@@ -20,12 +20,11 @@ module.exports = {
             'min-height': 600,
             'show': false,
             'resizable': true,
-
-            // editor-window options
-            'panel-window': true,
         });
         Editor.mainWindow = mainWin;
 
+        // restore window size and position
+        mainWin.restorePositionAndSize();
 
         // load and show main window
         mainWin.show();
