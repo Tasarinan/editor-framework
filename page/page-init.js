@@ -38,17 +38,23 @@ try {
     };
 
     window.onunload = function () {
-        if ( Editor.PanelMng ) {
+        if ( Editor && Editor.Panel ) {
             Editor.sendToCore( 'window:save-layout',
-                             Editor.PanelMng.getLayout(),
-                             Editor.RequireIpcEvent );
+                               Editor.Panel.getLayout(),
+                               Editor.RequireIpcEvent );
+        }
+        else {
+            Editor.sendToCore( 'window:save-layout',
+                               null,
+                               Editor.RequireIpcEvent );
         }
     };
 
     window.onerror = function ( message, filename, lineno, colno, error ) {
-        if (Editor && Editor.sendToWindows) {
+        if ( Editor && Editor.sendToWindows ) {
             Editor.sendToWindows('console:error', message);
-        } else {
+        }
+        else {
             console.error(message);
         }
 

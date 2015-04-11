@@ -34,3 +34,6 @@ utils/api
 
 # log files
 *.log
+
+# test files
+test/.settings/

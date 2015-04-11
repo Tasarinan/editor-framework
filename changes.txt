@@ -1,7 +1,0 @@
-1. move all namespace to editor
-1. add js-utils to get some Fire.JS method in it
-1. remove fire-app.js, use editor-init.js instead
-1. change fire-window.js to editor-window.js
-1. change panel-mng.js to editor-panel.js
-1. rename ipc messages fire:send2... to editor:send2...
-1. rename fireWin to editorWin in code

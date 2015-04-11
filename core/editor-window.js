@@ -4,8 +4,6 @@ var Screen = require('screen');
 var Url = require('fire-url');
 var Ipc = require('ipc');
 
-var JS = require('./js-utils');
-
 //
 function EditorWindow ( name, options ) {
     this._loaded = false;
@@ -29,7 +27,7 @@ function EditorWindow ( name, options ) {
     }.bind(this) );
 
     this.nativeWin.on ( 'closed', function () {
-        Editor.PanelMng._onWindowClosed(this);
+        Editor.Panel._onWindowClosed(this);
         if ( this.isMainWindow ) {
             if ( this.isPanelWindow ) {
                 EditorWindow.saveLayout();
@@ -45,12 +43,12 @@ function EditorWindow ( name, options ) {
 
     this.nativeWin.webContents.on('did-finish-load', function() {
         this._loaded = true;
-        Editor.sendToCore('window:reloaded', this);
+        // Editor.sendToCore('window:reloaded', this);
     }.bind(this) );
 
     EditorWindow.addWindow(this); // NOTE: window must be add after nativeWin assigned
 }
-JS.extend(EditorWindow,EventEmitter);
+Editor.JS.extend(EditorWindow,EventEmitter);
 
 Object.defineProperty(EditorWindow.prototype, 'isMainWindow', {
     get: function () {
@@ -77,11 +75,17 @@ Object.defineProperty(EditorWindow.prototype, 'isLoaded', {
 });
 
 //
-EditorWindow.prototype.load = function ( pageUrl, argv ) {
+EditorWindow.prototype.load = function ( editorUrl, argv ) {
+    var resultUrl = Editor.url(editorUrl);
+    if ( !resultUrl ) {
+        Editor.error( 'Failed to load page %s for window "%s"', editorUrl, this.name );
+        return;
+    }
+
     this._loaded = false;
     var url = Url.format( {
         protocol: 'file',
-        pathname: pageUrl,
+        pathname: resultUrl,
         slashes: true,
         query: argv,
     } );
@@ -185,7 +189,7 @@ EditorWindow.addWindow = function ( win ) {
 EditorWindow.removeWindow = function ( win ) {
     var idx = _windows.indexOf(win);
     if ( idx === -1 ) {
-        Fire.warn( 'Can not find window ' + win.name );
+        Editor.warn( 'Can not find window ' + win.name );
         return;
     }
     _windows.splice(idx,1);
@@ -221,17 +225,17 @@ EditorWindow.prototype.sendToPage = function () {
 };
 
 Ipc.on ( 'window:open', function ( name, url, options ) {
-    var fireWin = new Editor.Window(name, options);
-    fireWin.nativeWin.setMenuBarVisibility(false);
-    fireWin.load(url, options.argv);
-    fireWin.show();
+    var editorWin = new Editor.Window(name, options);
+    editorWin.nativeWin.setMenuBarVisibility(false);
+    editorWin.load(url, options.argv);
+    editorWin.show();
 } );
 
 Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
     var win = BrowserWindow.fromWebContents( event.sender );
-    var fireWin = Editor.Window.find(win);
-    if ( !fireWin ) {
-        Fire.warn('Failed to save layout, can not find the window.');
+    var editorWin = Editor.Window.find(win);
+    if ( !editorWin ) {
+        Editor.warn('Failed to save layout, can not find the window.');
         return;
     }
 
@@ -250,21 +254,23 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
     profile.panels = profile.panels || {};
 
     var panels = [];
-    if ( layoutInfo.type === 'standalone' ) {
-        panels.push({
-            name: layoutInfo.panel,
-            width: layoutInfo.width,
-            height: layoutInfo.height,
-        });
-    }
-    else {
-        _getPanels( layoutInfo.docks, panels );
+    if ( layoutInfo ) {
+        if ( layoutInfo.type === 'standalone' ) {
+            panels.push({
+                name: layoutInfo.panel,
+                width: layoutInfo.width,
+                height: layoutInfo.height,
+            });
+        }
+        else {
+            _getPanels( layoutInfo.docks, panels );
+        }
     }
 
     for ( var i = 0; i < panels.length; ++i ) {
         var panel = panels[i];
         profile.panels[panel.name] = {
-            window: fireWin.name,
+            window: editorWin.name,
             x: winPos[0],
             y: winPos[1],
             width: panel.width,
@@ -275,7 +281,7 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
     profile.save();
 
     // cache and save window layout
-    _windowLayouts[fireWin.name] = winInfo;
+    _windowLayouts[editorWin.name] = winInfo;
     EditorWindow.saveLayout();
 } );
 

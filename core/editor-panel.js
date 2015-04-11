@@ -9,6 +9,12 @@ var _panelIDToWindows = {};
 var _panelIDToArgv = {};
 
 Ipc.on('panel:ready', function ( reply, panelID ) {
+    if ( !panelID ) {
+        Editor.error( 'Invalid panelID ' + panelID );
+        reply( {} );
+        return;
+    }
+
     var pair = panelID.split('@');
     if ( pair.length !== 2 ) {
         Editor.error( 'Invalid panelID ' + panelID );

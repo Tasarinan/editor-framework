@@ -1,15 +1,28 @@
-﻿var Util = require('util');
-var EventEmitter = require('events');
-var Ipc = require('ipc');
-var Winston = require('winston');
+﻿var Ipc = require('ipc');
 
-var JS = require('./js-utils');
+/**
+ * This option is used to indicate that the message should not send to self.
+ * It must be supplied as the last argument of your message if you want.
+ */
+Editor.SelfExcluded = {
+    'EDITOR_MSG_OPTIONS': true,
+    'SelfExcluded': true,
+};
+
+/**
+ * This option is used to indicate that the message listener should receive a ipc event as its first argument.
+ * It must be supplied as the last argument of your message if you want.
+ */
+Editor.RequireIpcEvent = {
+    'EDITOR_MSG_OPTIONS': true,
+    'RequireIpcEvent': true,
+};
 
 // message operation
 
 function getOptions (args) {
     var options = args[args.length - 1];
-    return (options && typeof options === 'object' && options.FIRE_MSG_OPTIONS) && options;
+    return (options && typeof options === 'object' && options.EDITOR_MSG_OPTIONS) && options;
 }
 
 function _sendToCore ( event, message ) {
@@ -181,7 +194,7 @@ Editor.sendToAll = function () {
 };
 
 Editor.sendToPlugin = function ( pluginName, message ) {
-    var panels = Editor.PanelMng.findPanels(pluginName);
+    var panels = Editor.Panel.findPanels(pluginName);
     var args = [].slice.call( arguments, 1 );
 
     for ( var i = 0; i < panels.length; ++i ) {
@@ -191,7 +204,7 @@ Editor.sendToPlugin = function ( pluginName, message ) {
 
 // example: Editor.sendToPanel( 'plugin-name', 'panel-name', 'ipc-foo-bar', arguments... )
 Editor.sendToPanel = function ( pluginName, panelName, message ) {
-    var win = Editor.PanelMng.findWindow( pluginName, panelName );
+    var win = Editor.Panel.findWindow( pluginName, panelName );
     if ( !win ) {
         Editor.warn( "Failed to send %s to panel %s, can not find it.", message, panelName );
         return;

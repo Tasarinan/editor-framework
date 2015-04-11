@@ -1,8 +1,17 @@
 // init your app
+var Fs = require('fire-fs');
+var Path = require('fire-path');
 
 // exports
 module.exports = {
     run: function ( options ) {
+        // initialize ./test/.settings
+        var settingsPath = Path.join(Editor.cwd, 'test', '.settings');
+        if ( !Fs.existsSync(settingsPath) ) {
+            Fs.makeTreeSync(settingsPath);
+        }
+        Editor.registerProfilePath( 'local', settingsPath );
+
         // create main window
         var mainWin = new Editor.Window('main', {
             // atom-window options
@@ -20,6 +29,6 @@ module.exports = {
 
         // load and show main window
         mainWin.show();
-        mainWin.load( './static/window.html' );
+        mainWin.load( 'editor://static/window.html' );
     }
 };

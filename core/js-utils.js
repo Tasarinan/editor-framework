@@ -1,3 +1,20 @@
+/**
+ * @param {object} obj
+ * @param {string} name
+ * @return {object}
+ */
+function _getPropertyDescriptor(obj, name) {
+    if (obj) {
+        var pd = Object.getOwnPropertyDescriptor(obj, name);
+        return pd || _getPropertyDescriptor(Object.getPrototypeOf(obj), name);
+    }
+}
+
+function _copyprop(name, source, target) {
+    var pd = _getPropertyDescriptor(source, name);
+    Object.defineProperty(target, name, pd);
+}
+
 module.exports = {
     /**
      * copy all properties not defined in obj from arguments[1...n]
@@ -34,7 +51,7 @@ module.exports = {
             var source = arguments[i];
             if (source) {
                 if (typeof source !== 'object') {
-                    Fire.error('Fire.mixin called on non-object:', source);
+                    Editor.error('JS.mixin called on non-object:', source);
                     continue;
                 }
                 for ( var name in source) {
@@ -47,8 +64,8 @@ module.exports = {
 
     /**
      * Derive the class from the supplied base class.
-     * Both classes are just native javascript constructors, not created by Fire.Class, so
-     * usually you will want to inherit using {% crosslink Fire.Class Fire.Class %} instead.
+     * Both classes are just native javascript constructors, not created by Editor.Class, so
+     * usually you will want to inherit using {% crosslink Editor.Class Editor.Class %} instead.
      *
      * @method extend
      * @param {function} cls
@@ -58,11 +75,11 @@ module.exports = {
     extend: function (cls, base) {
 // @ifdef DEV
         if ( !base ) {
-            Fire.error('The base class to extend from must be non-nil');
+            Editor.error('The base class to extend from must be non-nil');
             return;
         }
         if ( !cls ) {
-            Fire.error('The class to extend must be non-nil');
+            Editor.error('The class to extend must be non-nil');
             return;
         }
 // @endif

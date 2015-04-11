@@ -1,7 +1,10 @@
 var Ipc = require('ipc');
 var Util = require('util');
 var Winston = require('winston');
+var Fs = require('fire-fs');
+var Path = require('fire-path');
 
+Editor.JS = require('./js-utils');
 Editor.Window = require('./editor-window');
 Editor.Panel = require('./editor-panel');
 
@@ -68,7 +71,14 @@ function _saveProfile ( path, profile ) {
 }
 
 // type: global, local, project
-Editor.loadProfile = function ( path, defaultProfile ) {
+Editor.loadProfile = function ( name, type, defaultProfile ) {
+    var path = _type2profilepath[type];
+    if ( !path ) {
+        Editor.error( 'Failed to load profile by type %s, please register it first.', type );
+        return null;
+    }
+    path = Path.join(path, name+'.json');
+
     var profile = _path2profiles[path];
     if ( profile ) {
         return profile;
@@ -98,13 +108,13 @@ Editor.loadProfile = function ( path, defaultProfile ) {
         }
         catch ( err ) {
             if ( err ) {
-                Fire.warn( 'Failed to load profile %s, error message: %s', name, err.message );
+                Editor.warn( 'Failed to load profile %s, error message: %s', name, err.message );
                 profile = {};
             }
         }
     }
 
-    profile = Fire.JS.mixin( profile, profileProto );
+    profile = Editor.JS.mixin( profile, profileProto );
     _path2profiles[path] = profile;
 
     return profile;
@@ -119,6 +129,16 @@ Editor.quit = function () {
     for ( var i = 0; i < winlist.length; ++i ) {
         winlist[i].close();
     }
+};
+
+// ==========================
+// extends
+// ==========================
+
+var _type2profilepath = {};
+
+Editor.registerProfilePath = function ( type, path ) {
+    _type2profilepath[type] = path;
 };
 
 // ==========================

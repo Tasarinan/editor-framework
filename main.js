@@ -16,7 +16,7 @@ process.on('uncaughtException', function(error) {
 });
 
 // initialize minimal Editor
-global.Editor = {};
+var Editor = global.Editor = {};
 
 Editor.name = App.getName();
 Editor.cwd = __dirname;
@@ -83,42 +83,42 @@ var chalk_info = Chalk.cyan;
 
 var levelToFormat = {
     normal: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + text;
     },
 
     success: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_success(text);
     },
 
     failed: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_error(text);
     },
 
     info: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_info(text);
     },
 
     warn: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_warn.inverse.bold('Warning:') + ' ' + chalk_warn(text);
     },
 
     error: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_error.inverse.bold('Error:') + ' ' + chalk_error(text);
     },
 
     fatal: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_error.inverse.bold('Fatal Error:') + ' ' + chalk_error(text);
     },
 
     uncaught: function ( text ) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
         return pid + chalk_error.inverse.bold('Uncaught Exception:') + ' ' + chalk_error(text);
     },
 };
@@ -126,13 +126,13 @@ var levelToFormat = {
 Winston.add( Winston.transports.Console, {
     level: 'normal',
     formatter: function (options) {
-        var pid = chalk_id("[" + process.pid + "]") + " ";
-        var text = "";
+        var pid = chalk_id('[' + process.pid + ']') + ' ';
+        var text = '';
         if ( options.message !== undefined ) {
             text += options.message;
         }
         if ( options.meta && Object.keys(options.meta).length ) {
-            text += " " + JSON.stringify(options.meta);
+            text += ' ' + JSON.stringify(options.meta);
         }
 
         // output log by different level
@@ -191,9 +191,9 @@ App.on('will-finish-launching', function() {
     if ( !Editor.isDev ) {
         var crashReporter = require('crash-reporter');
         crashReporter.start({
-            productName: 'Fireball',
-            companyName: 'FireBox',
-            submitUrl: 'https://fireball-x.im/crash-report',
+            productName: Editor.name,
+            companyName: 'Firebox Technology',
+            submitUrl: 'https://fireball-x.com/crash-report',
             autoSubmit: false,
         });
     }
@@ -210,15 +210,20 @@ App.on('ready', function() {
     Winston.normal( 'Initializing editor' );
     require('./core/editor-init');
 
-    Winston.success("Initial success!");
+    var defaultProfilePath = Path.join( Editor.dataPath, 'settings' );
+    Editor.registerProfilePath( 'global', defaultProfilePath );
+    Editor.registerProfilePath( 'local', defaultProfilePath );
+
+    Winston.success('Initial success!');
 
     // open your app
     try {
         if ( Fs.existsSync('./app.js') ) {
             Editor.App = require('./app');
         }
+        // run unit test
         else {
-            Editor.App = require('./default-app');
+            Editor.App = require('./test/app');
         }
         Editor.App.run(options);
     }
