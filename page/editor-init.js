@@ -1,4 +1,5 @@
 var Remote = require('remote');
+var Util = require('util');
 
 var Editor = Editor || {};
 var RemoteEditor = Remote.getGlobal('Editor');

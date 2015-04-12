@@ -28,6 +28,12 @@ module.exports = {
 
         // load and show main window
         mainWin.show();
-        mainWin.load( 'editor://static/window.html' );
+        mainWin.load( 'editor://test/test-window.html' );
+
+        // open dev tools if needed
+        if ( options.showDevtools ) {
+            mainWin.openDevTools();
+        }
+        mainWin.focus();
     }
 };

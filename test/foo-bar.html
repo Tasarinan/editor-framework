@@ -1,0 +1,17 @@
+<dom-module id="foo-bar">
+  <style>
+    .label {
+        color: #f00;
+    }
+  </style>
+
+  <template>
+    <div class='label'>Hello from my local DOM</div>
+  </template>
+</dom-module>
+
+<script>
+  Editor.Foobar = Polymer( {
+      is: "foo-bar"
+  });
+</script>
