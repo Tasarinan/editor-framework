@@ -1,30 +1,23 @@
 # Editor Framework
 A simple framework for easily making multi-panel editor.
 
-## What we need in this framework?
+## Features
 
-### Manage Panel
-
-### Manage Dock
-
-Allow dock panel in same window, dock panel to other window or pop up a panel
-
-### Layout Manager
-
-Remember last open window position, remember layout of the panels in one window
-
-### Ipc Manager
-
-A way to register ipc to methods, ipc to dom-events
-
-### Log System
-
-A log system like fireball
-
-### Save/Load Profiles
-
-A library to save/load profiles, and store in specific location for different purpose.
-
-### Dialog System
-
-can remember last open path, aka editor-share/src/platform.js
+ - Dockable interface
+ - Plugable package
+ - Panel system
+   - Save and load panel settings
+   - Allow register and customize key mappings
+ - Ipc System
+   - Ipc message send to specific panel
+   - Allow register ipc message to dom event
+ - Log System
+   - Log to file
+ - Dialog
+   - Remember dialog last edit position
+ - Command System
+   - Register and customize command based on panel
+   - Search and execute command in command window
+ - Menu
+   - Provide main menu registry API
+   - Register and customize menu item for panel
