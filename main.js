@@ -204,11 +204,9 @@ App.on('ready', function() {
     Winston.normal( 'Initializing protocol' );
     require('./core/protocol-init');
 
-    Winston.normal( 'Initializing ipc' );
-    require('./core/ipc-init');
-
     Winston.normal( 'Initializing editor' );
     require('./core/editor-init');
+    require('./core/ipc-init');
 
     var defaultProfilePath = Path.join( Editor.dataPath, 'settings' );
     Editor.registerProfilePath( 'global', defaultProfilePath );

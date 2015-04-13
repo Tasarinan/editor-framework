@@ -13,19 +13,29 @@
       }
     </style>
     <script type="text/javascript" src="editor://page/page-init.js"></script>
-    <script type="text/javascript" src="editor://page/ipc-init.js"></script>
+    <!-- Initializing editor -->
     <script type="text/javascript" src="editor://page/editor-init.js"></script>
+    <script type="text/javascript" src="editor://page/ipc-init.js"></script>
     <script type="text/javascript" src="editor://page/panel-init.js"></script>
   </head>
 
   <body>
-    <!-- <foo-bar></foo-bar> -->
+    <dom-module id="test-page">
+        <link rel="import" type="css" href="test-page.css">
+        <template>
+            <button on-click="clickAction">Reload foo-bar</button>
+            <div class="border">
+                <content></content>
+            </div>
+        </template>
+    </dom-module>
+
+    <test-page id="my-page"></test-page>
 
     <!-- <script>Polymer = {dom: 'shadow'};</script> -->
     <script src="editor://bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="editor://bower_components/polymer/polymer.html">
 
-    <script src="editor://test/test-window.js"></script>
-    <!-- <link rel="import" href="editor://test/foo-bar.html"> -->
+    <script src="editor://test/test-page.js"></script>
   </body>
 </html>

@@ -1,7 +1,7 @@
 var Remote = require('remote');
 var Util = require('util');
 
-var Editor = Editor || {};
+window.Editor = window.Editor || {};
 var RemoteEditor = Remote.getGlobal('Editor');
 
 // init argument list sending from core by url?queries
