@@ -2,7 +2,7 @@ Editor.info('starting load elements');
 
 var url2link = {};
 
-var loadElement = function ( url, cb ) {
+var importElement = function ( url, cb ) {
     var link = url2link[url];
     if ( link ) {
         link.remove();
@@ -27,7 +27,7 @@ Polymer( {
 
     clickAction: function ( event ) {
         ++index;
-        loadElement( 'editor://test/foo-bar.html?' + index, function () {
+        importElement( 'editor://test/foo-bar.html?' + index, function () {
             var myPage = document.querySelector('#my-page');
             Polymer.dom(myPage).appendChild( new Editor.Foobar() );
         } );

@@ -1,5 +1,6 @@
 var Remote = require('remote');
 var Util = require('util');
+var Ipc = require('ipc');
 
 window.Editor = window.Editor || {};
 var RemoteEditor = Remote.getGlobal('Editor');
@@ -33,7 +34,9 @@ Editor.log = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.log(text);
-    Editor.sendToCore('console:log', text);
+    Editor.sendToCore('console:log', {
+        message: text
+    });
 };
 
 Editor.warn = function ( text ) {
@@ -45,7 +48,9 @@ Editor.warn = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.warn(text);
-    Editor.sendToCore('console:warn', text);
+    Editor.sendToCore('console:warn', {
+        message: text
+    });
 };
 
 Editor.error = function ( text ) {
@@ -57,7 +62,9 @@ Editor.error = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.error(text);
-    Editor.sendToCore('console:error', text);
+    Editor.sendToCore('console:error', {
+        message: text
+    });
 };
 
 Editor.success = function ( text ) {
@@ -69,7 +76,9 @@ Editor.success = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: green');
-    Editor.sendToCore('console:success', text);
+    Editor.sendToCore('console:success', {
+        message: text
+    });
 };
 
 Editor.failed = function ( text ) {
@@ -81,7 +90,9 @@ Editor.failed = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: red');
-    Editor.sendToCore('console:failed', text);
+    Editor.sendToCore('console:failed', {
+        message: text
+    });
 };
 
 Editor.info = function ( text ) {
@@ -93,5 +104,7 @@ Editor.info = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.info(text);
-    Editor.sendToCore('console:info', text);
+    Editor.sendToCore('console:info', {
+        message: text
+    });
 };

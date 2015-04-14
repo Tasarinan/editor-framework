@@ -2,7 +2,7 @@ var Ipc = require('ipc');
 var BrowserWindow = require('browser-window');
 
 /**
- * Redirect plugins messages to its registered windows.
+ * Redirect panel messages to its registered windows.
  */
 var Panel = {};
 var _panelIDToWindows = {};
@@ -114,7 +114,7 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
     }
 
     //
-    var windowName = 'plugin-window-' + new Date().getTime();
+    var windowName = 'editor-window-' + new Date().getTime();
     var options = {
         'use-content-size': true,
         'width': panelInfo.width,
@@ -123,8 +123,6 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
         'min-height': panelInfo['min-height'],
         'max-width': panelInfo['max-width'],
         'max-height': panelInfo['max-height'],
-
-        'panel-window': true,
     };
 
     // load layout-settings, and find windows by name

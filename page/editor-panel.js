@@ -1,4 +1,5 @@
 var _idToPanelInfo = {};
+var _url2link = {};
 
 _getPanels = function ( panelEL ) {
     var panels = [];
@@ -43,11 +44,40 @@ _getDocks = function ( dockEL ) {
     return docks;
 };
 
+function _registerIpc ( ipcListener, ipcName, domEvent, viewEL ) {
+    ipcListener.on( ipcName, function () {
+        var detail = {};
+        if ( arguments.length > 0 ) {
+            detail = arguments[0];
+        }
+        viewEL.fire( domEvent, detail );
+    } );
+}
+
 Editor.Panel = {
     root: null, // The mainDock, init by panel-init.js or main-window.js
 
+    import: function ( url, cb ) {
+        var link = _url2link[url];
+        if ( link ) {
+            link.remove();
+            delete _url2link[url];
+        }
+
+        link = document.createElement('link');
+        link.rel = 'import';
+        link.href = url;
+        link.onload = cb;
+        link.onerror = function(e) {
+            Editor.error('Failed to import %s', link.href);
+        };
+
+        document.head.appendChild(link);
+        _url2link[url] = link;
+    },
+
     load: function ( url, panelID, panelInfo, cb ) {
-        Polymer.import([url], function () {
+        Editor.Panel.import(url, function () {
             var viewEL = new window[panelInfo.ctor]();
             viewEL.setAttribute('id', panelID);
             viewEL.setAttribute('name', panelInfo.title);
@@ -72,19 +102,11 @@ Editor.Panel = {
             if ( panelInfo['max-height'] )
                 viewEL.setAttribute( 'max-height', panelInfo['max-height'] );
 
-            // jshint ignore:start
             // register ipc events
             var ipcListener = new Editor.IpcListener();
             for ( var ipcName in panelInfo.messages ) {
-                ipcListener.on( ipcName, function () {
-                    var detail = {};
-                    if ( arguments.length > 0 ) {
-                        detail = arguments[0];
-                    }
-                    viewEL.fire( panelInfo.messages[ipcName], detail );
-                } );
+                _registerIpc( ipcListener, ipcName, panelInfo.messages[ipcName], viewEL );
             }
-            // jshint ignore:end
 
             //
             _idToPanelInfo[panelID] = {
@@ -126,8 +148,8 @@ Editor.Panel = {
         Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
     },
 
-    dispatch: function ( pluginName, panelName, ipcMessage ) {
-        var panelID = panelName + '@' + pluginName;
+    dispatch: function ( packageName, panelName, ipcMessage ) {
+        var panelID = panelName + '@' + packageName;
         var panelInfo = _idToPanelInfo[panelID];
         if ( !panelInfo ) {
             Fire.warn( 'Failed to receive ipc %s, can not find panel %s', ipcMessage, panelID);

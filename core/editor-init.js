@@ -15,39 +15,51 @@ Editor.Panel = require('./editor-panel');
 Editor.log = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.normal(text);
-    Editor.sendToWindows('console:log', text);
+    Editor.sendToWindows('console:log', {
+        message: text
+    });
 };
 
 Editor.success = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.success(text);
-    Editor.sendToWindows('console:success', text);
+    Editor.sendToWindows('console:success', {
+        message: text
+    });
 };
 
 Editor.failed = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.failed(text);
-    Editor.sendToWindows('console:failed', text);
+    Editor.sendToWindows('console:failed', {
+        message: text
+    });
 };
 
 Editor.info = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.info(text);
-    Editor.sendToWindows('console:info', text);
+    Editor.sendToWindows('console:info', {
+        message: text
+    });
 };
 
 Editor.warn = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.warn(text);
     console.trace();
-    Editor.sendToWindows('console:warn', text);
+    Editor.sendToWindows('console:warn', {
+        message: text
+    });
 };
 
 Editor.error = function () {
     var text = Util.format.apply(Util, arguments);
     Winston.error(text);
     console.trace();
-    Editor.sendToWindows('console:error', text);
+    Editor.sendToWindows('console:error', {
+        message: text
+    });
 };
 
 Editor.fatal = function () {
@@ -146,9 +158,9 @@ Editor.registerProfilePath = function ( type, path ) {
 // ==========================
 
 // console
-Ipc.on ( 'console:log', Editor.log );
-Ipc.on ( 'console:warn', Editor.warn );
-Ipc.on ( 'console:error', Editor.error );
-Ipc.on ( 'console:success', Editor.success );
-Ipc.on ( 'console:failed', Editor.failed );
-Ipc.on ( 'console:info', Editor.info );
+Ipc.on ( 'console:log', function ( detail ) { Editor.log(detail.message); } );
+Ipc.on ( 'console:warn', function ( detail ) { Editor.warn(detail.message); } );
+Ipc.on ( 'console:error', function ( detail ) { Editor.error(detail.message); } );
+Ipc.on ( 'console:success', function ( detail ) { Editor.success(detail.message); } );
+Ipc.on ( 'console:failed', function ( detail ) { Editor.failed(detail.message); } );
+Ipc.on ( 'console:info', function ( detail ) { Editor.info(detail.message); } );

@@ -10,8 +10,11 @@ var Winston = require('winston');
 // this will prevent default atom-shell uncaughtException
 process.removeAllListeners('uncaughtException');
 process.on('uncaughtException', function(error) {
-    if ( Editor.sendToWindows )
-        Editor.sendToWindows('console:error', error.stack || error);
+    if ( Editor && Editor.sendToWindows ) {
+        Editor.sendToWindows('console:error', {
+            message: error.stack || error
+        });
+    }
     Winston.uncaught( error.stack || error );
 });
 
