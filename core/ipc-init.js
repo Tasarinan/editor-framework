@@ -112,7 +112,7 @@ Ipc.on ( 'editor:sendreq2core', function (event, request, args, sessionId) {
     function replyCallback () {
         if ( !called ) {
             called = true;
-            event.sender.send('editor:send-reply-back', [].slice.call(arguments), sessionId);
+            event.sender.send('editor:sendreq2core:reply', [].slice.call(arguments), sessionId);
         }
         else {
             Editor.error('The callback which reply to "%s" can only be called once!', request);

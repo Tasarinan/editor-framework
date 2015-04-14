@@ -1,5 +1,6 @@
-var Ipc = require('ipc');
+(function () {
 
+var Ipc = require('ipc');
 require('../share/ipc-init');
 
 // messages
@@ -123,7 +124,7 @@ Editor.sendRequestToCore = function (request) {
     }
 };
 
-Ipc.on('editor:send-reply-back', function replyCallback (args, sessionId) {
+Ipc.on('editor:sendreq2core:reply', function replyCallback (args, sessionId) {
     'use strict';
     var key = "" + sessionId;
     var cb = replyCallbacks[key];
@@ -143,3 +144,5 @@ Ipc.on('editor:send-reply-back', function replyCallback (args, sessionId) {
 Ipc.on('editor:send2panel', function () {
     Editor.Panel.dispatch.apply(Editor.Panel,arguments);
 });
+
+})();

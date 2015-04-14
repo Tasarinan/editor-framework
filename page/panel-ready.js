@@ -1,4 +1,4 @@
-var Ipc = require('ipc');
+(function () {
 
 // NOTE: there are two way to initialize a panel,
 // panel:ready happends when a panel open in a new window
@@ -6,8 +6,10 @@ var Ipc = require('ipc');
 
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
-    Editor.sendRequestToCore( 'panel:ready', Editor.argv.panelID,
-                            function ( detail ) {
+    Editor.sendRequestToCore('panel:ready',
+                             Editor.argv.panelID,
+                             function ( detail ) {
+
         var panelID = detail['panel-id'];
         var panelInfo = detail['panel-info'];
         var packagePath = detail['package-path'];
@@ -47,3 +49,5 @@ if ( Editor.argv.panelID ) {
                            });
     } );
 }
+
+})();

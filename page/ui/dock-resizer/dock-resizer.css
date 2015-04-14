@@ -1,0 +1,76 @@
+size = 11px
+blank-size = -4px
+hover-color = rgb(12,112,200)
+
+:host {
+    flex: 0 0 size
+    position: relative
+    white-space: nowrap
+
+    z-index: 2
+
+    // horizontal resizer
+    margin-top: blank-size
+    margin-bottom: blank-size
+    margin-left: 0px
+    margin-right: 0px
+    width: auto
+    height: size
+}
+
+.bar {
+    position: absolute
+    top: 4px
+    left: 0px
+    height: 3px
+    width: 100%
+}
+
+:host([active]) .bar {
+    background-color: hover-color
+}
+
+:host([vertical]) {
+    margin-top: 0px
+    margin-bottom: 0px
+    margin-left: blank-size
+    margin-right: blank-size
+    width: size
+    height: auto
+
+    .bar {
+        position: absolute
+        top: 0px
+        left: 4px
+        width: 3px
+        height: 100%
+    }
+}
+
+:host(:hover) {
+    cursor: row-resize
+    .bar {
+        cursor: row-resize
+    }
+}
+
+:host([vertical]:hover) {
+    cursor: col-resize
+    .bar {
+        cursor: col-resize
+    }
+}
+
+:host(.platform-win:hover) {
+    cursor: ns-resize
+    .bar {
+        cursor: ns-resize
+    }
+}
+
+:host(.platform-win[vertical]:hover) {
+    cursor: ew-resize
+    .bar {
+        cursor: ew-resize
+    }
+}

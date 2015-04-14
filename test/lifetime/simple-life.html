@@ -1,0 +1,78 @@
+<dom-module id="simple-life">
+    <style>
+        :host {
+            position: relative;
+            box-sizing: border-box;
+
+            display: block;
+            outline: none;
+
+            border: 1px solid black;
+
+            min-width: 200px;
+            min-height: 200px;
+        }
+
+        .border {
+            border: 1px solid #555;
+
+            background-color: #474747;
+        }
+
+        .border .name {
+            font-size: 12px;
+            padding: 3px 10px;
+            border-bottom: 1px solid #555;
+
+            color: #aaa;
+            background-color: #171717;
+        }
+
+        .border .content {
+            position: relative;
+
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            flex-direction: row;
+        }
+
+        .border .content:focus {
+            outline: 1px solid #09f;
+        }
+    </style>
+
+    <template>
+        <div class="border layout vertical fit">
+            <div class="name">{{name}}</div>
+            <div id="content" class="content flex-1 self-stretch">
+                <content/>
+            </div>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'simple-life',
+
+        properties: {
+            name: {
+                type: String,
+                value: 'Unknown',
+            },
+        },
+
+        created: function () {
+            console.log( '%s created.', this.getAttribute('name') );
+        },
+
+        ready: function () {
+            console.log( '%s ready.', this.name );
+        },
+
+        attached: function () {
+            console.log( '%s attached.', this.name );
+        },
+    });
+</script>

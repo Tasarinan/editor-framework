@@ -1,63 +1,65 @@
-var _idToPanelInfo = {};
-var _url2link = {};
+Editor.Panel = (function () {
 
-_getPanels = function ( panelEL ) {
-    var panels = [];
+    var _idToPanelInfo = {};
+    var _url2link = {};
 
-    for ( var i = 0; i < panelEL.childElementCount; ++i ) {
-        var childEL = panelEL.children[i];
-        var id = childEL.getAttribute('id');
-        panels.push(id);
+    _getPanels = function ( panelEL ) {
+        var panels = [];
+
+        for ( var i = 0; i < panelEL.childElementCount; ++i ) {
+            var childEL = panelEL.children[i];
+            var id = childEL.getAttribute('id');
+            panels.push(id);
+        }
+
+        return panels;
+    };
+
+    _getDocks = function ( dockEL ) {
+        var docks = [];
+
+        for ( var i = 0; i < dockEL.childElementCount; ++i ) {
+            var childEL = dockEL.children[i];
+
+            if ( !(childEL instanceof FireDock) )
+                continue;
+
+            var rect = childEL.getBoundingClientRect();
+            var info = {
+                'row': childEL.row,
+                'width': rect.width,
+                'height': rect.height,
+            };
+
+            if ( childEL instanceof FirePanel ) {
+                info.type = 'panel';
+                info.panels = _getPanels(childEL);
+            }
+            else {
+                info.type = 'dock';
+                info.docks = _getDocks(childEL);
+            }
+
+            docks.push(info);
+        }
+
+        return docks;
+    };
+
+    function _registerIpc ( ipcListener, ipcName, domEvent, viewEL ) {
+        ipcListener.on( ipcName, function () {
+            var detail = {};
+            if ( arguments.length > 0 ) {
+                detail = arguments[0];
+            }
+            viewEL.fire( domEvent, detail );
+        } );
     }
 
-    return panels;
-};
+    var Panel = {};
+    Panel.root = null; // The mainDock, init by panel-init.js or main-window.js
 
-_getDocks = function ( dockEL ) {
-    var docks = [];
-
-    for ( var i = 0; i < dockEL.childElementCount; ++i ) {
-        var childEL = dockEL.children[i];
-
-        if ( !(childEL instanceof FireDock) )
-            continue;
-
-        var rect = childEL.getBoundingClientRect();
-        var info = {
-            'row': childEL.row,
-            'width': rect.width,
-            'height': rect.height,
-        };
-
-        if ( childEL instanceof FirePanel ) {
-            info.type = 'panel';
-            info.panels = _getPanels(childEL);
-        }
-        else {
-            info.type = 'dock';
-            info.docks = _getDocks(childEL);
-        }
-
-        docks.push(info);
-    }
-
-    return docks;
-};
-
-function _registerIpc ( ipcListener, ipcName, domEvent, viewEL ) {
-    ipcListener.on( ipcName, function () {
-        var detail = {};
-        if ( arguments.length > 0 ) {
-            detail = arguments[0];
-        }
-        viewEL.fire( domEvent, detail );
-    } );
-}
-
-Editor.Panel = {
-    root: null, // The mainDock, init by panel-init.js or main-window.js
-
-    import: function ( url, cb ) {
+    Panel.import = function ( url, cb ) {
         var link = _url2link[url];
         if ( link ) {
             link.remove();
@@ -67,17 +69,22 @@ Editor.Panel = {
         link = document.createElement('link');
         link.rel = 'import';
         link.href = url;
-        link.onload = cb;
+        // link.onload = cb;
         link.onerror = function(e) {
             Editor.error('Failed to import %s', link.href);
         };
 
         document.head.appendChild(link);
         _url2link[url] = link;
-    },
 
-    load: function ( url, panelID, panelInfo, cb ) {
-        Editor.Panel.import(url, function () {
+        // TEST
+        HTMLImports.whenReady( function () {
+            cb();
+        });
+    };
+
+    Panel.load = function ( url, panelID, panelInfo, cb ) {
+        Panel.import(url, function () {
             var viewEL = new window[panelInfo.ctor]();
             viewEL.setAttribute('id', panelID);
             viewEL.setAttribute('name', panelInfo.title);
@@ -129,15 +136,15 @@ Editor.Panel = {
                 cb ( null, viewEL );
             } );
         });
-    },
+    };
 
-    closeAll: function () {
+    Panel.closeAll = function () {
         for ( var id in _idToPanelInfo ) {
-            Editor.Panel.close(id);
+            Panel.close(id);
         }
-    },
+    };
 
-    close: function ( panelID ) {
+    Panel.close = function ( panelID ) {
         var panelInfo = _idToPanelInfo[panelID];
 
         if ( panelInfo) {
@@ -146,9 +153,9 @@ Editor.Panel = {
         }
 
         Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
-    },
+    };
 
-    dispatch: function ( packageName, panelName, ipcMessage ) {
+    Panel.dispatch = function ( packageName, panelName, ipcMessage ) {
         var panelID = panelName + '@' + packageName;
         var panelInfo = _idToPanelInfo[panelID];
         if ( !panelInfo ) {
@@ -177,9 +184,9 @@ Editor.Panel = {
             }
             panelInfo.element.fire( domEvent, detail );
         }
-    },
+    };
 
-    getLayout: function () {
+    Panel.getLayout = function () {
         if ( this.root instanceof FireDock ) {
             return {
                 'type': 'dock',
@@ -199,6 +206,7 @@ Editor.Panel = {
                 'height': rect.height,
             };
         }
-    },
-};
+    };
 
+    return Panel;
+})();

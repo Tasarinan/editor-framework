@@ -1,0 +1,29 @@
+:host {
+    position: relative;
+    box-sizing: border-box;
+
+    white-space: nowrap;
+    overflow: hidden;
+
+    font-size: 12px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    color: #ddd;
+}
+
+.content {
+    position: relative;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.content:focus {
+    outline: none;
+}
+
+:host([row]) .content {
+    flex-direction: row;
+}

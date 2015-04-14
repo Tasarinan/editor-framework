@@ -1,3 +1,5 @@
+(function () {
+
 var Remote = require('remote');
 var Util = require('util');
 var Ipc = require('ipc');
@@ -108,3 +110,5 @@ Editor.info = function ( text ) {
         message: text
     });
 };
+
+})();

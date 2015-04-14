@@ -28,7 +28,7 @@ module.exports = {
 
         // load and show main window
         mainWin.show();
-        mainWin.load( 'editor://test/test-window.html' );
+        mainWin.load( 'editor://test/lifetime/lifetime.html' );
 
         // open dev tools if needed
         if ( options.showDevtools ) {
