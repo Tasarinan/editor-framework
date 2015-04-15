@@ -23,13 +23,12 @@ var importElement = function ( url, cb ) {
 
 var index = 0;
 Polymer( {
-    is: 'test-page',
+    is: 'test-import',
 
     clickAction: function ( event ) {
         ++index;
-        importElement( 'editor://test/foo-bar.html?' + index, function () {
-            var myPage = document.querySelector('#my-page');
-            Polymer.dom(myPage).appendChild( new Editor.Foobar() );
-        } );
+        importElement( 'editor://test/import/foo-bar.html?' + index, function () {
+            Polymer.dom(this).appendChild( new Editor.Foobar() );
+        }.bind(this));
     }
 });

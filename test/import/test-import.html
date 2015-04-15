@@ -1,9 +1,9 @@
 <html>
   <head>
-    <title>Test Window</title>
+    <title>Test Import</title>
     <style>
       body {
-        margin: 0px;
+        margin: 10px;
         padding: 0px;
         border: 0px;
 
@@ -13,14 +13,20 @@
       }
     </style>
     <script type="text/javascript" src="editor://page/page-init.js"></script>
+
     <!-- Initializing editor -->
     <script type="text/javascript" src="editor://page/editor-init.js"></script>
     <script type="text/javascript" src="editor://page/ipc-init.js"></script>
+
+    <!-- <script>Polymer = {dom: 'shadow'};</script> -->
+    <script src="editor://bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="editor://bower_components/polymer/polymer.html">
   </head>
 
   <body>
-    <dom-module id="test-page">
-        <link rel="import" type="css" href="test-page.css">
+    <dom-module id="test-import">
+        <link rel="import" type="css" href="test-import.css">
+        <!-- WARN, DO NOT USE: <link rel="stylesheet" href="test-import.css"> -->
         <template>
             <button on-click="clickAction">Reload foo-bar</button>
             <div class="border">
@@ -28,16 +34,8 @@
             </div>
         </template>
     </dom-module>
+    <script src="editor://test/import/test-import.js"></script>
 
-    <test-page id="my-page"></test-page>
-
-    <!-- <script>Polymer = {dom: 'shadow'};</script> -->
-    <script src="editor://bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="editor://bower_components/polymer/polymer.html">
-    <link rel="import" href="editor://page/ui/ui.html">
-
-    <script src="editor://test/test-page.js"></script>
-
-    <script type="text/javascript" src="editor://page/panel-ready.js"></script>
+    <test-import></test-import>
   </body>
 </html>

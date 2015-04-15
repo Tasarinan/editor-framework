@@ -1,0 +1,16 @@
+.border {
+    display: block;
+    border: 1px solid red;
+    min-height: 200px;
+    margin-top: 10px;
+}
+
+button {
+    background: green;
+    border: 1px solid black;
+    color: black;
+}
+
+button:focus {
+    outline: none;
+}

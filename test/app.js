@@ -4,17 +4,18 @@ var Path = require('fire-path');
 
 // exports
 module.exports = {
-    run: function ( options ) {
+    init: function ( options ) {
         // initialize ./test/.settings
         var settingsPath = Path.join(Editor.cwd, 'test', '.settings');
         if ( !Fs.existsSync(settingsPath) ) {
             Fs.makeTreeSync(settingsPath);
         }
         Editor.registerProfilePath( 'local', settingsPath );
+    },
 
+    run: function () {
         // create main window
         var mainWin = new Editor.Window('main', {
-            // atom-window options
             'title': 'Editor Framework',
             'min-width': 800,
             'min-height': 600,
@@ -28,10 +29,11 @@ module.exports = {
 
         // load and show main window
         mainWin.show();
-        mainWin.load( 'editor://test/lifetime/lifetime.html' );
+        // mainWin.load( 'editor://test/lifecycle/lifecycle.html' );
+        mainWin.load( 'editor://test/import/test-import.html' );
 
         // open dev tools if needed
-        if ( options.showDevtools ) {
+        if ( Editor.showDevtools ) {
             mainWin.openDevTools();
         }
         mainWin.focus();

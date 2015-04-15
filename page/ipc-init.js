@@ -1,7 +1,8 @@
 (function () {
 
 var Ipc = require('ipc');
-require('../share/ipc-init');
+
+require( Editor.url('editor://share/ipc-init') );
 
 // messages
 

@@ -1,9 +1,12 @@
+// ---------------------------
 // load modules
+// ---------------------------
+
 var App = require('app');
 var Path = require('fire-path');
 var Fs = require('fire-fs');
 var Url = require('fire-url');
-var Nomnom = require('nomnom');
+var Commander = require('commander');
 var Chalk = require('chalk');
 var Winston = require('winston');
 
@@ -18,7 +21,10 @@ process.on('uncaughtException', function(error) {
     Winston.uncaught( error.stack || error );
 });
 
+// ---------------------------
 // initialize minimal Editor
+// ---------------------------
+
 var Editor = global.Editor = {};
 
 Editor.name = App.getName();
@@ -37,7 +43,17 @@ if ( !Fs.existsSync(settingsPath) ) {
     Fs.mkdirSync(settingsPath);
 }
 
+// load user App definition
+if ( Fs.existsSync('./app.js') ) {
+    Editor.App = require('./app');
+} else {
+    Editor.App = require('./test/app'); // run unit test
+}
+
+// ---------------------------
 // initialize logs/
+// ---------------------------
+
 // MacOSX: ~/Library/Logs/{app-name}
 // Windows: %APPDATA%, some where like 'C:\Users\{your user name}\AppData\Local\...'
 
@@ -148,37 +164,47 @@ Winston.add( Winston.transports.Console, {
     }
 });
 
-//
-function _parseArgv( argv ) {
-    Nomnom
-    .script( Editor.name )
-    .option('version', { abbr: 'v', flag: true, help: 'Print the version.',
-            callback: function () { return App.getVersion(); } })
-    .option('help', { abbr: 'h', flag: true, help: 'Print this usage message.' })
-    .option('dev', { abbr: 'd', flag: true, help: 'Run in development mode.' })
-    .option('showDevtools', { abbr: 'D', full: 'show-devtools', flag: true, help: 'Open devtools automatically when main window loaded.' })
-    .option('debug', { full: 'debug', flag: true, help: 'Open in browser context debug mode.' })
-    .option('debugBreak', { full: 'debug-brk', flag: true, help: 'Open in browser context debug mode, and break at first.' })
+// ---------------------------
+// initialize Commander
+// ---------------------------
+
+// NOTE: commander only get things done barely in core level,
+//       it doesn't touch the page level, so it should not put into App.on('ready')
+Commander
+    .version(App.getVersion())
+    .option('--dev', 'Run in development mode')
+    .option('--show-devtools', 'Open devtools automatically when main window loaded')
+    .option('--debug <port>', 'Open in browser context debug mode', parseInt )
+    .option('--debug-brk <port>', 'Open in browser context debug mode, and break at first.', parseInt)
     ;
 
-    var opts = Nomnom.parse(argv);
+// EXAMPLE:
 
-    if ( opts.dev ) {
-        if ( opts._.length < 2 ) {
-            opts.project = null;
-        }
-        else {
-            opts.project = opts._[opts._.length-1];
-        }
-    }
+// usage
+// Commander
+//     .usage('[options] <file ...>')
+//     ;
 
-    return opts;
+// command
+// Commander
+//     .command('foobar').action( function () {
+//         console.log('foobar!!!');
+//         process.exit(1);
+//     })
+//     ;
+
+if ( Editor.App.initCommander ) {
+    Editor.App.initCommander(Commander);
 }
 
-// parse process arguments and apply it to editor
-var options = _parseArgv( process.argv.slice(1) );
+// finish Commander initialize
+Commander.parse(process.argv);
 
-Editor.isDev = options.dev;
+// apply argv to Editor
+Editor.isDev = Commander.dev;
+Editor.showDevtools = Commander.showDevtools;
+
+// register App events
 
 // DISABLE: http cache only happends afterwhile, not satisefy our demand (which need to happend immediately).
 // App.commandLine.appendSwitch('disable-http-cache');
@@ -215,21 +241,36 @@ App.on('ready', function() {
     Editor.registerProfilePath( 'global', defaultProfilePath );
     Editor.registerProfilePath( 'local', defaultProfilePath );
 
-    Winston.success('Initial success!');
-
-    // open your app
-    try {
-        if ( Fs.existsSync('./app.js') ) {
-            Editor.App = require('./app');
-        }
-        // run unit test
-        else {
-            Editor.App = require('./test/app');
-        }
-        Editor.App.run(options);
+    // init user App
+    if ( !Editor.App.init ) {
+        Winston.error('Can not find function "init" in your App');
+        App.terminate();
+        return;
     }
-    catch ( error ) {
+
+    try {
+        Editor.App.init(Commander);
+    } catch ( error ) {
         Winston.error(error.stack || error);
         App.terminate();
+        return;
+    }
+
+    //
+    Winston.success('Initial success!');
+
+    // run user App
+    if ( !Editor.App.run ) {
+        Winston.error('Can not find function "run" in your App');
+        App.terminate();
+        return;
+    }
+
+    try {
+        Editor.App.run();
+    } catch ( error ) {
+        Winston.error(error.stack || error);
+        App.terminate();
+        return;
     }
 });
