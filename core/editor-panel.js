@@ -91,10 +91,8 @@ Ipc.on('panel:save-settings', function ( detail ) {
 
     var profile = Editor.loadProfile( panelID, 'global' );
     if ( profile ) {
-        var save = profile.save;
-        profile = settings;
-        profile.save = save;
-
+        profile.clear();
+        Editor.JS.mixin(profile, settings);
         profile.save();
     }
 });

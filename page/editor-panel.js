@@ -52,8 +52,13 @@ Editor.Panel = (function () {
             if ( arguments.length > 0 ) {
                 detail = arguments[0];
             }
-            viewEL.fire( domEvent, detail );
+            viewEL.fire( ipcName, detail );
         } );
+
+        var domMethod = viewEL[ipcName];
+        if ( domMethod ) {
+            viewEL.addEventListener( ipcName, domMethod.bind(viewEL) );
+        }
     }
 
     var Panel = {};
@@ -111,8 +116,8 @@ Editor.Panel = (function () {
 
             // register ipc events
             var ipcListener = new Editor.IpcListener();
-            for ( var ipcName in panelInfo.messages ) {
-                _registerIpc( ipcListener, ipcName, panelInfo.messages[ipcName], viewEL );
+            for ( var i = 0; i < panelInfo.messages.length; ++i ) {
+                _registerIpc( ipcListener, panelInfo.messages[i], viewEL );
             }
 
             //
@@ -163,26 +168,14 @@ Editor.Panel = (function () {
             return;
         }
 
-        var detail;
-
-        // special message
-        if ( ipcMessage === 'panel:open' ) {
-            detail = {};
+        // messages
+        var idx = panelInfo.messages.indexOf(ipcMessage);
+        if ( idx !== -1 ) {
+            var detail = {};
             if ( arguments.length > 3 ) {
                 detail = arguments[3];
             }
-            panelInfo.element.fire( 'open', detail );
-            return;
-        }
-
-        // other messages
-        var domEvent = panelInfo.messages[ipcMessage];
-        if ( domEvent ) {
-            detail = {};
-            if ( arguments.length > 3 ) {
-                detail = arguments[3];
-            }
-            panelInfo.element.fire( domEvent, detail );
+            panelInfo.element.fire( ipcMessage, detail );
         }
     };
 
