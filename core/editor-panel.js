@@ -47,6 +47,13 @@ Ipc.on('panel:page-ready', function ( reply, panelID ) {
     var panelInfo = packageInfo.panels[panelName];
     var path = Editor.PackageManager.getPackagePath(packageName);
 
+    // load profiles
+    for ( var type in panelInfo.profiles ) {
+        var profile = panelInfo.profiles[type];
+        profile = Editor.loadProfile( panelID, type, profile );
+        panelInfo.profiles[type] = profile;
+    }
+
     reply({
         'panel-info': panelInfo,
         'package-path': path,
@@ -70,23 +77,16 @@ Ipc.on('panel:undock', function ( event, panelID ) {
     Panel.undock( panelID, editorWin );
 });
 
-Ipc.on('panel:query-settings', function ( reply, detail ) {
-    var panelID = detail.id;
-    var settings = detail.settings;
-
-    settings = Editor.loadProfile( panelID, 'global', settings );
-    reply(settings);
-});
-
 //
-Ipc.on('panel:save-settings', function ( detail ) {
+Ipc.on('panel:save-profile', function ( detail ) {
     var panelID = detail.id;
-    var settings = detail.settings;
+    var type = detail.type;
+    var panelProfile = detail.profile;
 
-    var profile = Editor.loadProfile( panelID, 'global' );
+    var profile = Editor.loadProfile( panelID, type );
     if ( profile ) {
         profile.clear();
-        Editor.JS.mixin(profile, settings);
+        Fire.JS.mixin(profile, panelProfile);
         profile.save();
     }
 });
