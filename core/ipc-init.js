@@ -178,19 +178,17 @@ Editor.sendToAll = function () {
 };
 
 Editor.sendToPlugin = function ( packageName, message ) {
-    var panels = Editor.Panel.findPanels(packageName);
-    var args = [].slice.call( arguments, 1 );
-
     for ( var i = 0; i < panels.length; ++i ) {
-        Editor.sendToPanel.apply( Editor, [packageName, panels[i]].concat(args) );
+        var panelID = panels[i] + '@' + packageName;
+        Editor.sendToPanel.apply( Editor, [panelID].concat(args) );
     }
 };
 
-// example: Editor.sendToPanel( 'package-name', 'panel-name', 'ipc-foo-bar', arguments... )
-Editor.sendToPanel = function ( packageName, panelName, message ) {
-    var win = Editor.Panel.findWindow( packageName, panelName );
+// example: Editor.sendToPanel( 'panel@package', 'ipc-foo-bar', arguments... )
+Editor.sendToPanel = function ( panelID, message ) {
+    var win = Editor.Panel.findWindow( panelID );
     if ( !win ) {
-        Editor.warn( "Failed to send %s to panel %s, can not find it.", message, panelName );
+        Editor.warn( "Failed to send %s to panel %s, can not find it.", message, panelID );
         return;
     }
 

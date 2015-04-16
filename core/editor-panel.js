@@ -54,18 +54,8 @@ Ipc.on('panel:page-ready', function ( reply, panelID ) {
 });
 
 Ipc.on('panel:ready', function ( panelID ) {
-    var pair = panelID.split('@');
-    if ( pair.length !== 2 ) {
-        Fire.error( 'Invalid panelID ' + panelID );
-        reply( {} );
-        return;
-    }
-
-    var panelName = pair[0];
-    var packageName = pair[1];
-
     var argv = _panelIDToArgv[panelID];
-    Editor.sendToPanel( packageName, panelName, 'panel:open', argv );
+    Editor.sendToPanel( panelID, 'panel:open', argv );
 });
 
 Ipc.on('panel:dock', function ( event, panelID ) {
@@ -102,14 +92,13 @@ Ipc.on('panel:save-settings', function ( detail ) {
 });
 
 //
-Panel.open = function ( packageName, panelName, panelInfo, argv ) {
-    var id = panelName + '@' + packageName;
-    _panelIDToArgv[id] = argv;
+Panel.open = function ( panelID, panelInfo, argv ) {
+    _panelIDToArgv[panelID] = argv;
 
-    var editorWin = Panel.findWindow(packageName, panelName);
+    var editorWin = Panel.findWindow(panelID);
     if ( editorWin ) {
-        // if we find window by ID, send panel:open to it
-        Editor.sendToPanel( packageName, panelName, 'panel:open', argv );
+        // if we found the window, send panel:open to it
+        Editor.sendToPanel( panelID, 'panel:open', argv );
         editorWin.show();
         editorWin.focus();
         return;
@@ -130,8 +119,8 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
     // load layout-settings, and find windows by name
     var profile = Editor.loadProfile('layout', 'local' );
     var panels = profile.panels;
-    if ( profile.panels && profile.panels[id] ) {
-        var panelProfile = profile.panels[id];
+    if ( profile.panels && profile.panels[panelID] ) {
+        var panelProfile = profile.panels[panelID];
         windowName = panelProfile.window;
 
         // find window by name
@@ -184,23 +173,17 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
     //
     editorWin = new Editor.Window(windowName, options);
 
-    // TODO:
-    // editorWin.nativeWin.webContents.on('did-finish-load', function() {
-    //     Editor.sendToPanel( packageName, panelName, 'panel:open', argv );
-    // });
-
     // BUG: https://github.com/atom/atom-shell/issues/1321
     editorWin.nativeWin.setContentSize( options.width, options.height );
     editorWin.nativeWin.setMenuBarVisibility(false);
     editorWin.load(url, {
-        panelID: id
+        panelID: panelID
     });
     editorWin.focus();
 };
 
-Panel.findWindow = function ( packageName, panelName ) {
-    var id = panelName + '@' + packageName;
-    return _panelIDToWindows[id];
+Panel.findWindow = function ( panelID ) {
+    return _panelIDToWindows[panelID];
 };
 
 Panel.findWindows = function (packageName) {

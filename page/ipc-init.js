@@ -76,12 +76,11 @@ Editor.sendToAll = function ( message ) {
 
 /**
  * Send message to specific panel
- * @param {string} packageName - the package name
- * @param {string} panelName - the panel name
+ * @param {string} panelID - the panel id
  * @param {string} message - the message to send
  * @param {...*} [arg] - whatever arguments the message needs
  */
-Editor.sendToPanel = function ( packageName, panelName, message ) {
+Editor.sendToPanel = function ( panelID, message ) {
     'use strict';
     if ( typeof message === 'string' ) {
         var args = [].slice.call( arguments );
