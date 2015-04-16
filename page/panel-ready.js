@@ -6,22 +6,17 @@
 
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
-    Editor.sendRequestToCore('panel:ready',
-                             Editor.argv.panelID,
+    Editor.sendRequestToCore('panel:page-ready', Editor.argv.panelID,
                              function ( detail ) {
-
-        var panelID = detail['panel-id'];
         var panelInfo = detail['panel-info'];
         var packagePath = detail['package-path'];
         var argv = detail.argv;
 
         var Path = require('fire-path');
         Editor.Panel.load( Path.join( packagePath, panelInfo.view ),
-                           panelID,
+                           Editor.argv.panelID,
                            panelInfo,
                            function ( err, element ) {
-                               element.argv = argv;
-
                                if ( panelInfo.type === 'dockable' ) {
                                    var dock = new FireDock();
                                    dock.setAttribute('fit', '');
@@ -32,13 +27,16 @@ if ( Editor.argv.panelID ) {
                                    dock.appendChild(panel);
                                    document.body.appendChild(dock);
 
-                                   Editor.Panel.root = dock;
+                                   EditorUI.DockUtils.root = dock;
                                }
                                else {
                                    document.body.appendChild(element);
 
-                                   Editor.Panel.root = element;
+                                   EditorUI.DockUtils.root = element;
                                }
+                               EditorUI.DockUtils.reset();
+
+                               Editor.sendToCore( 'panel:ready', Editor.argv.panelID );
 
                                // save layout after css layouted
                                window.requestAnimationFrame ( function () {

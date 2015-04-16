@@ -8,7 +8,7 @@ var Panel = {};
 var _panelIDToWindows = {};
 var _panelIDToArgv = {};
 
-Ipc.on('panel:ready', function ( reply, panelID ) {
+Ipc.on('panel:page-ready', function ( reply, panelID ) {
     if ( !panelID ) {
         Editor.error( 'Invalid panelID ' + panelID );
         reply( {} );
@@ -32,36 +32,40 @@ Ipc.on('panel:ready', function ( reply, panelID ) {
         return;
     }
 
-    // TODO: remove fireball
-
-    if ( !packageInfo.fireball ) {
-        Editor.error( 'Invalid package info %s, can not find fireball property', packageName );
-        reply( {} );
-        return;
-    }
-
-    if ( !packageInfo.fireball.panels ) {
+    if ( !packageInfo.panels ) {
         Editor.error( 'Invalid package info %s, can not find panels property', packageName );
         reply( {} );
         return;
     }
 
-    if ( !packageInfo.fireball.panels[panelName] ) {
+    if ( !packageInfo.panels[panelName] ) {
         Editor.error( 'Invalid package info %s, can not find %s property', packageName, panelName );
         reply( {} );
         return;
     }
 
-    var panelInfo = packageInfo.fireball.panels[panelName];
+    var panelInfo = packageInfo.panels[panelName];
     var path = Editor.PackageManager.getPackagePath(packageName);
-    var argv = _panelIDToArgv[panelID];
 
     reply({
-        'panel-id': panelID,
         'panel-info': panelInfo,
         'package-path': path,
-        'argv': argv
     });
+});
+
+Ipc.on('panel:ready', function ( panelID ) {
+    var pair = panelID.split('@');
+    if ( pair.length !== 2 ) {
+        Fire.error( 'Invalid panelID ' + panelID );
+        reply( {} );
+        return;
+    }
+
+    var panelName = pair[0];
+    var packageName = pair[1];
+
+    var argv = _panelIDToArgv[panelID];
+    Editor.sendToPanel( packageName, panelName, 'panel:open', argv );
 });
 
 Ipc.on('panel:dock', function ( event, panelID ) {
@@ -115,12 +119,12 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
     var windowName = 'editor-window-' + new Date().getTime();
     var options = {
         'use-content-size': true,
-        'width': panelInfo.width,
-        'height': panelInfo.height,
-        'min-width': panelInfo['min-width'],
-        'min-height': panelInfo['min-height'],
-        'max-width': panelInfo['max-width'],
-        'max-height': panelInfo['max-height'],
+        'width': parseInt(panelInfo.width),
+        'height': parseInt(panelInfo.height),
+        'min-width': parseInt(panelInfo['min-width']),
+        'min-height': parseInt(panelInfo['min-height']),
+        'max-width': parseInt(panelInfo['max-width']),
+        'max-height': parseInt(panelInfo['max-height']),
     };
 
     // load layout-settings, and find windows by name
@@ -137,10 +141,10 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
             return;
         }
 
-        options.x = panelProfile.x;
-        options.y = panelProfile.y;
-        options.width = panelProfile.width;
-        options.height = panelProfile.height;
+        options.x = parseInt(panelProfile.x);
+        options.y = parseInt(panelProfile.y);
+        options.width = parseInt(panelProfile.width);
+        options.height = parseInt(panelProfile.height);
     }
 
     // create new window
@@ -166,13 +170,25 @@ Panel.open = function ( packageName, panelName, panelInfo, argv ) {
         options.resizable = false;
         options['always-on-top'] = true;
         // NOTE: fixed-size window always use package.json settings
-        options.width = panelInfo.width;
-        options.height = panelInfo.height;
+        options.width = parseInt(panelInfo.width);
+        options.height = parseInt(panelInfo.height);
+        break;
+
+    case 'quick':
+        options.resizable = true;
+        options['always-on-top'] = true;
+        options['close-when-blur'] = true;
         break;
     }
 
     //
     editorWin = new Editor.Window(windowName, options);
+
+    // TODO:
+    // editorWin.nativeWin.webContents.on('did-finish-load', function() {
+    //     Editor.sendToPanel( packageName, panelName, 'panel:open', argv );
+    // });
+
     // BUG: https://github.com/atom/atom-shell/issues/1321
     editorWin.nativeWin.setContentSize( options.width, options.height );
     editorWin.nativeWin.setMenuBarVisibility(false);

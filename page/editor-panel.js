@@ -62,7 +62,6 @@ Editor.Panel = (function () {
     }
 
     var Panel = {};
-    Panel.root = null; // The mainDock, init by panel-init.js or main-window.js
 
     Panel.import = function ( url, cb ) {
         var link = _url2link[url];
@@ -90,7 +89,13 @@ Editor.Panel = (function () {
 
     Panel.load = function ( url, panelID, panelInfo, cb ) {
         Panel.import(url, function () {
-            var viewEL = new window[panelInfo.ctor]();
+            var viewCtor = window[panelInfo.ctor];
+            if ( !viewCtor ) {
+                Editor.error('Panel import faield. Can not find constructor %s', panelInfo.ctor );
+                return;
+            }
+
+            var viewEL = new viewCtor();
             viewEL.setAttribute('id', panelID);
             viewEL.setAttribute('name', panelInfo.title);
             viewEL.setAttribute('fit', '');

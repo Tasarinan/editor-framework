@@ -26,16 +26,16 @@ EditorUI.Dock = Polymer({
     },
 
     domReady: function () {
-        if ( !EditorUI.DockUtils.root ) {
-            var isRootDock = this['no-collapse'] && !(this.parentElement instanceof FireDock);
-            if ( isRootDock ) {
-                EditorUI.DockUtils.root = this;
-                this._finalizeSizeRecursively();
-                this._finalizeMinMaxRecursively();
-                this._finalizeStyleRecursively();
-                this._notifyResize();
-            }
-        }
+        // if ( !EditorUI.DockUtils.root ) {
+        //     var isRootDock = this['no-collapse'] && !(this.parentElement instanceof FireDock);
+        //     if ( isRootDock ) {
+        //         EditorUI.DockUtils.root = this;
+        //         this._finalizeSizeRecursively();
+        //         this._finalizeMinMaxRecursively();
+        //         this._finalizeStyleRecursively();
+        //         this._notifyResize();
+        //     }
+        // }
     },
 
     _initResizers: function () {
