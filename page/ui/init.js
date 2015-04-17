@@ -169,35 +169,5 @@
         }
     };
 
-    // string utils
-    EditorUI.toHumanText = function ( text ) {
-        var result = text.replace(/([A-Z])/g, ' $1').replace(/[-_]/g, ' ');
-
-        // remove first white-space
-        if ( result.charAt(0) === ' ' ) {
-            result.slice(1);
-        }
-
-        // capitalize the first letter
-        return result.charAt(0).toUpperCase() + result.slice(1);
-    };
-
-    //
-    function _getPropertyDescriptor(obj, name) {
-        if (obj) {
-            var pd = Object.getOwnPropertyDescriptor(obj, name);
-            return pd || _getPropertyDescriptor(Object.getPrototypeOf(obj), name);
-        }
-    }
-    function _copyprop(name, source, target) {
-        var pd = _getPropertyDescriptor(source, name);
-        Object.defineProperty(target, name, pd);
-    }
-
-    //
-    EditorUI.fireChanged = function ( element ) {
-        element.fire("changed", element.value);
-    };
-
     return EditorUI;
 })();

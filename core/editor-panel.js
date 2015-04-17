@@ -91,6 +91,8 @@ Ipc.on('panel:save-profile', function ( detail ) {
     }
 });
 
+Panel.templateUrl = 'editor://static/window.html';
+
 //
 Panel.open = function ( panelID, panelInfo, argv ) {
     _panelIDToArgv[panelID] = argv;
@@ -137,7 +139,6 @@ Panel.open = function ( panelID, panelInfo, argv ) {
     }
 
     // create new window
-    var url = 'editor://static/window.html';
     // DISABLE: currently, I don't want to support page
     // if ( panelInfo.page ) {
     //     url = panelInfo.page;
@@ -176,7 +177,7 @@ Panel.open = function ( panelID, panelInfo, argv ) {
     // BUG: https://github.com/atom/atom-shell/issues/1321
     editorWin.nativeWin.setContentSize( options.width, options.height );
     editorWin.nativeWin.setMenuBarVisibility(false);
-    editorWin.load(url, {
+    editorWin.load(Panel.templateUrl, {
         panelID: panelID
     });
     editorWin.focus();
