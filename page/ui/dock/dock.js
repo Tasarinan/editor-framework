@@ -26,10 +26,11 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
         this._initResizable();
         this._initResizers();
 
+        // this will make sure all dock children is ready
         window.requestAnimationFrame( function () {
             if ( !EditorUI.DockUtils.root ) {
-                var lightDOM = Polymer.dom(this);
-                var isRootDock = this['no-collapse'] && !lightDOM.parentNode['ui-dockable'];
+                var thisDOM = Polymer.dom(this);
+                var isRootDock = this['no-collapse'] && !thisDOM.parentNode['ui-dockable'];
                 if ( isRootDock ) {
                     EditorUI.DockUtils.root = this;
                     this._finalizeSizeRecursively();
@@ -42,16 +43,17 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     },
 
     _initResizers: function () {
-        var lightDOM = Polymer.dom(this);
-        if ( lightDOM.children.length > 1 ) {
-            for ( var i = 0; i < lightDOM.children.length; ++i ) {
-                if ( i != lightDOM.children.length-1 ) {
-                    var el = lightDOM.children[i];
+        var thisDOM = Polymer.dom(this);
+        if ( thisDOM.children.length > 1 ) {
+            for ( var i = 0; i < thisDOM.children.length; ++i ) {
+                if ( i != thisDOM.children.length-1 ) {
+                    var el = thisDOM.children[i];
+                    var nextEL = thisDOM.children[i+1];
 
                     var resizer = new EditorUI.DockResizer();
                     resizer.vertical = this.row;
 
-                    lightDOM.insertBefore( resizer, el.nextElementSibling );
+                    thisDOM.insertBefore( resizer, nextEL );
                     i += 1;
                 }
             }
@@ -61,11 +63,11 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     // depth first calculate the width and height
     _finalizeSizeRecursively: function () {
         var elements = [];
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
 
         //
-        for ( var i = 0; i < lightDOM.children.length; i += 2 ) {
-            var el = lightDOM.children[i];
+        for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
+            var el = thisDOM.children[i];
             if ( el['ui-dockable'] ) {
                 el._finalizeSizeRecursively();
                 elements.push(el);
@@ -79,11 +81,11 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     // depth first calculate the min max width and height
     _finalizeMinMaxRecursively: function () {
         var elements = [];
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
 
         //
-        for ( var i = 0; i < lightDOM.children.length; i += 2 ) {
-            var el = lightDOM.children[i];
+        for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
+            var el = thisDOM.children[i];
             if ( el['ui-dockable'] ) {
                 el._finalizeMinMaxRecursively();
                 elements.push(el);
@@ -96,11 +98,11 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
 
     _finalizeStyleRecursively: function () {
         var elements = [];
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
 
         //
-        for ( var i = 0; i < lightDOM.children.length; i += 2 ) {
-            var el = lightDOM.children[i];
+        for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
+            var el = thisDOM.children[i];
             if ( el['ui-dockable'] ) {
                 el._finalizeStyleRecursively();
             }
@@ -112,10 +114,10 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     },
 
     _reflowRecursively: function () {
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
 
-        for ( var i = 0; i < lightDOM.children.length; i += 2 ) {
-            var el = lightDOM.children[i];
+        for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
+            var el = thisDOM.children[i];
             if ( el['ui-dockable'] ) {
                 el._reflowRecursively();
             }
@@ -124,22 +126,22 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     },
 
     finalizeStyle: function () {
-        // var resizerCnt = (this.children.length - 1)/2;
+        // var resizerCnt = (thisDOM.children.length - 1)/2;
         // var resizerSize = resizerCnt * resizerSpace;
 
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
         var i, el, size;
         var hasAutoLayout = false;
 
-        if ( lightDOM.children.length === 1 ) {
-            el = lightDOM.children[0];
+        if ( thisDOM.children.length === 1 ) {
+            el = thisDOM.children[0];
 
             el.style.flex = "1 1 auto";
             hasAutoLayout = true;
         }
         else {
-            for ( i = 0; i < lightDOM.children.length; i += 2 ) {
-                el = lightDOM.children[i];
+            for ( i = 0; i < thisDOM.children.length; i += 2 ) {
+                el = thisDOM.children[i];
 
                 if ( this.row ) {
                     size = el.curWidth;
@@ -154,7 +156,7 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
                 }
                 else {
                     // if this is last el and we don't have auto-layout elements, give rest size to last el
-                    if ( i === (lightDOM.children.length-1) && !hasAutoLayout ) {
+                    if ( i === (thisDOM.children.length-1) && !hasAutoLayout ) {
                         el.style.flex = "1 1 auto";
                     }
                     else {
@@ -169,10 +171,10 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
         var i, rect, el;
         var sizeList = [];
         var totalSize = 0;
-        var lightDOM = Polymer.dom(this);
+        var thisDOM = Polymer.dom(this);
 
-        for ( i = 0; i < lightDOM.children.length; ++i ) {
-            el = lightDOM.children[i];
+        for ( i = 0; i < thisDOM.children.length; ++i ) {
+            el = thisDOM.children[i];
 
             rect = el.getBoundingClientRect();
             var size = Math.floor(this.row ? rect.width : rect.height);
@@ -180,8 +182,8 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
             totalSize += size;
         }
 
-        for ( i = 0; i < lightDOM.children.length; ++i ) {
-            el = lightDOM.children[i];
+        for ( i = 0; i < thisDOM.children.length; ++i ) {
+            el = thisDOM.children[i];
             if ( el instanceof EditorUI.DockResizer )
                 continue;
 

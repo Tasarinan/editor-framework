@@ -236,6 +236,20 @@ EditorUI.resizable = (function () {
                 }
             }
 
+            if ( this['min-width'] !== 'auto' &&
+                 this.computedMinWidth !== 'auto' &&
+                 this['min-width'] > this.computedMinWidth )
+            {
+                this.computedMinWidth = this['min-width'];
+            }
+
+            if ( this['min-height'] !== 'auto' &&
+                 this.computedMinHeight !== 'auto' &&
+                 this['min-height'] > this.computedMinHeight )
+            {
+                this.computedMinHeight = this['min-height'];
+            }
+
             // final decision
 
             // min-width
@@ -276,6 +290,17 @@ EditorUI.resizable = (function () {
         },
 
         _initResizable: function () {
+            // parse properties
+            // NOTE: since we use String for size properties, we have to
+            //       parse them for the right type
+            [ 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height']
+            .forEach(function ( prop ) {
+                if ( this[prop] !== 'auto' )
+                    this[prop] = parseInt(this[prop]);
+                if ( isNaN(this[prop]) )
+                    this[prop] = 'auto';
+            }.bind(this));
+
             this.initSize();
         },
     };

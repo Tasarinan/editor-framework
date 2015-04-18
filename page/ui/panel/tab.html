@@ -1,6 +1,4 @@
-<dom-module name="editor-tab"
-    on-dragstart="dragstartAction"
-    >
+<dom-module name="editor-tab">
     <link rel="import" type="css" href="tab.css">
 
     <template>
@@ -8,12 +6,11 @@
         <div class="border">
             <div class="title">
                 <div id="icon"></div>
-                <content/>
+                <span>{{name}}</span>
             </div>
         </div>
         <span class="right-tab-border"></span>
     </template>
-
 </dom-module>
 
 <script type="text/javascript" src="tab.js"></script>

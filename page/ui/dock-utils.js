@@ -72,15 +72,15 @@ EditorUI.DockUtils = (function () {
 
     DockUtils.dropTab = function ( target, insertBeforeTabEL ) {
         var viewEL = _draggingTab.viewEL;
-        var panelEL = _draggingTab.parentElement.panel;
-        var needCollapse = panelEL !== target.panel;
+        var panelEL = Polymer.dom(_draggingTab).parentNode.panelEL;
+        var needCollapse = panelEL !== target.panelEL;
 
         if ( needCollapse ) {
             panelEL.closeNoCollapse(_draggingTab);
         }
 
         //
-        var newPanel = target.panel;
+        var newPanel = target.panelEL;
         var idx = newPanel.insert( _draggingTab, viewEL, insertBeforeTabEL );
         newPanel.select(idx);
 
@@ -143,7 +143,7 @@ EditorUI.DockUtils = (function () {
         event.dataTransfer.dropEffect = 'move';
         event.preventDefault();
 
-        var panelEL = _draggingTab.parentElement.panel;
+        var panelEL = Polymer.dom(_draggingTab).parentNode.panelEL;
         var minDistance = null;
         _resultDock = null;
 
@@ -254,8 +254,9 @@ EditorUI.DockUtils = (function () {
         if ( _resultDock === null ) {
             return;
         }
+        var draggingTabDOM = Polymer.dom(_draggingTab);
 
-        if ( _resultDock.target === _draggingTab.parentElement.panel &&
+        if ( _resultDock.target === draggingTabDOM.parentNode.panelEL &&
              _resultDock.target.tabCount === 1 )
         {
             return;
@@ -265,10 +266,11 @@ EditorUI.DockUtils = (function () {
         event.stopPropagation();
 
         var viewEL = _draggingTab.viewEL;
-        var panelEL = _draggingTab.parentElement.panel;
+        var panelEL = draggingTabDOM.parentNode.panelEL;
+        var panelDOM = Polymer.dom(panelEL);
 
         var panelRect = panelEL.getBoundingClientRect();
-        var parentDock = panelEL.parentElement;
+        var parentDock = panelDOM.parentNode;
 
         //
         panelEL.closeNoCollapse(_draggingTab);
@@ -301,19 +303,20 @@ EditorUI.DockUtils = (function () {
         _resultDock.target.addDock( _resultDock.position, newPanel );
 
         //
-        var totallyRemoved = panelEL.children.length === 0;
+        var totallyRemoved = panelDOM.children.length === 0;
         panelEL.collapse();
 
         // if we totally remove the panelEL, check if targetDock has the ancient as panelEL does
         // if that is true, add parentEL's size to targetDock's flex style size
         if ( totallyRemoved ) {
             var hasSameAncient = false;
+            var newPanelDOM = Polymer.dom(newPanel);
 
             // if newPanel and oldPanel have the same parent, don't do the calculation.
             // it means newPanel just move under the same parent dock in same direction.
-            if ( newPanel.parentElement !== parentDock ) {
+            if ( newPanelDOM.parentNode !== parentDock ) {
                 var sibling = newPanel;
-                var newParent = newPanel.parentElement;
+                var newParent = newPanelDOM.parentNode;
                 while ( newParent && newParent['ui-dockable'] ) {
                     if ( newParent === parentDock ) {
                         hasSameAncient = true;
@@ -321,7 +324,7 @@ EditorUI.DockUtils = (function () {
                     }
 
                     sibling = newParent;
-                    newParent = newParent.parentElement;
+                    newParent = Polymer.dom(newParent).parentNode;
                 }
 
                 if ( hasSameAncient ) {

@@ -2,7 +2,11 @@ EditorUI.dockable = (function () {
     var dockable = {
         'ui-dockable': true,
 
-        _dragoverAction: function ( event ) {
+        listeners: {
+            'dragover': '_onDragOver',
+        },
+
+        _onDragOver: function ( event ) {
             event.preventDefault();
 
             EditorUI.DockUtils.dragoverDock( event.currentTarget );
@@ -16,8 +20,8 @@ EditorUI.dockable = (function () {
             }
 
             var needNewDock = false;
-            var lightDOM = Polymer.dom(this);
-            var parentEL = lightDOM.parentNode;
+            var thisDOM = Polymer.dom(this);
+            var parentEL = thisDOM.parentNode;
             var parentDOM = Polymer.dom(parentEL);
             var elements = [];
             var newDock, newDockDOM, newResizer, nextEL;
@@ -127,8 +131,8 @@ EditorUI.dockable = (function () {
                         this.row = false;
                     }
 
-                    while ( this.children.length > 0 ) {
-                        var childEL = this.children[0];
+                    while ( thisDOM.children.length > 0 ) {
+                        var childEL = thisDOM.children[0];
                         elements.push(childEL);
                         newDockDOM.appendChild(childEL);
                     }
@@ -145,12 +149,12 @@ EditorUI.dockable = (function () {
 
                     //
                     if ( position === 'left' || position === 'top' ) {
-                        lightDOM.appendChild(element);
-                        lightDOM.appendChild(newDock);
+                        thisDOM.appendChild(element);
+                        thisDOM.appendChild(newDock);
                     }
                     else {
-                        lightDOM.appendChild(newDock);
-                        lightDOM.appendChild(element);
+                        thisDOM.appendChild(newDock);
+                        thisDOM.appendChild(element);
                     }
 
                     //
@@ -171,12 +175,12 @@ EditorUI.dockable = (function () {
                         // insert after
                         nextEL = this.nextElementSibling;
                         if ( nextEL === null ) {
-                            lightDOM.appendChild(newResizer);
-                            lightDOM.appendChild(element);
+                            thisDOM.appendChild(newResizer);
+                            thisDOM.appendChild(element);
                         }
                         else {
-                            lightDOM.insertBefore(newResizer, nextEL);
-                            lightDOM.insertBefore(element, nextEL);
+                            thisDOM.insertBefore(newResizer, nextEL);
+                            thisDOM.insertBefore(element, nextEL);
                         }
                     }
                 }
@@ -184,24 +188,33 @@ EditorUI.dockable = (function () {
         },
 
         removeDock: function ( childEL ) {
-            if ( !this.contains(childEL) )
+            var thisDOM = Polymer.dom(this);
+
+            var contains = false;
+            for ( var i = 0; i < thisDOM.children.length; ++i ) {
+                if ( thisDOM.children[i] === childEL ) {
+                    contains = true;
+                    break;
+                }
+            }
+            if ( !contains )
                 return false;
 
-            if ( this.firstElementChild === childEL ) {
+            if ( thisDOM.children[0] === childEL ) {
                 if ( childEL.nextElementSibling &&
                      childEL.nextElementSibling instanceof EditorUI.DockResizer )
                 {
-                    childEL.nextElementSibling.remove();
+                    thisDOM.removeChild(childEL.nextElementSibling);
                 }
             }
             else {
                 if ( childEL.previousElementSibling &&
                      childEL.previousElementSibling instanceof EditorUI.DockResizer )
                 {
-                    childEL.previousElementSibling.remove();
+                    thisDOM.removeChild(childEL.previousElementSibling);
                 }
             }
-            childEL.remove();
+            thisDOM.removeChild(childEL);
 
             // return if dock can be collapsed
             return this.collapse();
@@ -211,16 +224,17 @@ EditorUI.dockable = (function () {
             if ( this['no-collapse'] )
                 return false;
 
-            var parentEL = Polymer.dom(this).parentNode;
+            var thisDOM = Polymer.dom(this);
+            var parentEL = thisDOM.parentNode;
             var parentDOM = Polymer.dom(parentEL);
 
             // if we don't have any element in this panel
-            if ( this.children.length === 0 ) {
+            if ( thisDOM.children.length === 0 ) {
                 if ( parentEL['ui-dockable'] ) {
                     parentEL.removeDock(this);
                 }
                 else {
-                    this.remove();
+                    parentDOM.removeChild(this);
                 }
 
                 return true;
@@ -228,8 +242,8 @@ EditorUI.dockable = (function () {
 
 
             // if we only have one element in this panel
-            if ( this.children.length === 1 ) {
-                var childEL = this.children[0];
+            if ( thisDOM.children.length === 1 ) {
+                var childEL = thisDOM.children[0];
 
                 // assign current style to it, also reset its computedSize
                 childEL.style.flex = this.style.flex;
@@ -243,7 +257,7 @@ EditorUI.dockable = (function () {
                 }
 
                 parentDOM.insertBefore( childEL, this );
-                this.remove();
+                parentDOM.removeChild(this);
 
                 if ( childEL['ui-dockable'] ) {
                     childEL.collapse();
@@ -254,10 +268,10 @@ EditorUI.dockable = (function () {
 
             // if the parent dock direction is same as this panel
             if ( parentEL['ui-dockable'] && parentEL.row === this.row ) {
-                while ( this.children.length > 0 ) {
-                    parentDOM.insertBefore( this.children[0], this );
+                while ( thisDOM.children.length > 0 ) {
+                    parentDOM.insertBefore( thisDOM.children[0], this );
                 }
-                this.remove();
+                parentDOM.removeChild(this);
 
                 return true;
             }

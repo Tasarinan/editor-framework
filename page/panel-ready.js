@@ -18,11 +18,11 @@ if ( Editor.argv.panelID ) {
                            panelInfo,
                            function ( err, element ) {
                                if ( panelInfo.type === 'dockable' ) {
-                                   var dock = new FireDock();
+                                   var dock = new EditorUI.Dock();
                                    dock.setAttribute('fit', '');
                                    dock.setAttribute('no-collapse', '');
 
-                                   var panel = new FirePanel();
+                                   var panel = new EditorUI.Panel();
                                    panel.add(element);
                                    dock.appendChild(panel);
                                    document.body.appendChild(dock);

@@ -3,56 +3,64 @@
 EditorUI.Tabs = Polymer(EditorUI.mixin({
     is: 'editor-tabs',
 
+    activeTab: null,
+    panel: null,
+
     hostAttributes: {
         'droppable': 'tab',
         'single-drop': true,
     },
 
-    created: function () {
-        this.activeTab = null;
+    listeners: {
+        'click': '_onClick',
+        'drop-area-enter': '_onDropAreaEnter',
+        'drop-area-leave': '_onDropAreaLeave',
+        'drop-area-accept': '_onDropAreaAccept',
+        'dragover': '_onDragOver',
     },
 
     ready: function () {
         this._initDroppable(this);
 
-        if ( this.children.length > 0 ) {
-            this.select(this.children[0]);
+        var thisDOM = Polymer.dom(this);
+        if ( thisDOM.children.length > 0 ) {
+            this.select(thisDOM.children[0]);
         }
-    },
-
-    clickAction: function ( event ) {
-        this.select(event.target);
-        event.stopPropagation();
     },
 
     insert: function ( tabEL, insertBeforeTabEL ) {
+        var thisDOM = Polymer.dom(this);
+
         if ( insertBeforeTabEL ) {
-            this.insertBefore(tabEL, insertBeforeTabEL);
+            thisDOM.insertBefore(tabEL, insertBeforeTabEL);
         }
         else {
-            this.appendChild(tabEL);
+            thisDOM.appendChild(tabEL);
         }
 
         return tabEL;
     },
 
     add: function ( name ) {
-        var tabEL = new FireTab();
-        tabEL.innerHTML = name;
+        var thisDOM = Polymer.dom(this);
 
-        this.appendChild(tabEL);
+        var tabEL = new EditorUI.Tab(name);
+
+        thisDOM.appendChild(tabEL);
 
         return tabEL;
     },
 
     remove: function ( tab ) {
+        var thisDOM = Polymer.dom(this);
+
         var tabEL = null;
         if ( typeof tab === 'number' ) {
-            if ( tab < this.children.length ) {
-                tabEL = this.children[tab];
+            if ( tab < thisDOM.children.length ) {
+                tabEL = thisDOM.children[tab];
             }
         }
-        else if ( tab instanceof FireTab ) {
+        else if ( tab instanceof EditorUI.Tab ) {
             tabEL = tab;
         }
 
@@ -69,19 +77,20 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
                 this.select(nextTab);
             }
 
-            this.removeChild(tabEL);
+            thisDOM.removeChild(tabEL);
         }
     },
 
     select: function ( tab ) {
+        var thisDOM = Polymer.dom(this);
         var tabEL = null;
 
         if ( typeof tab === 'number' ) {
-            if ( tab < this.children.length ) {
-                tabEL = this.children[tab];
+            if ( tab < thisDOM.children.length ) {
+                tabEL = thisDOM.children[tab];
             }
         }
-        else if ( tab instanceof FireTab ) {
+        else if ( tab instanceof EditorUI.Tab ) {
             tabEL = tab;
         }
 
@@ -100,26 +109,31 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         }
     },
 
-    dropAreaEnterAction: function ( event ) {
+    _onClick: function ( event ) {
+        event.stopPropagation();
+        this.select(event.target);
+    },
+
+    _onDropAreaEnter: function ( event ) {
         event.stopPropagation();
 
         this.$.insertLine.style.display = 'block';
     },
 
-    dropAreaLeaveAction: function ( event ) {
+    _onDropAreaLeave: function ( event ) {
         event.stopPropagation();
 
         this.$.insertLine.style.display = '';
     },
 
-    dropAreaAcceptAction: function ( event ) {
+    _onDropAreaAccept: function ( event ) {
         event.stopPropagation();
 
         EditorUI.DockUtils.dropTab(this, this._curInsertTab);
         this.$.insertLine.style.display = '';
     },
 
-    dragoverAction: function ( event ) {
+    _onDragOver: function ( event ) {
         // NOTE: in web, there is a problem:
         // http://stackoverflow.com/questions/11974077/datatransfer-setdata-of-dragdrop-doesnt-work-in-chrome
         var type = event.dataTransfer.getData('fire/type');
@@ -136,7 +150,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         //
         this._curInsertTab = null;
         var style = this.$.insertLine.style;
-        if ( event.target instanceof FireTab ) {
+        if ( event.target instanceof EditorUI.Tab ) {
             style.left = event.target.offsetLeft + 'px';
             this._curInsertTab = event.target;
         }

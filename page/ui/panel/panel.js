@@ -1,6 +1,6 @@
 (function () {
 
-EditorUI.Panel = Polymer( EditorUI.mixin({
+EditorUI.Panel = Polymer(EditorUI.mixin({
     is: 'editor-panel',
 
     // TODO: we have to use EditorUI.mixin polyfill until polymer support
@@ -17,14 +17,19 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     ready: function () {
         this._initFocusable(this.$.content);
         this._initResizable();
+        this._initTabs();
+    },
+
+    _initTabs: function () {
+        var thisDOM = Polymer.dom(this);
 
         //
         var tabs = this.$.tabs;
-        tabs.panel = this;
+        tabs.panelEL = this;
 
         //
-        for ( var i = 0; i < this.children.length; ++i ) {
-            var el = this.children[i];
+        for ( var i = 0; i < thisDOM.children.length; ++i ) {
+            var el = thisDOM.children[i];
 
             //
             var name = el.getAttribute('name');
@@ -33,8 +38,7 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
 
             el.style.display = 'none';
             tabEL.viewEL = el;
-
-            tabEL.setIcon( el.icon ); // TEMP HACK
+            tabEL.setIcon( el.icon );
         }
 
         tabs.select(0);
@@ -56,14 +60,15 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     _applyViewSize: function () {
+        var thisDOM = Polymer.dom(this);
         var autoWidth = false, autoHeight = false;
 
         // reset width, height
         this.computedWidth = this.width;
         this.computedHeight = this.height;
 
-        for ( var i = 0; i < this.children.length; ++i ) {
-            var el = this.children[i];
+        for ( var i = 0; i < thisDOM.children.length; ++i ) {
+            var el = thisDOM.children[i];
 
             // width
             var elWidth = parseInt(el.getAttribute('width'));
@@ -100,10 +105,11 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     _applyViewMinMax: function () {
+        var thisDOM = Polymer.dom(this);
         var infWidth = false, infHeight = false;
 
-        for ( var i = 0; i < this.children.length; ++i ) {
-            var el = this.children[i];
+        for ( var i = 0; i < thisDOM.children.length; ++i ) {
+            var el = thisDOM.children[i];
 
             // NOTE: parseInt('auto') will return NaN, it will return false in if check
 
@@ -196,7 +202,7 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     get tabCount () {
-        return this.$.tabs.children.length;
+        return Polymer.dom(this.$.tabs).children.length;
     },
 
     select: function ( tab ) {
@@ -205,6 +211,8 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     insert: function ( tabEL, viewEL, insertBeforeTabEL ) {
+        var thisDOM = Polymer.dom(this);
+        var tabDOM = Polymer.dom(tabEL);
         var tabs = this.$.tabs;
 
         var name = viewEL.getAttribute('name');
@@ -212,14 +220,14 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
         tabEL.setAttribute('draggable', 'true');
 
         // NOTE: if we just move tabs, we must not hide viewEL
-        if ( tabEL.parentElement !== tabs ) {
+        if ( tabDOM.parentNode !== tabs ) {
             viewEL.style.display = 'none';
         }
         tabEL.viewEL = viewEL;
         tabEL.setIcon( viewEL.icon ); // TEMP HACK
 
         //
-        this.appendChild(viewEL);
+        thisDOM.appendChild(viewEL);
 
         //
         this._applyViewMinMax();
@@ -229,6 +237,7 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     add: function ( viewEL ) {
+        var thisDOM = Polymer.dom(this);
         var tabs = this.$.tabs;
 
         var name = viewEL.getAttribute('name');
@@ -239,14 +248,14 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
         tabEL.viewEL = viewEL;
         tabEL.setIcon( viewEL.icon ); // TEMP HACK
 
-        this.appendChild(viewEL);
+        thisDOM.appendChild(viewEL);
 
         //
         this._applyViewMinMax();
         this._applyStyle();
 
         //
-        return this.children.length - 1;
+        return thisDOM.children.length - 1;
     },
 
     closeNoCollapse: function ( tabEL ) {
@@ -270,17 +279,20 @@ EditorUI.Panel = Polymer( EditorUI.mixin({
     },
 
     collapse: function () {
+        var thisDOM = Polymer.dom(this);
+        var tabsDOM = Polymer.dom(this.$.tabs);
+
         // remove from dock;
-        if ( this.$.tabs.children.length === 0 ) {
-            if ( this.parentElement['ui-dockable'] ) {
-                return this.parentElement.removeDock(this);
+        if ( tabsDOM.children.length === 0 ) {
+            if ( thisDOM.parentNode['ui-dockable'] ) {
+                return thisDOM.parentNode.removeDock(this);
             }
         }
 
         return false;
     },
 
-    tabsChangedAction: function ( event ) {
+    _onTabsChanged: function ( event ) {
         var detail = event.detail;
         if ( detail.old !== null ) {
             detail.old.viewEL.style.display = 'none';

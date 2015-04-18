@@ -1,4 +1,5 @@
 EditorUI.droppable = (function () {
+
     var droppable = {
         'ui-droppable': true,
 

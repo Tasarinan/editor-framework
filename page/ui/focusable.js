@@ -46,6 +46,11 @@ EditorUI.focusable = (function () {
             },
         },
 
+        listener: {
+            'focus': '_onFocus',
+            'blur': '_onBlur',
+        },
+
         _initFocusable: function ( focusEls ) {
             if ( focusEls ) {
                 if ( Array.isArray(focusEls) ) {
@@ -115,11 +120,11 @@ EditorUI.focusable = (function () {
             }
         },
 
-        _focusAction: function ( event ) {
+        _onFocus: function ( event ) {
             this.focused = true;
         },
 
-        _blurAction: function ( event ) {
+        _onBlur: function ( event ) {
             this.focused = false;
         },
 

@@ -86,7 +86,7 @@ Ipc.on('panel:save-profile', function ( detail ) {
     var profile = Editor.loadProfile( panelID, type );
     if ( profile ) {
         profile.clear();
-        Fire.JS.mixin(profile, panelProfile);
+        Editor.JS.mixin(profile, panelProfile);
         profile.save();
     }
 });

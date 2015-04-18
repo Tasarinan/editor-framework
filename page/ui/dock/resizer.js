@@ -103,7 +103,7 @@ EditorUI.DockResizer = Polymer({
     is: 'editor-dock-resizer',
 
     listeners: {
-        'mousedown': 'mousedownAction'
+        'mousedown': '_onMouseDown'
     },
 
     properties: {
@@ -127,8 +127,8 @@ EditorUI.DockResizer = Polymer({
     },
 
     _snapshot: function () {
-        var lightDOM = Polymer.dom(this);
-        var parentEL = lightDOM.parentNode;
+        var thisDOM = Polymer.dom(this);
+        var parentEL = thisDOM.parentNode;
         var parentDOM = Polymer.dom(parentEL);
 
         var rect;
@@ -202,12 +202,12 @@ EditorUI.DockResizer = Polymer({
         };
     },
 
-    mousedownAction: function ( event ) {
+    _onMouseDown: function ( event ) {
         //
         event.stopPropagation();
 
-        var lightDOM = Polymer.dom(this);
-        var parentEL = lightDOM.parentNode;
+        var thisDOM = Polymer.dom(this);
+        var parentEL = thisDOM.parentNode;
         var parentDOM = Polymer.dom(parentEL);
 
         //
@@ -288,8 +288,8 @@ EditorUI.DockResizer = Polymer({
 
             this.active = false;
 
-            var lightDOM = Polymer.dom(this);
-            var parentEL = lightDOM.parentNode;
+            var thisDOM = Polymer.dom(this);
+            var parentEL = thisDOM.parentNode;
             var parentDOM = Polymer.dom(parentEL);
 
             // get elements' size

@@ -53,7 +53,7 @@
 </dom-module>
 
 <script>
-    Polymer({
+    window.SimpleLife = Polymer({
         is: 'simple-life',
 
         properties: {
@@ -69,6 +69,11 @@
 
         ready: function () {
             console.log( '%s ready.', this.name );
+        },
+
+        constructor: function ( name ) {
+            this.name = name;
+            console.log( '%s constructor.', this.name );
         },
 
         attached: function () {

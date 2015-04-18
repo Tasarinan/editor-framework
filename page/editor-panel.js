@@ -6,8 +6,9 @@ Editor.Panel = (function () {
     _getPanels = function ( panelEL ) {
         var panels = [];
 
-        for ( var i = 0; i < panelEL.childElementCount; ++i ) {
-            var childEL = panelEL.children[i];
+        var panelDOM = Polymer.dom(panelEL);
+        for ( var i = 0; i < panelDOM.children.length; ++i ) {
+            var childEL = panelDOM.children[i];
             var id = childEL.getAttribute('id');
             panels.push(id);
         }
@@ -18,10 +19,11 @@ Editor.Panel = (function () {
     _getDocks = function ( dockEL ) {
         var docks = [];
 
-        for ( var i = 0; i < dockEL.childElementCount; ++i ) {
-            var childEL = dockEL.children[i];
+        var dockDOM = Polymer.dom(dockEL);
+        for ( var i = 0; i < dockDOM.children.length; ++i ) {
+            var childEL = dockDOM.children[i];
 
-            if ( !(childEL instanceof FireDock) )
+            if ( !childEL['ui-dockable'] )
                 continue;
 
             var rect = childEL.getBoundingClientRect();
@@ -31,7 +33,7 @@ Editor.Panel = (function () {
                 'height': rect.height,
             };
 
-            if ( childEL instanceof FirePanel ) {
+            if ( childEL instanceof EditorUI.Panel ) {
                 info.type = 'panel';
                 info.panels = _getPanels(childEL);
             }
@@ -172,7 +174,7 @@ Editor.Panel = (function () {
     Panel.dispatch = function ( panelID, ipcMessage ) {
         var panelInfo = _idToPanelInfo[panelID];
         if ( !panelInfo ) {
-            Fire.warn( 'Failed to receive ipc %s, can not find panel %s', ipcMessage, panelID);
+            Editor.warn( 'Failed to receive ipc %s, can not find panel %s', ipcMessage, panelID);
             return;
         }
 
@@ -188,7 +190,7 @@ Editor.Panel = (function () {
     };
 
     Panel.getLayout = function () {
-        if ( this.root instanceof FireDock ) {
+        if ( this.root['ui-dockable'] ) {
             return {
                 'type': 'dock',
                 'row': this.root.row,

@@ -3,13 +3,13 @@
     <title>Simple Panel</title>
     <style>
       body {
-        margin: 10px;
+        margin: 5px;
         padding: 0px;
         border: 0px;
 
         overflow: hidden;
         color: #ddd;
-        background-color: #474747;
+        background-color: #333;
       }
     </style>
     <script type="text/javascript" src="editor://page/page-init.js"></script>
@@ -32,10 +32,15 @@
   <body class="layout vertical">
     <editor-dock class="flex-1" no-collapse>
       <editor-dock>
-        <simple-view></simple-view>
+        <editor-panel>
+          <simple-view name="foo"></simple-view>
+          <simple-view name="bar"></simple-view>
+        </editor-panel>
       </editor-dock>
       <editor-dock>
-        <simple-view></simple-view>
+        <editor-panel>
+          <simple-view name="foobar"></simple-view>
+        </editor-panel>
       </editor-dock>
     </editor-dock>
   </body>

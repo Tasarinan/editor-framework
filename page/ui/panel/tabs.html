@@ -1,17 +1,11 @@
 <link rel="import" href="tab.html">
 
-<dom-module name="editor-tabs"
-    on-click="clickAction"
-    on-drop-area-enter="dropAreaEnterAction"
-    on-drop-area-leave="dropAreaLeaveAction"
-    on-drop-area-accept="dropAreaAcceptAction"
-    on-dragover="dragoverAction"
-    >
+<dom-module name="editor-tabs">
     <link rel="import" type="css" href="tabs.css">
 
     <template>
-        <div flex-row class="border">
-            <div flex-1 flex-row flex-stretch class="tabs">
+        <div class="border layout horizontal">
+            <div class="tabs layout horizontal flex-1">
                 <content></content>
                 <div id="insertLine" class="insert"></div>
             </div>

@@ -1,0 +1,28 @@
+* {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+::-webkit-scrollbar {
+    height: 5px;
+    width: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+}
+::-webkit-scrollbar-track {
+    // background-clip: padding-box;
+    background-color: rgba(255,255,255,0.1);
+}
+::-webkit-scrollbar-corner {
+    background-color: #171717;
+}
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+editor-tab.active + editor-tab span.left-tab-border {
+    display: inline-block;
+    border-left: 1px solid #212121;
+    height: 20px;
+}
