@@ -39,6 +39,9 @@ Editor.url = function (url) {
     return RemoteEditor.url(url);
 };
 
+require( Editor.url('editor://share/platform')) ;
+Editor.JS = require( Editor.url('editor://share/js-utils')) ;
+
 // log functions
 
 Editor.log = function ( text ) {

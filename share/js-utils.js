@@ -16,6 +16,8 @@ function _copyprop(name, source, target) {
 }
 
 module.exports = {
+    copyprop: _copyprop,
+
     /**
      * copy all properties not defined in obj from arguments[1...n]
      * @method addon

@@ -1,0 +1,23 @@
+<link rel="import" href="tabs.html">
+
+<dom-module name="editor-panel"
+    on-dragover="_dragoverAction"
+    on-focus="_focusAction"
+    on-blur="_blurAction"
+    >
+    <link rel="import" type="css" href="panel.css">
+
+    <template>
+        <fire-ui-tabs id="tabs"
+            on-changed="tabsChangedAction"
+            >
+        </fire-ui-tabs>
+        <div class="border flex-1">
+            <div id="content" class="content fit">
+                <content/>
+            </div>
+        </div>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="panel.js"></script>

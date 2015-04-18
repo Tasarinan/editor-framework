@@ -1,0 +1,49 @@
+:host {
+    position: relative;
+    display: inline-block;
+    border-left: 1px solid #212121;
+    border-right: 1px solid #212121;
+    border-top: 1px solid #212121;
+    box-sizing: border-box;
+
+    font-size: 12px;
+
+    color: #aaa;
+    background-color: #333;
+    z-index: 1;
+}
+
+.border {
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    padding-right: 5px;
+}
+
+.tabs {
+    height: 22px;
+    margin-bottom: -2px;
+    margin-left: -2px;
+    margin-top: -2px;
+    padding-right: 20px;
+    overflow: hidden;
+}
+
+.insert {
+    display: none;
+    position: absolute;
+    border: 1px solid #c7722c;
+    box-sizing: border-box;
+    height: 100%;
+
+    pointer-events: none;
+}
+
+.menu {
+    color: #777;
+}
+
+.menu:hover {
+    color: #aaa;
+}

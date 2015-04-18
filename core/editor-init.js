@@ -4,7 +4,8 @@ var Winston = require('winston');
 var Fs = require('fire-fs');
 var Path = require('fire-path');
 
-Editor.JS = require('./js-utils');
+require( Editor.url('editor://share/platform')) ;
+Editor.JS = require( Editor.url('editor://share/js-utils')) ;
 Editor.Window = require('./editor-window');
 Editor.Panel = require('./editor-panel');
 

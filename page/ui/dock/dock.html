@@ -1,14 +1,14 @@
-<link rel="import" href="../dock-resizer/dock-resizer.html">
+<link rel="import" href="resizer.html">
 
 <dom-module name="editor-dock"
-    on-dragover="{{dragoverAction}}"
-    on-focus="{{_focusAction}}"
-    on-blur="{{_blurAction}}"
+    on-dragover="_dragoverAction"
+    on-focus="_focusAction"
+    on-blur="_blurAction"
     >
     <link rel="import" type="css" href="dock.css">
 
     <template>
-        <div id="content" class="content" fit>
+        <div id="content" class="content fit">
             <content/>
         </div>
     </template>

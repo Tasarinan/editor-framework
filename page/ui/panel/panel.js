@@ -1,9 +1,17 @@
-Polymer({
-    publish: {
-        width: 200,
-        height: 200,
-        'min-width': 200,
-        'min-height': 200,
+(function () {
+
+EditorUI.Panel = Polymer( EditorUI.mixin({
+    is: 'editor-panel',
+
+    // TODO: we have to use EditorUI.mixin polyfill until polymer support
+    //       mixin properties, observers and so on.
+    // mixins: [EditorUI.resizable, EditorUI.focusable, EditorUI.dockable],
+
+    properties: {
+        'width': { type: String, value: '200', },
+        'height': { type: String, value: '200', },
+        'min-width': { type: String, value: '200', },
+        'min-height': { type: String, value: '200', },
     },
 
     ready: function () {
@@ -264,7 +272,7 @@ Polymer({
     collapse: function () {
         // remove from dock;
         if ( this.$.tabs.children.length === 0 ) {
-            if ( this.parentElement instanceof FireDock ) {
+            if ( this.parentElement['ui-dockable'] ) {
                 return this.parentElement.removeDock(this);
             }
         }
@@ -285,4 +293,6 @@ Polymer({
 
         event.stopPropagation();
     },
-});
+}, EditorUI.resizable, EditorUI.focusable, EditorUI.dockable));
+
+})();

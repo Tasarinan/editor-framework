@@ -1,3 +1,5 @@
+(function () {
+
 function _resize ( elementList, vertical, offset,
                    sizeList, resizerIndex,
                    prevTotalSize, prevMinSize, prevMaxSize,
@@ -90,34 +92,45 @@ function _resize ( elementList, vertical, offset,
 
     for ( var i = 0; i < elementList.length; ++i ) {
         var el = elementList[i];
-        if ( el instanceof FireDockResizer )
+        if ( el instanceof EditorUI.DockResizer )
             continue;
 
         el._notifyResize();
     }
 }
 
-Polymer({
-    publish: {
+EditorUI.DockResizer = Polymer({
+    is: 'editor-dock-resizer',
+
+    listeners: {
+        'mousedown': 'mousedownAction'
+    },
+
+    properties: {
         vertical: {
+            type: Boolean,
             value: false,
-            reflect: true
+            reflectToAttribute: true
         },
-        space: 3,
+
         active: {
+            type: Boolean,
             value: false,
-            reflect: true
+            reflectToAttribute: true
         },
     },
 
     ready: function () {
-        if ( Fire.isWin32 ) {
+        if ( Editor.isWin32 ) {
             this.classList.add('platform-win');
         }
     },
 
     _snapshot: function () {
-        var parentEL = this.parentElement;
+        var lightDOM = Polymer.dom(this);
+        var parentEL = lightDOM.parentNode;
+        var parentDOM = Polymer.dom(parentEL);
+
         var rect;
         var sizeList = [];
         var i, resizerIndex = -1;
@@ -133,8 +146,8 @@ Polymer({
         // totalSize = this.vertical ? rect.width : rect.height;
 
         // get element size
-        for ( i = 0; i < parentEL.children.length; ++i ) {
-            var el = parentEL.children[i];
+        for ( i = 0; i < parentDOM.children.length; ++i ) {
+            var el = parentDOM.children[i];
             if ( el === this ) {
                 resizerIndex = i;
             }
@@ -155,26 +168,26 @@ Polymer({
             prevTotalSize += sizeList[i];
             prevMinSize +=
                 this.vertical ?
-                parentEL.children[i].computedMinWidth :
-                parentEL.children[i].computedMinHeight;
+                parentDOM.children[i].computedMinWidth :
+                parentDOM.children[i].computedMinHeight;
 
             prevMaxSize +=
                 this.vertical ?
-                parentEL.children[i].computedMaxWidth :
-                parentEL.children[i].computedMaxHeight;
+                parentDOM.children[i].computedMaxWidth :
+                parentDOM.children[i].computedMaxHeight;
         }
 
-        for ( i = resizerIndex+1; i < parentEL.children.length; i += 2 ) {
+        for ( i = resizerIndex+1; i < parentDOM.children.length; i += 2 ) {
             nextTotalSize += sizeList[i];
             nextMinSize +=
                 this.vertical ?
-                parentEL.children[i].computedMinWidth :
-                parentEL.children[i].computedMinHeight;
+                parentDOM.children[i].computedMinWidth :
+                parentDOM.children[i].computedMinHeight;
 
             nextMaxSize +=
                 this.vertical ?
-                parentEL.children[i].computedMaxWidth :
-                parentEL.children[i].computedMaxHeight;
+                parentDOM.children[i].computedMaxWidth :
+                parentDOM.children[i].computedMaxHeight;
         }
 
         return {
@@ -190,17 +203,24 @@ Polymer({
     },
 
     mousedownAction: function ( event ) {
+        //
+        event.stopPropagation();
+
+        var lightDOM = Polymer.dom(this);
+        var parentEL = lightDOM.parentNode;
+        var parentDOM = Polymer.dom(parentEL);
+
+        //
         this.active = true;
-        var parentEL = this.parentElement;
         var snapshot = this._snapshot();
         var lastDir = 0;
         var rect = this.getBoundingClientRect();
         var centerx = Math.floor(rect.left + rect.width/2);
         var centery = Math.floor(rect.top + rect.height/2);
 
-        for ( var i = 0; i < parentEL.children.length; ++i ) {
-            var el = parentEL.children[i];
-            if ( el instanceof FireDockResizer )
+        for ( var i = 0; i < parentDOM.children.length; ++i ) {
+            var el = parentDOM.children[i];
+            if ( el instanceof EditorUI.DockResizer )
                 continue;
 
             el.style.flex = "0 0 " + snapshot.sizeList[i] + "px";
@@ -243,7 +263,7 @@ Polymer({
                 }
                 lastDir = curDir;
 
-                _resize( this.parentElement.children,
+                _resize( parentDOM.children,
                          this.vertical,
                          offset,
                          snapshot.sizeList,
@@ -268,14 +288,17 @@ Polymer({
 
             this.active = false;
 
+            var lightDOM = Polymer.dom(this);
+            var parentEL = lightDOM.parentNode;
+            var parentDOM = Polymer.dom(parentEL);
+
             // get elements' size
-            var parentEL = this.parentElement;
             parentEL._reflowRecursively();
 
             // notify resize
-            for ( i = 0; i < parentEL.children.length; ++i ) {
-                el = parentEL.children[i];
-                if ( el instanceof FireDockResizer )
+            for ( i = 0; i < parentDOM.children.length; ++i ) {
+                el = parentDOM.children[i];
+                if ( el instanceof EditorUI.DockResizer )
                     continue;
 
                 el._notifyResize();
@@ -283,7 +306,7 @@ Polymer({
         }.bind(this);
 
         // add drag-ghost
-        if ( Fire.isWin32 ) {
+        if ( Editor.isWin32 ) {
             EditorUI.addDragGhost( this.vertical ? 'ew-resize' : 'ns-resize' );
         }
         else {
@@ -291,8 +314,7 @@ Polymer({
         }
         document.addEventListener ( 'mousemove', mousemoveHandle );
         document.addEventListener ( 'mouseup', mouseupHandle );
-
-        //
-        event.stopPropagation();
     },
 });
+
+})();

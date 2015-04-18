@@ -1,9 +1,9 @@
 ﻿var EditorUI = (function () {
-    var UI = {};
+    var EditorUI = {};
 
     EditorUI.index = function ( element ) {
-        var parent = element.parentElement;
-        var curChildEL = parent.firstElementChild;
+        var parentDOM = Polymer.dom(element).parentNode;
+        var curChildEL = parentDOM.children.length > 0 ? parentDOM.children[0] : null;
 
         var idx = 0;
         while ( curChildEL ) {
@@ -18,12 +18,14 @@
     };
 
     var _findInChildren = function ( element, elementToFind ) {
-        for ( var i = 0; i < element.children.length; ++i ) {
-            var childEL = element.children[i];
+        var elementDOM = Polymer.dom(element);
+
+        for ( var i = 0; i < elementDOM.children.length; ++i ) {
+            var childEL = elementDOM.children[i];
             if ( childEL === elementToFind )
                 return true;
 
-            if ( childEL.children.length > 0 )
+            if ( Polymer.dom(childEL).children.length > 0 )
                 if ( _findInChildren( childEL, elementToFind ) )
                     return true;
         }
@@ -56,14 +58,14 @@
 
     //
     EditorUI.getParentTabIndex = function ( element ) {
-        var parent = element.parentElement;
+        var parent = Polymer.dom(element).parentNode;
         while ( parent ) {
             if ( parent.tabIndex !== null &&
                  parent.tabIndex !== undefined &&
                  parent.tabIndex !== -1 )
                 return parent.tabIndex;
 
-            parent = parent.parentElement;
+            parent = Polymer.dom(parent).parentNode;
         }
         return 0;
     };
@@ -75,7 +77,7 @@
             if ( parent instanceof parentType )
                 return parent;
 
-            parent = parent.parentElement;
+            parent = Polymer.dom(parent).parentNode;
         }
         return 0;
     };
@@ -90,13 +92,16 @@
         }
 
         var el = null;
-        for ( var i = 0; i < element.children.length; ++i ) {
-            el = EditorUI.getFirstFocusableChild(element.children[i]);
+        var elementDOM = Polymer.dom(element);
+        for ( var i = 0; i < elementDOM.children.length; ++i ) {
+            el = EditorUI.getFirstFocusableChild(elementDOM.children[i]);
             if ( el !== null )
                 return el;
         }
-        if ( element.shadowRoot ) {
-            el = EditorUI.getFirstFocusableChild(element.shadowRoot);
+
+        var rootDOM = Polymer.dom(element.root);
+        if ( rootDOM ) {
+            el = EditorUI.getFirstFocusableChild(rootDOM);
             if ( el !== null )
                 return el;
         }
@@ -167,6 +172,28 @@
                 _hitGhost.removeEventListener('mousedown');
             }
         }
+    };
+
+    //
+    EditorUI.mixin = function ( obj ) {
+        'use strict';
+        for ( var i = 1, length = arguments.length; i < length; ++i ) {
+            var source = arguments[i];
+            for ( var name in source) {
+                if ( name === 'properties' ||
+                     name === 'observers' ||
+                     name === 'listeners' )
+                {
+                    obj[name] = Editor.JS.addon( obj[name], source[name] );
+                }
+                else {
+                    if ( obj[name] === undefined ) {
+                        Editor.JS.copyprop( name, source, obj);
+                    }
+                }
+            }
+        }
+        return obj;
     };
 
     return EditorUI;

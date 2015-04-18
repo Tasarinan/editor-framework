@@ -1,0 +1,79 @@
+/* size = 11px       */
+/* blank-size = -4px */
+
+:host {
+    flex: 0 0 11px; /*size*/
+    position: relative;
+    white-space: nowrap;
+
+    z-index: 2;
+
+    /* horizontal resizer */
+    margin-top: -4px; /*blank-size*/
+    margin-bottom: -4px; /*blank-size*/
+    margin-left: 0px;
+    margin-right: 0px;
+    width: auto;
+    height: 11px; /*size*/
+}
+
+.bar {
+    position: absolute;
+    top: 4px;
+    left: 0px;
+    height: 3px;
+    width: 100%;
+}
+
+:host([active]) .bar {
+    background-color: rgb(12,112,200);
+}
+
+:host([vertical]) {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: -4px; /*blank-size*/
+    margin-right: -4px; /*blank-size*/
+    width: 11px; /*size*/
+    height: auto;
+}
+
+:host([vertical]) .bar {
+    position: absolute;
+    top: 0px;
+    left: 4px;
+    width: 3px;
+    height: 100%;
+}
+
+:host(:hover) {
+    cursor: row-resize;
+}
+
+:host(:hover) .bar {
+    cursor: row-resize;
+}
+
+:host([vertical]:hover) {
+    cursor: col-resize;
+}
+
+:host([vertical]:hover) .bar {
+    cursor: col-resize;
+}
+
+:host(.platform-win:hover) {
+    cursor: ns-resize;
+}
+
+:host(.platform-win:hover) .bar {
+    cursor: ns-resize;
+}
+
+:host(.platform-win[vertical]:hover) {
+    cursor: ew-resize;
+}
+
+:host(.platform-win[vertical]:hover) .bar {
+    cursor: ew-resize;
+}

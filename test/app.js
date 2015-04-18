@@ -30,7 +30,8 @@ module.exports = {
         // load and show main window
         mainWin.show();
         // mainWin.load( 'editor://test/lifecycle/lifecycle.html' );
-        mainWin.load( 'editor://test/import/test-import.html' );
+        // mainWin.load( 'editor://test/import/test-import.html' );
+        mainWin.load( 'editor://test/panel/panel.html' );
 
         // open dev tools if needed
         if ( Editor.showDevtools ) {

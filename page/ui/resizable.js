@@ -2,9 +2,11 @@ EditorUI.resizable = (function () {
     function _notifyResizeRecursively ( element ) {
         element.dispatchEvent( new CustomEvent('resize') );
 
-        for ( var i = 0; i < element.children.length; ++i ) {
-            var childEL = element.children[i];
-            if ( childEL instanceof FireDockResizer )
+        var elementDOM = Polymer.dom(element);
+
+        for ( var i = 0; i < elementDOM.children.length; ++i ) {
+            var childEL = elementDOM.children[i];
+            if ( childEL instanceof EditorUI.DockResizer )
                 continue;
 
             _notifyResizeRecursively(childEL);
@@ -12,14 +14,16 @@ EditorUI.resizable = (function () {
     }
 
     var resizable = {
-        publish: {
-            'width': 'auto',
-            'min-width': 'auto',
-            'max-width': 'auto',
+        'ui-resizable': true,
 
-            'height': 'auto',
-            'min-height': 'auto',
-            'max-height': 'auto',
+        properties: {
+            'width': { type: String, value: 'auto', },
+            'min-width': { type: String, value: 'auto', },
+            'max-width': { type: String, value: 'auto', },
+
+            'height': { type: String, value: 'auto', },
+            'min-height': { type: String, value: 'auto', },
+            'max-height': { type: String, value: 'auto', },
         },
 
         calcWidth: function ( width ) {
@@ -152,8 +156,8 @@ EditorUI.resizable = (function () {
             var i, el;
             var infWidth = false, infHeight = false;
 
-            this.computedMinWidth = 3 * (elements.length-1); // preserve resizers' width
-            this.computedMinHeight = 3 * (elements.length-1); // preserve resizers' height
+            this.computedMinWidth = elements.length > 0 ? 3 * (elements.length-1) : 0; // preserve resizers' width
+            this.computedMinHeight = elements.length > 0 ? 3 * (elements.length-1) : 0; // preserve resizers' height
             this.computedMaxWidth = this['max-width'];
             this.computedMaxHeight = this['max-height'];
 

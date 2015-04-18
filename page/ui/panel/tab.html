@@ -1,0 +1,19 @@
+<dom-module name="editor-tab"
+    on-dragstart="dragstartAction"
+    >
+    <link rel="import" type="css" href="tab.css">
+
+    <template>
+        <span class="left-tab-border"></span>
+        <div class="border">
+            <div class="title">
+                <div id="icon"></div>
+                <content/>
+            </div>
+        </div>
+        <span class="right-tab-border"></span>
+    </template>
+
+</dom-module>
+
+<script type="text/javascript" src="tab.js"></script>

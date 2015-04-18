@@ -1,5 +1,6 @@
 EditorUI.DockUtils = (function () {
 
+    var _resizerSpace = 3; // 3 is resizer size
     var _resultDock = null;
     var _potentialDocks = [];
     var _dockMask = null;
@@ -50,7 +51,7 @@ EditorUI.DockUtils = (function () {
 
     DockUtils.dragstart = function ( dataTransfer, tabEL ) {
         _draggingTab = tabEL;
-        dataTransfer.setData('fire/type', 'tab');
+        dataTransfer.setData('editor/type', 'tab');
     };
 
     DockUtils.dragoverTab = function ( target ) {
@@ -102,7 +103,7 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.reset = function () {
-        if ( DockUtils.root instanceof FireDock ) {
+        if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeSizeRecursively();
             this.root._finalizeMinMaxRecursively();
             this.root._finalizeStyleRecursively();
@@ -113,7 +114,7 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.flush = function () {
-        if ( DockUtils.root instanceof FireDock ) {
+        if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeMinMaxRecursively();
             this.root._finalizeStyleRecursively();
             this.root._notifyResize();
@@ -123,7 +124,7 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.reflow = function () {
-        if ( DockUtils.root instanceof FireDock ) {
+        if ( DockUtils.root['ui-dockable'] ) {
             DockUtils.root._reflowRecursively();
             DockUtils.root._notifyResize();
         } else {
@@ -135,7 +136,7 @@ EditorUI.DockUtils = (function () {
         DockUtils.reflow();
     });
 
-    document.addEventListener("dragover", function ( event ) {
+    document.addEventListener('dragover', function ( event ) {
         if ( _draggingTab === null )
             return;
 
@@ -244,12 +245,12 @@ EditorUI.DockUtils = (function () {
         _potentialDocks = [];
     });
 
-    document.addEventListener("dragend", function ( event ) {
+    document.addEventListener('dragend', function ( event ) {
         // reset internal states
         _reset();
     });
 
-    document.addEventListener("drop", function ( event ) {
+    document.addEventListener('drop', function ( event ) {
         if ( _resultDock === null ) {
             return;
         }
@@ -273,7 +274,7 @@ EditorUI.DockUtils = (function () {
         panelEL.closeNoCollapse(_draggingTab);
 
         //
-        var newPanel = new FirePanel();
+        var newPanel = new EditorUI.Panel();
         newPanel['min-width'] = panelEL['min-width'];
         newPanel['max-width'] = panelEL['max-width'];
         newPanel['min-height'] = panelEL['min-height'];
@@ -313,7 +314,7 @@ EditorUI.DockUtils = (function () {
             if ( newPanel.parentElement !== parentDock ) {
                 var sibling = newPanel;
                 var newParent = newPanel.parentElement;
-                while ( newParent && newParent instanceof FireDock ) {
+                while ( newParent && newParent['ui-dockable'] ) {
                     if ( newParent === parentDock ) {
                         hasSameAncient = true;
                         break;
@@ -326,13 +327,11 @@ EditorUI.DockUtils = (function () {
                 if ( hasSameAncient ) {
                     var size = 0;
                     if ( parentDock.row ) {
-                        // 3 is resizer size
-                        size = sibling.curWidth + 3 + panelEL.curWidth;
+                        size = sibling.curWidth + _resizerSpace + panelEL.curWidth;
                         sibling.curWidth = size;
                     }
                     else {
-                        // 3 is resizer size
-                        size = sibling.curHeight + 3 + panelEL.curHeight;
+                        size = sibling.curHeight + _resizerSpace + panelEL.curHeight;
                         sibling.curHeight = size;
                     }
 
