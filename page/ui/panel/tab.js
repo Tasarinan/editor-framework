@@ -8,6 +8,7 @@ EditorUI.Tab = Polymer({
 
     listeners: {
         'dragstart': '_onDragStart',
+        'click': '_onClick',
     },
 
     ready: function () {
@@ -22,6 +23,13 @@ EditorUI.Tab = Polymer({
         event.stopPropagation();
 
         EditorUI.DockUtils.dragstart( event.dataTransfer, this );
+    },
+
+    _onClick: function ( event ) {
+        event.stopPropagation();
+
+        var thisDOM = Polymer.dom(this);
+        this.fire( 'tab-click', {} );
     },
 
     setIcon: function ( img ) {

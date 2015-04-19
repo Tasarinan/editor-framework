@@ -3,14 +3,16 @@
         :host {
             display: block;
 
-            margin-top: 2px;
-            border: 1px solid #171717;
-            box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
-            background: #333;
+            text-align: center;
+            margin: 10px;
+            border: 1px solid #666;
+            /* box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2); */
+            /* background: #333; */
         }
     </style>
 
     <template>
+        <h1>{{text}}</h1>
     </template>
 </dom-module>
 
@@ -18,8 +20,16 @@
     Polymer({
         is: 'simple-view',
 
-        created: function () {
+        properties: {
+            text: {
+                type: String,
+                value: 'Hello World',
+            },
+        },
+
+        ready: function () {
             this.classList.add('fit');
+            this.text = this.getAttribute('name');
         },
     });
 </script>

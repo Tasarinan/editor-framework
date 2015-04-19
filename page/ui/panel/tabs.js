@@ -12,7 +12,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     },
 
     listeners: {
-        'click': '_onClick',
+        'tab-click': '_onTabClick',
         'drop-area-enter': '_onDropAreaEnter',
         'drop-area-leave': '_onDropAreaLeave',
         'drop-area-accept': '_onDropAreaAccept',
@@ -109,7 +109,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         }
     },
 
-    _onClick: function ( event ) {
+    _onTabClick: function ( event ) {
         event.stopPropagation();
         this.select(event.target);
     },
