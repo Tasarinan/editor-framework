@@ -25,7 +25,7 @@
     width: 100%;
 }
 
-:host([active]) .bar {
+:host([active])>.bar {
     background-color: rgb(12,112,200);
 }
 
@@ -38,7 +38,7 @@
     height: auto;
 }
 
-:host([vertical]) .bar {
+:host([vertical])>.bar {
     position: absolute;
     top: 0px;
     left: 4px;
@@ -50,7 +50,7 @@
     cursor: row-resize;
 }
 
-:host(:hover) .bar {
+:host(:hover)>.bar {
     cursor: row-resize;
 }
 
@@ -58,7 +58,7 @@
     cursor: col-resize;
 }
 
-:host([vertical]:hover) .bar {
+:host([vertical]:hover)>.bar {
     cursor: col-resize;
 }
 
@@ -66,7 +66,7 @@
     cursor: ns-resize;
 }
 
-:host(.platform-win:hover) .bar {
+:host(.platform-win:hover)>.bar {
     cursor: ns-resize;
 }
 

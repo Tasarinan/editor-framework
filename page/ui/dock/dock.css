@@ -22,6 +22,6 @@
     outline: none;
 }
 
-:host([row]) .content {
+:host([row])>.content {
     flex-direction: row;
 }

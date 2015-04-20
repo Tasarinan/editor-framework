@@ -114,6 +114,7 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.flush = function () {
+        Polymer.dom.flush();
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeMinMaxRecursively();
             this.root._finalizeStyleRecursively();
