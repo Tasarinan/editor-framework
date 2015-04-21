@@ -1,14 +1,12 @@
 var Ipc = require('ipc');
 var Util = require('util');
-var Winston = require('winston');
 var Fs = require('fire-fs');
 var Path = require('fire-path');
+var Winston = require('winston');
 
 require( Editor.url('editor://share/platform')) ;
 Editor.JS = require( Editor.url('editor://share/js-utils')) ;
-Editor.Window = require('./editor-window');
-Editor.Panel = require('./editor-panel');
-Editor.Package = require('./editor-package');
+require('./ipc-init');
 
 // ==========================
 // logs API
@@ -71,6 +69,13 @@ Editor.fatal = function () {
 
     // NOTE: fatal error will close app immediately, no need for ipc.
 };
+
+Ipc.on ( 'console:log', function ( detail ) { Editor.log(detail.message); } );
+Ipc.on ( 'console:warn', function ( detail ) { Editor.warn(detail.message); } );
+Ipc.on ( 'console:error', function ( detail ) { Editor.error(detail.message); } );
+Ipc.on ( 'console:success', function ( detail ) { Editor.success(detail.message); } );
+Ipc.on ( 'console:failed', function ( detail ) { Editor.failed(detail.message); } );
+Ipc.on ( 'console:info', function ( detail ) { Editor.info(detail.message); } );
 
 // ==========================
 // profiles API
@@ -145,6 +150,39 @@ Editor.quit = function () {
     }
 };
 
+Editor.reloadPlayground = function () {
+    var cache = require.cache;
+    var playgroundPath = Path.join(Editor.cwd,'playground.js');
+    var module = cache[playgroundPath];
+    var exports = null;
+
+    // unload
+    try {
+        if ( module ) {
+            exports = module.exports;
+            if ( exports && exports.unload ) {
+                exports.unload();
+            }
+        }
+    }
+    catch (err) {
+        Editor.error( 'Failed to unload Playground.', err.stack );
+    }
+
+    delete cache[playgroundPath];
+
+    // load
+    try {
+        exports = require(playgroundPath);
+        if ( exports && exports.load ) {
+            exports.load();
+        }
+    }
+    catch (err) {
+        Editor.error( 'Failed to load Playground.', err.stack );
+    }
+};
+
 // ==========================
 // extends
 // ==========================
@@ -161,13 +199,12 @@ Editor.registerPackagePath = function ( path ) {
 };
 
 // ==========================
-// register builtin messages
+// load modules
 // ==========================
 
-// console
-Ipc.on ( 'console:log', function ( detail ) { Editor.log(detail.message); } );
-Ipc.on ( 'console:warn', function ( detail ) { Editor.warn(detail.message); } );
-Ipc.on ( 'console:error', function ( detail ) { Editor.error(detail.message); } );
-Ipc.on ( 'console:success', function ( detail ) { Editor.success(detail.message); } );
-Ipc.on ( 'console:failed', function ( detail ) { Editor.failed(detail.message); } );
-Ipc.on ( 'console:info', function ( detail ) { Editor.info(detail.message); } );
+Editor.Menu = require('./editor-menu');
+Editor.Window = require('./editor-window');
+Editor.Panel = require('./editor-panel');
+Editor.Package = require('./editor-package');
+
+Editor.MainMenu = require('./main-menu');

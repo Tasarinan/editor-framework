@@ -1,8 +1,8 @@
 (function () {
 
 var Remote = require('remote');
-var Util = require('util');
 var Ipc = require('ipc');
+var Util = require('util');
 var Path = require('fire-path');
 var Url = require('fire-url');
 
@@ -39,10 +39,13 @@ Editor.url = function (url) {
     return Editor.remote.url(url);
 };
 
-require( Editor.url('editor://share/platform')) ;
-Editor.JS = require( Editor.url('editor://share/js-utils')) ;
+require( Editor.url('editor://share/platform'));
+Editor.JS = require( Editor.url('editor://share/js-utils'));
+require( Editor.url('editor://page/ipc-init'));
 
-// log functions
+// ==========================
+// logs API
+// ==========================
 
 Editor.log = function ( text ) {
     'use strict';
@@ -127,5 +130,12 @@ Editor.info = function ( text ) {
         message: text
     });
 };
+
+// ==========================
+// load modules
+// ==========================
+
+Editor.Panel = require( Editor.url('editor://page/editor-panel'));
+Editor.MainMenu = require( Editor.url('editor://page/main-menu'));
 
 })();

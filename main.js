@@ -235,7 +235,9 @@ App.on('ready', function() {
 
     Winston.normal( 'Initializing editor' );
     require('./core/editor-init');
-    require('./core/ipc-init');
+
+    // apply default main menu
+    Editor.MainMenu.apply();
 
     // register profile path
     var defaultProfilePath = Path.join( Editor.dataPath, 'settings' );

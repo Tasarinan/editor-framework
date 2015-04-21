@@ -11,7 +11,7 @@ var Fs = require('fs');
 
 var pjson = JSON.parse(Fs.readFileSync('./package.json'));
 var fireShellVer = pjson['fire-shell-version'];
-var atomShellVer = pjson['atom-shell-version'];
+var electronVer = pjson['electron-version'];
 
 /////////////////////////////////////////////////////
 // inits
@@ -22,8 +22,8 @@ if ( fireShellVer === null || fireShellVer === undefined ) {
   return;
 }
 
-if ( atomShellVer === null || atomShellVer === undefined ) {
-  console.error( 'Can not read atom-shell-version from package.json' );
+if ( electronVer === null || electronVer === undefined ) {
+  console.error( 'Can not read electron-version from package.json' );
   return;
 }
 
@@ -31,9 +31,9 @@ if ( atomShellVer === null || atomShellVer === undefined ) {
 // downloads
 /////////////////////////////////////////////////////
 
-gulp.task('update-atom-shell', function(cb) {
+gulp.task('update-electron', function(cb) {
   updateFireShell.downloadAtomShell({
-    version: atomShellVer,
+    version: electronVer,
     outputDir: 'bin/electron'
   }, cb);
 });
@@ -62,7 +62,7 @@ gulp.task('update-atom-native-module', ['prebuild-native-module'], function(cb) 
   ], {
     cwd: 'bin',
     env: {
-      ATOM_NODE_VERSION: atomShellVer
+      ATOM_NODE_VERSION: electronVer
     }
   });
   stream.write(process.stdout);
