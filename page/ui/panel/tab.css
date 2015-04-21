@@ -29,6 +29,12 @@
     background-color: #333;
 }
 
+/* :host(.hover) .border {     */
+/*     background-color: #555; */
+/* }                           */
+/* NOTE: there is a bug on css:hover for tab,                      */
+/* when we drop tab 'foo' on top of tab 'bar' to insert before it, */
+/* the tab 'bar' will keep css:hover state after.                  */
 .border:hover {
     background-color: #555;
 }

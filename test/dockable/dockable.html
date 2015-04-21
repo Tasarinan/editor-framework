@@ -21,7 +21,7 @@
     <!-- Initializing ui -->
     <link rel="import" href="editor://page/ui/ui.html">
 
-    <link rel="import" href="editor://test/panel/simple-view.html">
+    <link rel="import" href="editor://test/dockable/simple-view.html">
   </head>
 
   <body class="layout vertical">
@@ -43,15 +43,15 @@
     <editor-dock class="flex-1" row no-collapse>
       <editor-dock>
         <editor-panel>
-          <simple-view name="hierarchy" width="200"></simple-view>
+          <simple-view name="Hierarchy" width="200"></simple-view>
         </editor-panel>
         <editor-panel>
-          <simple-view name="assets" width="200"></simple-view>
+          <simple-view name="Assets" width="200"></simple-view>
         </editor-panel>
       </editor-dock>
 
       <editor-panel>
-        <simple-view name="inspector" width="300" min-width="240"></simple-view>
+        <simple-view name="Inspector" width="300" min-width="240"></simple-view>
       </editor-panel>
 
       <editor-dock>

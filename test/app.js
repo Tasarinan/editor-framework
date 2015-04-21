@@ -31,7 +31,7 @@ module.exports = {
         mainWin.show();
         // mainWin.load( 'editor://test/lifecycle/lifecycle.html' );
         // mainWin.load( 'editor://test/import/test-import.html' );
-        mainWin.load( 'editor://test/panel/panel.html' );
+        mainWin.load( 'editor://test/dockable/dockable.html' );
 
         // open dev tools if needed
         if ( Editor.showDevtools ) {

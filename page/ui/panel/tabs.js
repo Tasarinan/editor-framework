@@ -29,6 +29,10 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     },
 
     insert: function ( tabEL, insertBeforeTabEL ) {
+        // do nothing if we insert to ourself
+        if ( tabEL === insertBeforeTabEL )
+            return tabEL;
+
         var thisDOM = Polymer.dom(this);
 
         if ( insertBeforeTabEL ) {
@@ -116,8 +120,6 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
 
     _onDropAreaEnter: function ( event ) {
         event.stopPropagation();
-
-        this.$.insertLine.style.display = 'block';
     },
 
     _onDropAreaLeave: function ( event ) {
@@ -152,6 +154,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         //
         this._curInsertTab = null;
         var style = this.$.insertLine.style;
+        style.display = 'block';
         if ( eventTarget instanceof EditorUI.Tab ) {
             style.left = eventTarget.offsetLeft + 'px';
             this._curInsertTab = eventTarget;
