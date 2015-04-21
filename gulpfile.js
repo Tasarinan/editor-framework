@@ -4,7 +4,6 @@
  */
 
 var gulp = require('gulp');
-var updateAtomShell = require('gulp-download-atom-shell');
 var updateFireShell = require('gulp-download-fire-shell');
 var shell = require('gulp-shell');
 var Path = require('path');
@@ -33,9 +32,9 @@ if ( atomShellVer === null || atomShellVer === undefined ) {
 /////////////////////////////////////////////////////
 
 gulp.task('update-atom-shell', function(cb) {
-  updateAtomShell({
+  updateFireShell.downloadAtomShell({
     version: atomShellVer,
-    outputDir: 'bin/atom-shell'
+    outputDir: 'bin/electron'
   }, cb);
 });
 

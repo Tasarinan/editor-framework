@@ -25,7 +25,7 @@ process.on('uncaughtException', function(error) {
 // initialize minimal Editor
 // ---------------------------
 
-var Editor = global.Editor = {};
+global.Editor = {};
 
 Editor.name = App.getName();
 Editor.cwd = __dirname;
