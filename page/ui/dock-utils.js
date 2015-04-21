@@ -294,8 +294,16 @@ EditorUI.DockUtils = (function () {
         elHeight = isNaN(elHeight) ? 'auto' : elHeight;
         newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelEL.computedHeight;
 
-        newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRect.width;
-        newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRect.height;
+        // if parent is row, the height will be ignore
+        if ( parentDock.row ) {
+            newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRect.width;
+            newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelEL.curHeight;
+        }
+        // else if parent is column, the width will be ignore
+        else {
+            newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelEL.curWidth;
+            newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRect.height;
+        }
 
         newPanel.add(viewEL);
         newPanel.select(0);

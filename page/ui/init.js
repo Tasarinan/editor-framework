@@ -2,16 +2,13 @@
     var EditorUI = {};
 
     EditorUI.index = function ( element ) {
-        var parentDOM = Polymer.dom(element).parentNode;
+        var parentEL = Polymer.dom(element).parentNode;
+        var parentDOM = Polymer.dom(parentEL);
         var curChildEL = parentDOM.children.length > 0 ? parentDOM.children[0] : null;
 
-        var idx = 0;
-        while ( curChildEL ) {
-            if ( curChildEL === element )
-                return idx;
-
-            ++idx;
-            curChildEL = curChildEL.nextElementSibling;
+        for ( var i = 0, len = parentDOM.children.length; i < len; ++i ) {
+            if ( parentDOM.children[i] === element )
+                return i;
         }
 
         return -1;

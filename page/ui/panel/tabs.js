@@ -97,7 +97,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         //
         if ( tabEL !== null ) {
             if ( tabEL !== this.activeTab ) {
-                this.fire( 'changed', { old: this.activeTab, new: tabEL  } );
+                this.fire( 'tab-changed', { old: this.activeTab, new: tabEL  } );
 
                 if ( this.activeTab !== null ) {
                     this.activeTab.classList.remove('active');
@@ -136,7 +136,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     _onDragOver: function ( event ) {
         // NOTE: in web, there is a problem:
         // http://stackoverflow.com/questions/11974077/datatransfer-setdata-of-dragdrop-doesnt-work-in-chrome
-        var type = event.dataTransfer.getData('fire/type');
+        var type = event.dataTransfer.getData('editor/type');
         if ( type !== 'tab' )
             return;
 
@@ -147,15 +147,18 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         event.stopPropagation();
         event.dataTransfer.dropEffect = 'move';
 
+        var eventTarget = Polymer.dom(event).localTarget;
+
         //
         this._curInsertTab = null;
         var style = this.$.insertLine.style;
-        if ( event.target instanceof EditorUI.Tab ) {
-            style.left = event.target.offsetLeft + 'px';
-            this._curInsertTab = event.target;
+        if ( eventTarget instanceof EditorUI.Tab ) {
+            style.left = eventTarget.offsetLeft + 'px';
+            this._curInsertTab = eventTarget;
         }
         else {
-            var el = this.lastElementChild;
+            var tabList = this.$['tab-list'];
+            var el = tabList.lastElementChild;
             style.left = (el.offsetLeft + el.offsetWidth) + 'px';
         }
     },

@@ -292,7 +292,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         return false;
     },
 
-    _onTabsChanged: function ( event ) {
+    _onTabChanged: function ( event ) {
         var detail = event.detail;
         if ( detail.old !== null ) {
             detail.old.viewEL.style.display = 'none';

@@ -18,11 +18,6 @@
     <script type="text/javascript" src="editor://page/editor-init.js"></script>
     <script type="text/javascript" src="editor://page/ipc-init.js"></script>
 
-    <!-- <script>Polymer = {dom: 'shadow'};</script> -->
-    <script src="editor://bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="editor://bower_components/polymer/polymer.html">
-    <link rel="import" href="editor://bower_components/layout/layout.html">
-
     <!-- Initializing ui -->
     <link rel="import" href="editor://page/ui/ui.html">
 
@@ -30,18 +25,46 @@
   </head>
 
   <body class="layout vertical">
-    <editor-dock class="flex-1" no-collapse>
+    <!-- <editor-dock class="flex-1" no-collapse>                    -->
+    <!--   <editor-dock>                                             -->
+    <!--     <editor-panel>                                          -->
+    <!--       <simple-view name="foo"></simple-view>                -->
+    <!--       <simple-view name="bar"></simple-view>                -->
+    <!--     </editor-panel>                                         -->
+    <!--   </editor-dock>                                            -->
+    <!--   <editor-dock>                                             -->
+    <!--     <editor-panel>                                          -->
+    <!--       <simple-view name="foobar" width="300"></simple-view> -->
+    <!--     </editor-panel>                                         -->
+    <!--   </editor-dock>                                            -->
+    <!-- </editor-dock>                                              -->
+
+    <!-- Test Case: Main Window -->
+    <editor-dock class="flex-1" row no-collapse>
       <editor-dock>
         <editor-panel>
-          <simple-view name="foo"></simple-view>
-          <simple-view name="bar"></simple-view>
+          <simple-view name="hierarchy" width="200"></simple-view>
+        </editor-panel>
+        <editor-panel>
+          <simple-view name="assets" width="200"></simple-view>
         </editor-panel>
       </editor-dock>
+
+      <editor-panel>
+        <simple-view name="inspector" width="300" min-width="240"></simple-view>
+      </editor-panel>
+
       <editor-dock>
         <editor-panel>
-          <simple-view name="foobar" width="300"></simple-view>
+          <simple-view name="Scene" width="auto" height="auto"></simple-view>
+          <simple-view name="Game" width="auto" height="auto"></simple-view>
+        </editor-panel>
+
+        <editor-panel>
+          <simple-view name="Console" height="300"></simple-view>
         </editor-panel>
       </editor-dock>
     </editor-dock>
+
   </body>
 </html>

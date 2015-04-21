@@ -13,8 +13,8 @@ EditorUI.DragDrop = (function () {
             } );
             dataTransfer.effectAllowed = effect;
             dataTransfer.dropEffect = 'none';
-            dataTransfer.setData('fire/type', type);
-            dataTransfer.setData('fire/items', ids.join());
+            dataTransfer.setData('editor/type', type);
+            dataTransfer.setData('editor/items', ids.join());
             var img = this.getDragIcon(items);
             dataTransfer.setDragImage(img, -10, 10);
         },
@@ -51,7 +51,7 @@ EditorUI.DragDrop = (function () {
         },
 
         type: function ( dataTransfer ) {
-            var type = dataTransfer.getData('fire/type');
+            var type = dataTransfer.getData('editor/type');
 
             if ( type === '' && dataTransfer.files.length > 0 )
                 return 'file';
@@ -86,7 +86,7 @@ EditorUI.DragDrop = (function () {
                 }
             }
             else {
-                items = dataTransfer.getData('fire/items');
+                items = dataTransfer.getData('editor/items');
                 if ( items !== '' ) {
                     items = items.split(',');
                 }
