@@ -237,9 +237,14 @@ App.on('ready', function() {
     require('./core/editor-init');
     require('./core/ipc-init');
 
+    // register profile path
     var defaultProfilePath = Path.join( Editor.dataPath, 'settings' );
     Editor.registerProfilePath( 'global', defaultProfilePath );
     Editor.registerProfilePath( 'local', defaultProfilePath );
+
+    // register package path
+    Editor.registerPackagePath( Path.join( Editor.cwd, 'builtin' ) );
+    Editor.registerPackagePath( Path.join( Editor.dataPath, 'extends' ) );
 
     // init user App
     if ( !Editor.App.init ) {
@@ -258,6 +263,10 @@ App.on('ready', function() {
 
     //
     Winston.success('Initial success!');
+
+    // before run the app, we start loading plugins
+    Winston.normal('Loading packages');
+    // TODO?? load package here, or may be later
 
     // run user App
     if ( !Editor.App.run ) {

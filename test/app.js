@@ -11,6 +11,8 @@ module.exports = {
             Fs.makeTreeSync(settingsPath);
         }
         Editor.registerProfilePath( 'local', settingsPath );
+
+        // TODO: load your profile, and disable packages here
     },
 
     run: function () {

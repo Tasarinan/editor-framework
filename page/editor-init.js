@@ -7,7 +7,7 @@ var Path = require('fire-path');
 var Url = require('fire-url');
 
 window.Editor = window.Editor || {};
-var RemoteEditor = Remote.getGlobal('Editor');
+Editor.remote = Remote.getGlobal('Editor');
 
 // init argument list sending from core by url?queries
 // format: '?foo=bar&hell=world'
@@ -22,7 +22,7 @@ for ( var i = 0; i < queryList.length; ++i ) {
     }
 }
 Editor.argv = queries;
-Editor.cwd = RemoteEditor.url('editor://');
+Editor.cwd = Editor.remote.url('editor://');
 
 // url
 Editor.url = function (url) {
@@ -36,7 +36,7 @@ Editor.url = function (url) {
     }
 
     // try ipc-sync function
-    return RemoteEditor.url(url);
+    return Editor.remote.url(url);
 };
 
 require( Editor.url('editor://share/platform')) ;

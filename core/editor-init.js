@@ -8,6 +8,7 @@ require( Editor.url('editor://share/platform')) ;
 Editor.JS = require( Editor.url('editor://share/js-utils')) ;
 Editor.Window = require('./editor-window');
 Editor.Panel = require('./editor-panel');
+Editor.Package = require('./editor-package');
 
 // ==========================
 // logs API
@@ -85,7 +86,7 @@ function _saveProfile ( path, profile ) {
 
 // type: global, local, project
 Editor.loadProfile = function ( name, type, defaultProfile ) {
-    var path = _type2profilepath[type];
+    var path = Editor._type2profilepath[type];
     if ( !path ) {
         Editor.error( 'Failed to load profile by type %s, please register it first.', type );
         return null;
@@ -148,10 +149,15 @@ Editor.quit = function () {
 // extends
 // ==========================
 
-var _type2profilepath = {};
-
+Editor._type2profilepath = {};
 Editor.registerProfilePath = function ( type, path ) {
-    _type2profilepath[type] = path;
+    Editor._type2profilepath[type] = path;
+};
+
+
+Editor._packagePathList = [];
+Editor.registerPackagePath = function ( path ) {
+    Editor._packagePathList.push(path);
 };
 
 // ==========================

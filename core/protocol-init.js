@@ -18,7 +18,7 @@ Protocol.registerProtocol('editor', function(request) {
 
 // Editor.url protocol register
 
-var _protocol2fn = {};
+Editor._protocol2fn = {};
 
 var _urlToPath = function ( urlInfo ) {
     if ( urlInfo.pathname ) {
@@ -35,7 +35,7 @@ Editor.url = function ( url ) {
         return null;
     }
 
-    var fn = _protocol2fn[urlInfo.protocol];
+    var fn = Editor._protocol2fn[urlInfo.protocol];
     if ( !fn ) {
         Editor.error( 'Failed to load url %s, please register the protocol for it.', url );
         return null;
@@ -45,7 +45,7 @@ Editor.url = function ( url ) {
 };
 
 Editor.registerProtocol = function ( protocol, fn ) {
-    _protocol2fn[protocol+':'] = fn;
+    Editor._protocol2fn[protocol+':'] = fn;
 };
 
 Editor.registerProtocol('editor', _urlToPath);
