@@ -12,7 +12,7 @@
   "panels": {
     "MyTest.Foobar": {
       "type": "dockable",
-      "view": "panel/foobar.html",
+      "view": "foobar.html",
       "title": "Foobar",
       "width": 500,
       "height": 800,

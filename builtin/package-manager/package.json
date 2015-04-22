@@ -21,5 +21,9 @@
       "messages": [
       ]
     }
+  },
+  "profiles": {
+    "local": {
+    }
   }
 }

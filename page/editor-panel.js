@@ -46,7 +46,7 @@ _getDocks = function ( dockEL ) {
     return docks;
 };
 
-function _registerIpc ( ipcListener, ipcName, domEvent, viewEL ) {
+function _registerIpc ( ipcListener, ipcName, viewEL ) {
     ipcListener.on( ipcName, function () {
         var detail = {};
         if ( arguments.length > 0 ) {
@@ -99,8 +99,23 @@ Panel.import = function ( url, cb ) {
 
 Panel.load = function ( url, panelID, panelInfo, cb ) {
     Panel.import(url, function () {
-        var viewCtor = window[panelInfo.ctor];
-        if ( !viewCtor ) {
+        var ctorPath = panelID.split('.');
+
+        var i;
+        var ctorNotFound = false;
+        var viewCtor = window;
+        for ( i = 0; i < ctorPath.length; ++i ) {
+            viewCtor = viewCtor[ctorPath[i]];
+            if ( !viewCtor ) {
+                ctorNotFound = true;
+                break;
+            }
+        }
+        if ( viewCtor === window ) {
+            ctorNotFound = true;
+        }
+
+        if ( ctorNotFound ) {
             Editor.error('Panel import faield. Can not find constructor %s', panelInfo.ctor );
             return;
         }
@@ -131,7 +146,7 @@ Panel.load = function ( url, panelID, panelInfo, cb ) {
 
         // register ipc events
         var ipcListener = new Editor.IpcListener();
-        for ( var i = 0; i < panelInfo.messages.length; ++i ) {
+        for ( i = 0; i < panelInfo.messages.length; ++i ) {
             _registerIpc( ipcListener, panelInfo.messages[i], viewEL );
         }
 

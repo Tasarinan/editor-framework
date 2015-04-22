@@ -74,6 +74,7 @@ Package.load = function ( path ) {
             }
 
             _panel2info[panelID] = packageObj.panels[panelID];
+            _panel2info[panelID].path = path;
         }
     }
 
@@ -129,6 +130,10 @@ Package.unload = function ( path ) {
 Package.reload = function ( path ) {
     Package.unload(path);
     Package.load(path);
+};
+
+Package.panelInfo = function ( panelID ) {
+    return _panel2info[panelID];
 };
 
 module.exports = Package;

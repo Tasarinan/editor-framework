@@ -5,11 +5,17 @@ module.exports = {
     unload: function () {
     },
 
-    'load:foobar': function () {
+    'foobar:load': function () {
         Editor.Package.load( Editor.url('editor://test/packages/foobar') );
     },
 
-    'unload:foobar': function () {
+    'foobar:unload': function () {
         Editor.Package.unload( Editor.url('editor://test/packages/foobar') );
+    },
+
+    'foobar:open': function () {
+        Editor.Panel.open( 'MyTest.Foobar', {
+            'message': 'Hello Foobar'
+        });
     },
 };

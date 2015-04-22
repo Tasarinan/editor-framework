@@ -5,47 +5,18 @@ var BrowserWindow = require('browser-window');
  * Redirect panel messages to its registered windows.
  */
 var Panel = {};
-var _panelIDToWindows = {};
-var _panelIDToArgv = {};
+var _panel2windows = {};
+var _panel2argv = {};
 
 Ipc.on('panel:page-ready', function ( reply, panelID ) {
     if ( !panelID ) {
-        Editor.error( 'Invalid panelID ' + panelID );
+        Editor.error( 'Empty panelID' );
         reply( {} );
         return;
     }
 
-    var pair = panelID.split('@');
-    if ( pair.length !== 2 ) {
-        Editor.error( 'Invalid panelID ' + panelID );
-        reply( {} );
-        return;
-    }
-
-    var panelName = pair[0];
-    var packageName = pair[1];
-
-    var packageInfo = Editor.PackageManager.getPackageInfo(packageName);
-    if ( !packageInfo ) {
-        Editor.error( 'Invalid package info ' + packageName );
-        reply( {} );
-        return;
-    }
-
-    if ( !packageInfo.panels ) {
-        Editor.error( 'Invalid package info %s, can not find panels property', packageName );
-        reply( {} );
-        return;
-    }
-
-    if ( !packageInfo.panels[panelName] ) {
-        Editor.error( 'Invalid package info %s, can not find %s property', packageName, panelName );
-        reply( {} );
-        return;
-    }
-
-    var panelInfo = packageInfo.panels[panelName];
-    var path = Editor.PackageManager.getPackagePath(packageName);
+    // get panelInfo
+    var panelInfo = Editor.Package.panelInfo(panelID);
 
     // load profiles
     for ( var type in panelInfo.profiles ) {
@@ -54,14 +25,14 @@ Ipc.on('panel:page-ready', function ( reply, panelID ) {
         panelInfo.profiles[type] = profile;
     }
 
+    //
     reply({
         'panel-info': panelInfo,
-        'package-path': path,
     });
 });
 
 Ipc.on('panel:ready', function ( panelID ) {
-    var argv = _panelIDToArgv[panelID];
+    var argv = _panel2argv[panelID];
     Editor.sendToPanel( panelID, 'panel:open', argv );
 });
 
@@ -94,8 +65,9 @@ Ipc.on('panel:save-profile', function ( detail ) {
 Panel.templateUrl = 'editor://static/window.html';
 
 //
-Panel.open = function ( panelID, panelInfo, argv ) {
-    _panelIDToArgv[panelID] = argv;
+Panel.open = function ( panelID, argv ) {
+    var panelInfo = Editor.Package.panelInfo(panelID);
+    _panel2argv[panelID] = argv;
 
     var editorWin = Panel.findWindow(panelID);
     if ( editorWin ) {
@@ -184,13 +156,13 @@ Panel.open = function ( panelID, panelInfo, argv ) {
 };
 
 Panel.findWindow = function ( panelID ) {
-    return _panelIDToWindows[panelID];
+    return _panel2windows[panelID];
 };
 
 Panel.findWindows = function (packageName) {
     var wins = [];
 
-    for ( var p in _panelIDToWindows ) {
+    for ( var p in _panel2windows ) {
         var pair = p.split('@');
         if ( pair.length !== 2 ) {
             continue;
@@ -198,7 +170,7 @@ Panel.findWindows = function (packageName) {
 
         var name = pair[1];
         if ( name === packageName ) {
-            var editorWin = _panelIDToWindows[p];
+            var editorWin = _panel2windows[p];
             if ( wins.indexOf (editorWin) === -1 )
                 wins.push(editorWin);
         }
@@ -209,7 +181,7 @@ Panel.findWindows = function (packageName) {
 
 Panel.findPanels = function ( packageName ) {
     var panels = [];
-    for ( var p in _panelIDToWindows ) {
+    for ( var p in _panel2windows ) {
         var pair = p.split('@');
         if ( pair.length !== 2 ) {
             continue;
@@ -226,14 +198,14 @@ Panel.findPanels = function ( packageName ) {
 
 Panel.dock = function ( panelID, win ) {
     // Editor.hint('dock %s', panelID ); // DEBUG
-    _panelIDToWindows[panelID] = win;
+    _panel2windows[panelID] = win;
 };
 
 Panel.undock = function ( panelID, win ) {
     // Editor.hint('undock %s', panelID ); // DEBUG
-    var editorWin = _panelIDToWindows[panelID];
+    var editorWin = _panel2windows[panelID];
     if ( editorWin === win )
-        return delete _panelIDToWindows[panelID];
+        return delete _panel2windows[panelID];
     return false;
 };
 
@@ -246,15 +218,15 @@ Panel.closeAll = function (packageName) {
     //     var win = wins[i];
     //     win.close();
     // }
-    // delete _panelIDToWindows[...];
+    // delete _panel2windows[...];
 };
 
 // NOTE: this only invoked in fire-window on-closed event
 Panel._onWindowClosed = function ( editorWin ) {
-    for ( var id in _panelIDToWindows ) {
-        var win = _panelIDToWindows[id];
+    for ( var id in _panel2windows ) {
+        var win = _panel2windows[id];
         if ( win === editorWin ) {
-            delete _panelIDToWindows[id];
+            delete _panel2windows[id];
         }
     }
 };

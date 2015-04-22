@@ -9,11 +9,11 @@ if ( Editor.argv.panelID ) {
     Editor.sendRequestToCore('panel:page-ready', Editor.argv.panelID,
                              function ( detail ) {
         var panelInfo = detail['panel-info'];
-        var packagePath = detail['package-path'];
-        var argv = detail.argv;
 
         var Path = require('fire-path');
-        Editor.Panel.load( Path.join( packagePath, panelInfo.view ),
+        var viewPath = Path.join( panelInfo.path, panelInfo.view );
+
+        Editor.Panel.load( viewPath,
                            Editor.argv.panelID,
                            panelInfo,
                            function ( err, element ) {
@@ -24,6 +24,7 @@ if ( Editor.argv.panelID ) {
 
                                    var panel = new EditorUI.Panel();
                                    panel.add(element);
+                                   panel.select(0);
                                    dock.appendChild(panel);
                                    document.body.appendChild(dock);
 

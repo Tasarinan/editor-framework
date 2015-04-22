@@ -1,0 +1,25 @@
+<dom-module id="foo-bar">
+  <style>
+    .label {
+        color: #ff0;
+    }
+  </style>
+
+  <template>
+      <div class='label'>{{foobar}}</div>
+  </template>
+</dom-module>
+
+<script>
+  window.MyTest = {};
+  MyTest.Foobar = Polymer( {
+      is: "foo-bar",
+
+      properties: {
+          foobar: {
+              type: String,
+              value: 'Hello Foobar',
+          }
+      },
+  });
+</script>
