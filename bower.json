@@ -1,0 +1,21 @@
+{
+  "name": "Editor Framework",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "3rd",
+    "bower_components",
+    "ext",
+    "node_modules",
+    "test"
+  ],
+  "dependencies": {
+    "fontawesome": "",
+    "pace": "",
+    "pixi": "2.2.3",
+    "polymer": "Polymer/polymer#0.8.0-rc.6",
+    "layout": "Polymer/layout",
+    "web-animations-js": "web-animations/web-animations-js#master"
+  },
+  "devDependencies": {}
+}

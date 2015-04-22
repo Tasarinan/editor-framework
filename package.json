@@ -1,0 +1,33 @@
+{
+  "name": "editor-framework",
+  "version": "0.0.1",
+  "description": "A simple framework for making panel based applications.",
+  "homepage": "http://fireball-x.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fireball-x/editor-framework.git"
+  },
+  "author": "Firebox Technology",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fireball-x/editor-framework/issues"
+  },
+  "dependencies": {
+    "fire-fs": "0.1.8",
+    "fire-url": "0.1.6",
+    "fire-path": "0.1.6",
+    "browserify": "9.0.8",
+    "commander": "2.7.1",
+    "chalk": "1.0.0",
+    "winston": "1.0.0",
+    "globby": "2.0.0"
+  },
+  "devDependencies": {
+    "gulp": "",
+    "gulp-shell": "0.2.11",
+    "gulp-download-fire-shell": ""
+  },
+  "fire-shell-version": "0.24.0",
+  "electron-version": "0.25.0",
+  "main": "main.js"
+}

@@ -24,8 +24,6 @@ bin/
 ext/
 dist/
 compiler/
-package.json
-bower.json
 apidocs/
 utils/api
 
