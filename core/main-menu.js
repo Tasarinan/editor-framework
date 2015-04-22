@@ -163,6 +163,12 @@ MainMenu.add = function ( path, template ) {
     }
 };
 
+MainMenu.remove = function ( path ) {
+    if ( _mainMenu.remove( path ) ) {
+        MainMenu.apply();
+    }
+};
+
 MainMenu.set = function ( path, options ) {
     if ( _mainMenu.set( path, options ) ) {
         MainMenu.apply();
@@ -176,6 +182,10 @@ Ipc.on('main-menu:reset', function () {
 
 Ipc.on('main-menu:add', function ( path, template ) {
     MainMenu.add( path, template );
+});
+
+Ipc.on('main-menu:remove', function ( path ) {
+    MainMenu.remove( path );
 });
 
 Ipc.on('main-menu:set', function ( path, options ) {

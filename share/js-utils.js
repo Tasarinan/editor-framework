@@ -39,6 +39,18 @@ module.exports = {
         return obj;
     },
 
+    extract: function ( obj, propNames ) {
+        'use strict';
+        var newObj = {};
+        for ( var i = 0; i < propNames.length; ++i ) {
+            var name = propNames[i];
+            if ( obj[name] !== undefined ) {
+                _copyprop( name, obj, newObj);
+            }
+        }
+        return newObj;
+    },
+
     /**
      * copy all properties from arguments[1...n] to obj
      * @method mixin

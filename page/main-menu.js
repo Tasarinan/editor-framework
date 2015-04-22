@@ -12,6 +12,10 @@ MainMenu.add = function ( path, template ) {
     Editor.sendToCore('main-menu:add', path, template);
 };
 
+MainMenu.remove = function ( path ) {
+    Editor.sendToCore('main-menu:remove', path);
+};
+
 MainMenu.set = function ( path, options ) {
     Editor.sendToCore('main-menu:set', path, options);
 };
