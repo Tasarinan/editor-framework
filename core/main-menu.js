@@ -177,6 +177,7 @@ function getDefaultMainMenu () {
                         },
                     ],
                 },
+                { type: 'separator' },
             ]
         },
     ];

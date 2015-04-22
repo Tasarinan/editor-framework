@@ -13,6 +13,8 @@ module.exports = {
         Editor.registerProfilePath( 'local', settingsPath );
 
         // TODO: load your profile, and disable packages here
+
+        Editor.registerPackagePath( Editor.url('editor://test/packages') );
     },
 
     run: function () {

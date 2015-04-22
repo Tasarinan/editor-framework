@@ -268,7 +268,7 @@ App.on('ready', function() {
 
     // before run the app, we start loading plugins
     Winston.normal('Loading packages');
-    // TODO?? load package here, or may be later
+    Editor.loadPackages();
 
     // run user App
     if ( !Editor.App.run ) {

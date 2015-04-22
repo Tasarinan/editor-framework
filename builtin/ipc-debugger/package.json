@@ -1,0 +1,25 @@
+{
+  "name": "ipc-debugger",
+  "version": "0.0.1",
+  "description": "A simple ipc debugger",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Developer/Ipc Debugger": {
+      "message": "ipc-debugger:open"
+    }
+  },
+  "panels": {
+    "Editor.IpcDebugger": {
+      "type": "dockable",
+      "view": "panel/ipc-debugger.html",
+      "title": "Ipc Debugger",
+      "width": 500,
+      "height": 800,
+      "min-width": 400,
+      "min-height": 200,
+      "messages": [
+      ]
+    }
+  }
+}

@@ -3,6 +3,7 @@ var Util = require('util');
 var Fs = require('fire-fs');
 var Path = require('fire-path');
 var Winston = require('winston');
+var Globby = require('globby');
 
 require( Editor.url('editor://share/platform')) ;
 Editor.JS = require( Editor.url('editor://share/js-utils')) ;
@@ -150,6 +151,7 @@ Editor.quit = function () {
     }
 };
 
+var _playgroundListener = new Editor.IpcListener();
 Editor.reloadPlayground = function () {
     var cache = require.cache;
     var playgroundPath = Path.join(Editor.cwd,'playground.js');
@@ -166,9 +168,10 @@ Editor.reloadPlayground = function () {
         }
     }
     catch (err) {
-        Editor.error( 'Failed to unload Playground.', err.stack );
+        Editor.failed( 'Failed to unload Playground.', err.stack );
     }
 
+    _playgroundListener.clear();
     delete cache[playgroundPath];
 
     // load
@@ -177,9 +180,29 @@ Editor.reloadPlayground = function () {
         if ( exports && exports.load ) {
             exports.load();
         }
+        for ( var prop in exports ) {
+            if ( prop === 'load' || prop === 'unload' )
+                continue;
+
+            if ( typeof exports[prop] === 'function' ) {
+                _playgroundListener.on( prop, exports[prop] );
+            }
+        }
     }
     catch (err) {
-        Editor.error( 'Failed to load Playground.', err.stack );
+        Editor.failed( 'Failed to load Playground.', err.stack );
+    }
+};
+
+Editor.loadPackages = function () {
+    var i, src = [];
+    for ( i = 0; i < Editor._packagePathList.length; ++i ) {
+        src.push( Editor._packagePathList[i] + '/*/package.json' );
+    }
+
+    var paths = Globby.sync( src );
+    for ( i = 0; i < paths.length; ++i ) {
+        Editor.Package.load( Path.dirname(paths[i]) );
     }
 };
 
