@@ -36,6 +36,10 @@ Ipc.on('panel:ready', function ( panelID ) {
     Editor.sendToPanel( panelID, 'panel:open', argv );
 });
 
+Ipc.on('panel:open', function ( panelID, argv ) {
+    Panel.open( panelID, argv );
+});
+
 Ipc.on('panel:dock', function ( event, panelID ) {
     var browserWin = BrowserWindow.fromWebContents( event.sender );
     var editorWin = Editor.Window.find(browserWin);

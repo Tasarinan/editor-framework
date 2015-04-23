@@ -167,10 +167,8 @@ Panel.load = function ( url, panelID, panelInfo, cb ) {
     });
 };
 
-Panel.closeAll = function () {
-    for ( var id in _idToPanelInfo ) {
-        Panel.close(id);
-    }
+Panel.open = function ( panelID, argv ) {
+    Editor.sendToCore('panel:open', panelID, argv);
 };
 
 Panel.close = function ( panelID ) {
@@ -182,6 +180,12 @@ Panel.close = function ( panelID ) {
     }
 
     Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
+};
+
+Panel.closeAll = function () {
+    for ( var id in _idToPanelInfo ) {
+        Panel.close(id);
+    }
 };
 
 Panel.dispatch = function ( panelID, ipcMessage ) {
