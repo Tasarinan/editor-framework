@@ -7,7 +7,6 @@ var Path = require('fire-path');
 var Url = require('fire-url');
 
 window.Editor = window.Editor || {};
-Editor.remote = Remote.getGlobal('Editor');
 
 // init argument list sending from core by url?queries
 // format: '?foo=bar&hell=world'
@@ -22,7 +21,11 @@ for ( var i = 0; i < queryList.length; ++i ) {
     }
 }
 Editor.argv = queries;
+
+// init & cache remote
+Editor.remote = Remote.getGlobal('Editor');
 Editor.cwd = Editor.remote.url('editor://');
+Editor.isDev = Editor.remote.isDev;
 
 // url
 Editor.url = function (url) {

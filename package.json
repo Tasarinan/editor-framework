@@ -28,6 +28,6 @@
     "gulp-download-fire-shell": ""
   },
   "fire-shell-version": "0.24.0",
-  "electron-version": "0.25.0",
+  "electron-version": "0.25.1",
   "main": "main.js"
 }
