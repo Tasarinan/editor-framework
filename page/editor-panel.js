@@ -98,6 +98,14 @@ Panel.import = function ( url, cb ) {
 };
 
 Panel.load = function ( url, panelID, panelInfo, cb ) {
+    // TODO: put to iframe?
+    // var iframe = document.createElement('iframe');
+    // document.body.appendChild(iframe);
+    // iframe.style.width = '100%';
+    // iframe.style.height = '100%';
+    // iframe.style.border = '0px';
+    // iframe.contentDocument.body.appendChild(element);
+
     Panel.import(url, function () {
         var ctorPath = panelID.split('.');
 
@@ -123,7 +131,7 @@ Panel.load = function ( url, panelID, panelInfo, cb ) {
         var viewEL = new viewCtor();
         viewEL.setAttribute('id', panelID);
         viewEL.setAttribute('name', panelInfo.title);
-        viewEL.setAttribute('fit', '');
+        viewEL.classList.add('fit');
 
         // set size attribute
         if ( panelInfo.width )
@@ -207,20 +215,21 @@ Panel.dispatch = function ( panelID, ipcMessage ) {
 };
 
 Panel.getLayout = function () {
-    if ( !this.root  )
+    var root = EditorUI.DockUtils.root;
+    if ( !root  )
         return null;
 
-    if ( this.root['ui-dockable'] ) {
+    if ( root['ui-dockable'] ) {
         return {
             'type': 'dock',
-            'row': this.root.row,
+            'row': root.row,
             'no-collapse': true,
-            'docks': _getDocks(this.root),
+            'docks': _getDocks(root),
         };
     }
     else {
-        var id = this.root.getAttribute('id');
-        var rect = this.root.getBoundingClientRect();
+        var id = root.getAttribute('id');
+        var rect = root.getBoundingClientRect();
 
         return {
             'type': 'standalone',

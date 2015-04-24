@@ -67,13 +67,14 @@ Package.load = function ( path ) {
 
     // register panel
     if ( packageObj.panels && typeof packageObj.panels === 'object' ) {
-        for ( var panelID in packageObj.panels ) {
+        for ( var panelName in packageObj.panels ) {
+            var panelID = packageObj.name + '.' + panelName;
             if ( _panel2info[panelID] ) {
-                Editor.error( 'Failed to load panel \'%s\' from \'%s\', already exists.', panelID, packageObj.name );
+                Editor.error( 'Failed to load panel \'%s\' from \'%s\', already exists.', panelName, packageObj.name );
                 continue;
             }
 
-            _panel2info[panelID] = packageObj.panels[panelID];
+            _panel2info[panelID] = packageObj.panels[panelName];
             _panel2info[panelID].path = path;
         }
     }
@@ -90,7 +91,8 @@ Package.unload = function ( path ) {
 
     // unregister panel
     if ( packageObj.panels && typeof packageObj.panels === 'object' ) {
-        for ( var panelID in packageObj.panels ) {
+        for ( var panelName in packageObj.panels ) {
+            var panelID = packageObj.name + '.' + panelName;
             delete _panel2info[panelID];
         }
     }

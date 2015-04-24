@@ -177,12 +177,12 @@ Editor.sendToAll = function () {
     }
 };
 
-Editor.sendToPlugin = function ( packageName, message ) {
-    for ( var i = 0; i < panels.length; ++i ) {
-        var panelID = panels[i] + '@' + packageName;
-        Editor.sendToPanel.apply( Editor, [panelID].concat(args) );
-    }
-};
+// Editor.sendToPlugin = function ( packageName, message ) {
+//     for ( var i = 0; i < panels.length; ++i ) {
+//         var panelID = packageName + '.' + panels[i];
+//         Editor.sendToPanel.apply( Editor, [panelID].concat(args) );
+//     }
+// };
 
 // example: Editor.sendToPanel( 'panel@package', 'ipc-foo-bar', arguments... )
 Editor.sendToPanel = function ( panelID, message ) {

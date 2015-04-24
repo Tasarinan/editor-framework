@@ -125,6 +125,21 @@ Editor.loadProfile = function ( name, type, defaultProfile ) {
     else {
         try {
             profile = JSON.parse(Fs.readFileSync(path));
+
+            var p;
+            if ( defaultProfile ) {
+                for ( p in profile ) {
+                    if ( defaultProfile[p] === undefined )
+                        delete profile[p];
+                }
+                for ( p in defaultProfile ) {
+                    if ( profile[p] === undefined ) {
+                        profile[p] = defaultProfile[p];
+                    }
+                }
+                // save again
+                Fs.writeFileSync(path, JSON.stringify(profile, null, 2));
+            }
         }
         catch ( err ) {
             if ( err ) {

@@ -10,7 +10,7 @@
     }
   },
   "panels": {
-    "Editor.IpcDebugger": {
+    "panel": {
       "type": "dockable",
       "view": "panel/ipc-debugger.html",
       "title": "Ipc Debugger",

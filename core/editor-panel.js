@@ -71,6 +71,11 @@ Panel.templateUrl = 'editor://static/window.html';
 //
 Panel.open = function ( panelID, argv ) {
     var panelInfo = Editor.Package.panelInfo(panelID);
+    if ( !panelInfo ) {
+        Editor.error('Failed to open panel %s, panel info not found.', panelID);
+        return;
+    }
+
     _panel2argv[panelID] = argv;
 
     var editorWin = Panel.findWindow(panelID);

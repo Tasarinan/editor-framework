@@ -10,7 +10,7 @@
     }
   },
   "panels": {
-    "MyTest.Foobar": {
+    "panel": {
       "type": "dockable",
       "view": "foobar.html",
       "title": "Foobar",

@@ -19,13 +19,14 @@ if ( Editor.argv.panelID ) {
                            function ( err, element ) {
                                if ( panelInfo.type === 'dockable' ) {
                                    var dock = new EditorUI.Dock();
-                                   dock.setAttribute('fit', '');
                                    dock.setAttribute('no-collapse', '');
+                                   dock.classList.add('fit');
 
                                    var panel = new EditorUI.Panel();
                                    panel.add(element);
                                    panel.select(0);
-                                   dock.appendChild(panel);
+
+                                   Polymer.dom(dock).appendChild(panel);
                                    document.body.appendChild(dock);
 
                                    EditorUI.DockUtils.root = dock;

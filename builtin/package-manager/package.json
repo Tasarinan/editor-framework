@@ -10,7 +10,7 @@
     }
   },
   "panels": {
-    "Editor.PackageManager": {
+    "panel": {
       "type": "dockable",
       "view": "panel/package-manager.html",
       "title": "Package Manager",
