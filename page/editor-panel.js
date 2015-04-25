@@ -91,21 +91,13 @@ Panel.import = function ( url, cb ) {
     document.head.appendChild(link);
     _url2link[url] = link;
 
-    // TEST
+    //
     HTMLImports.whenReady( function () {
         cb();
     });
 };
 
 Panel.load = function ( url, panelID, panelInfo, cb ) {
-    // TODO: put to iframe?
-    // var iframe = document.createElement('iframe');
-    // document.body.appendChild(iframe);
-    // iframe.style.width = '100%';
-    // iframe.style.height = '100%';
-    // iframe.style.border = '0px';
-    // iframe.contentDocument.body.appendChild(element);
-
     Panel.import(url, function () {
         var ctorPath = panelID.split('.');
 
