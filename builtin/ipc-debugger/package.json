@@ -19,11 +19,11 @@
       "min-width": 400,
       "min-height": 200,
       "messages": [
-      ]
-    }
-  },
-  "profiles": {
-    "local": {
+      ],
+      "profiles": {
+        "local": {
+        }
+      }
     }
   }
 }

@@ -51,10 +51,8 @@ try {
     };
 
     window.onerror = function ( message, filename, lineno, colno, error ) {
-        if ( Editor && Editor.sendToWindows ) {
-            Editor.sendToWindows('console:error', {
-                message: error.stack || error
-            });
+        if ( Editor && Editor.sendToAll ) {
+            Editor.sendToAll('console:error', error.stack || error);
         }
         else {
             console.error(error.stack || error);

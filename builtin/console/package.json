@@ -1,0 +1,29 @@
+{
+  "name": "editor-console",
+  "version": "0.0.1",
+  "description": "A simple console editor",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Developer/Editor Console": {
+      "message": "console:open"
+    }
+  },
+  "panels": {
+    "panel": {
+      "type": "dockable",
+      "view": "panel/console.html",
+      "title": "Editor Console",
+      "height": 300,
+      "min-height": 200,
+      "messages": [
+          "console:log",
+          "console:success",
+          "console:failed",
+          "console:info",
+          "console:warn",
+          "console:error"
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<dom-module id="editor-console">
+    <link rel="import" type="css" href="console.css">
+
+    <template>
+        <ul>
+            <template is="x-repeat" items="{{logs}}">
+                <li class$="{{item.type}}">
+                    <span>{{item.text}}</span>
+                </li>
+            </template>
+        </ul>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="console.js"></script>

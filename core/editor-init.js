@@ -14,45 +14,46 @@ require('./ipc-init');
 // ==========================
 
 Editor.log = function () {
-    Winston.normal.apply( Winston, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:log'].concat(args) );
+    var text = Util.format.apply(Util, arguments);
+    Winston.normal(text);
+    Editor.sendToWindows('console:log',text);
 };
 
 Editor.success = function () {
-    Winston.success.apply( Winston, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:success'].concat(args) );
+    var text = Util.format.apply(Util, arguments);
+    Winston.success(text);
+    Editor.sendToWindows('console:success',text);
 };
 
 Editor.failed = function () {
-    Winston.failed.apply( Winston, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:failed'].concat(args) );
+    var text = Util.format.apply(Util, arguments);
+    Winston.failed(text);
+    Editor.sendToWindows('console:failed',text);
 };
 
 Editor.info = function () {
-    Winston.info.apply( Winston, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:info'].concat(args) );
+    var text = Util.format.apply(Util, arguments);
+    Winston.info(text);
+    Editor.sendToWindows('console:info',text);
 };
 
 Editor.warn = function () {
-    Winston.warn.apply( Winston, arguments );
+    var text = Util.format.apply(Util, arguments);
+    Winston.warn(text);
     console.trace();
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:warn'].concat(args) );
+    Editor.sendToWindows('console:warn',text);
 };
 
 Editor.error = function () {
-    Winston.error.apply( Winston, arguments );
+    var text = Util.format.apply(Util, arguments);
+    Winston.error(text);
     console.trace();
-    var args = [].slice.call(arguments);
-    Editor.sendToWindows.apply( Editor, ['console:error'].concat(args) );
+    Editor.sendToWindows('console:error',text);
 };
 
 Editor.fatal = function () {
-    Winston.fatal.apply( Winston, arguments );
+    var text = Util.format.apply(Util, arguments);
+    Winston.fatal(text);
     console.trace();
 
     // NOTE: fatal error will close app immediately, no need for ipc.

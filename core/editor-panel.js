@@ -94,6 +94,13 @@ Panel.open = function ( panelID, argv ) {
         break;
     }
 
+    if ( isNaN(options.width) ) {
+        options.width = 800;
+    }
+    if ( isNaN(options.height) ) {
+        options.height = 600;
+    }
+
     //
     editorWin = new Editor.Window(windowName, options);
 

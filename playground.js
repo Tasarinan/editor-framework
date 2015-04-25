@@ -9,9 +9,7 @@ module.exports = {
         var Winston = require('winston');
         var Util = require('util');
 
-        // var text = Util.format( '%s', new Error('foobar') );
-        // Winston.normal(text);
-        Editor.log('foobar %d', 20);
+        Editor.error( new Error('hello world') );
     },
 
 };

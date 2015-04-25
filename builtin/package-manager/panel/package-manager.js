@@ -2,9 +2,11 @@
 
 var Path = require('fire-path');
 
-window['package-manager'] = {};
-window['package-manager'].panel = Polymer( {
-    is: "package-manager",
+var name = 'package-manager';
+window[name] = {};
+
+window[name].panel = Polymer( {
+    is: name,
 
     properties: {
     },
