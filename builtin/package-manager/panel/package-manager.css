@@ -1,0 +1,17 @@
+:host {
+    overflow: auto;
+}
+
+ul {
+    padding: 0px;
+    margin: 10px;
+}
+
+li {
+    list-style-type: none;
+    display: flex;
+}
+
+li[builtin] {
+    color: #888;
+}

@@ -44,20 +44,6 @@ function EditorWindow ( name, options ) {
     }.bind(this) );
 
     EditorWindow.addWindow(this); // NOTE: window must be add after nativeWin assigned
-
-    // add to _windowLayouts
-    // NOTE: this will in case save-layout not invoke,
-    //       and it will missing info for current window
-    var winSize = this.nativeWin.getSize();
-    var winPos = this.nativeWin.getPosition();
-    var winInfo = {
-        x: winPos[0],
-        y: winPos[1],
-        width: winSize[0],
-        height: winSize[1],
-        layout: null
-    };
-    _windowLayouts[name] = winInfo;
 }
 Editor.JS.extend(EditorWindow,EventEmitter);
 
@@ -184,6 +170,21 @@ Object.defineProperty(EditorWindow, 'windows', {
         return _windows.slice();
     }
 });
+
+// NOTE: this will in case save-layout not invoke,
+//       and it will missing info for current window
+EditorWindow.loadLayouts = function () {
+    _windowLayouts = {};
+
+    var profile = Editor.loadProfile( 'layout', 'local', {
+        windows: {},
+        panels: {},
+    });
+    for ( var name in profile.windows ) {
+        var info = profile.windows[name];
+        _windowLayouts[name] = info;
+    }
+};
 
 EditorWindow.find = function ( param ) {
     var i, win;

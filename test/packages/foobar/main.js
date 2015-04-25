@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'foo:bar': function ( text ) {
+    'foobar:foo-bar': function ( text ) {
         Editor.success(text);
     },
 };

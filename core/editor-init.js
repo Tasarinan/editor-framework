@@ -10,73 +10,60 @@ Editor.JS = require( Editor.url('editor://share/js-utils')) ;
 require('./ipc-init');
 
 // ==========================
-// logs API
+// console log API
 // ==========================
 
 Editor.log = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.normal(text);
-    Editor.sendToWindows('console:log', {
-        message: text
-    });
+    Winston.normal.apply( Winston, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:log'].concat(args) );
 };
 
 Editor.success = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.success(text);
-    Editor.sendToWindows('console:success', {
-        message: text
-    });
+    Winston.success.apply( Winston, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:success'].concat(args) );
 };
 
 Editor.failed = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.failed(text);
-    Editor.sendToWindows('console:failed', {
-        message: text
-    });
+    Winston.failed.apply( Winston, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:failed'].concat(args) );
 };
 
 Editor.info = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.info(text);
-    Editor.sendToWindows('console:info', {
-        message: text
-    });
+    Winston.info.apply( Winston, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:info'].concat(args) );
 };
 
 Editor.warn = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.warn(text);
+    Winston.warn.apply( Winston, arguments );
     console.trace();
-    Editor.sendToWindows('console:warn', {
-        message: text
-    });
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:warn'].concat(args) );
 };
 
 Editor.error = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.error(text);
+    Winston.error.apply( Winston, arguments );
     console.trace();
-    Editor.sendToWindows('console:error', {
-        message: text
-    });
+    var args = [].slice.call(arguments);
+    Editor.sendToWindows.apply( Editor, ['console:error'].concat(args) );
 };
 
 Editor.fatal = function () {
-    var text = Util.format.apply(Util, arguments);
-    Winston.fatal(text);
+    Winston.fatal.apply( Winston, arguments );
     console.trace();
 
     // NOTE: fatal error will close app immediately, no need for ipc.
 };
 
-Ipc.on ( 'console:log', function ( detail ) { Editor.log(detail.message); } );
-Ipc.on ( 'console:warn', function ( detail ) { Editor.warn(detail.message); } );
-Ipc.on ( 'console:error', function ( detail ) { Editor.error(detail.message); } );
-Ipc.on ( 'console:success', function ( detail ) { Editor.success(detail.message); } );
-Ipc.on ( 'console:failed', function ( detail ) { Editor.failed(detail.message); } );
-Ipc.on ( 'console:info', function ( detail ) { Editor.info(detail.message); } );
+Ipc.on ( 'console:log', function () { Editor.log.apply(Editor,arguments); } );
+Ipc.on ( 'console:success', function ( detail ) { Editor.success.apply(Editor,arguments); } );
+Ipc.on ( 'console:failed', function ( detail ) { Editor.failed.apply(Editor,arguments); } );
+Ipc.on ( 'console:info', function ( detail ) { Editor.info.apply(Editor,arguments); } );
+Ipc.on ( 'console:warn', function ( detail ) { Editor.warn.apply(Editor,arguments); } );
+Ipc.on ( 'console:error', function ( detail ) { Editor.error.apply(Editor,arguments); } );
 
 // ==========================
 // profiles API

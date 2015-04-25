@@ -266,7 +266,10 @@ App.on('ready', function() {
     //
     Winston.success('Initial success!');
 
-    // before run the app, we start loading plugins
+    // load windows layout after local profile registered
+    Editor.Window.loadLayouts();
+
+    // before run the app, we start loading packages
     Winston.normal('Loading packages');
     Editor.loadPackages();
 

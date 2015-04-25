@@ -46,28 +46,28 @@ _getDocks = function ( dockEL ) {
     return docks;
 };
 
-function _registerIpc ( ipcListener, ipcName, viewEL ) {
-    ipcListener.on( ipcName, function () {
-        var detail = {};
-        if ( arguments.length > 0 ) {
-            detail = arguments[0];
+function _registerIpc ( panelID, viewEL, ipcListener, ipcName ) {
+    var fn = viewEL[ipcName];
+    if ( !fn || typeof fn !== 'function' ) {
+        if ( ipcName !== 'panel:open') {
+            Editor.warn('Failed to register ipc message %s in panel %s, Can not find implementation', ipcName, panelID );
         }
-        viewEL.fire( ipcName, detail );
-    } );
-
-    var domMethod = viewEL[ipcName];
-    if ( domMethod ) {
-        viewEL.addEventListener( ipcName, domMethod.bind(viewEL) );
+        return;
     }
+
+    ipcListener.on( ipcName, function () {
+        var fn = viewEL[ipcName];
+        if ( !fn || typeof fn !== 'function' ) {
+            Editor.warn('Failed to respond ipc message %s in panel %s, Can not find implementation', ipcName, panelID );
+            return;
+        }
+        fn.apply( viewEL, arguments );
+    } );
 }
 
 function _registerProfile ( panelID, type, profile ) {
     profile.save = function () {
-        Editor.sendToCore('panel:save-profile', {
-            id: panelID,
-            type: type,
-            profile: profile,
-        } );
+        Editor.sendToCore('panel:save-profile', panelID, type, profile);
     };
 }
 
@@ -146,8 +146,14 @@ Panel.load = function ( url, panelID, panelInfo, cb ) {
 
         // register ipc events
         var ipcListener = new Editor.IpcListener();
+
+        // always have panel:open message
+        if ( panelInfo.messages.indexOf('panel:open') === -1 ) {
+            panelInfo.messages.push('panel:open');
+        }
+
         for ( i = 0; i < panelInfo.messages.length; ++i ) {
-            _registerIpc( ipcListener, panelInfo.messages[i], viewEL );
+            _registerIpc( panelID, viewEL, ipcListener, panelInfo.messages[i] );
         }
 
         //
@@ -188,22 +194,29 @@ Panel.closeAll = function () {
     }
 };
 
-Panel.dispatch = function ( panelID, ipcMessage ) {
+Panel.dispatch = function ( panelID, ipcName ) {
     var panelInfo = _idToPanelInfo[panelID];
     if ( !panelInfo ) {
-        Editor.warn( 'Failed to receive ipc %s, can not find panel %s', ipcMessage, panelID);
+        Editor.warn( 'Failed to receive ipc %s, can not find panel %s', ipcName, panelID);
         return;
     }
 
     // messages
-    var idx = panelInfo.messages.indexOf(ipcMessage);
-    if ( idx !== -1 ) {
-        var detail = {};
-        if ( arguments.length > 2 ) {
-            detail = arguments[2];
-        }
-        panelInfo.element.fire( ipcMessage, detail );
+    var idx = panelInfo.messages.indexOf(ipcName);
+    if ( idx === -1 ) {
+        Editor.warn('Can not find ipc message %s register in panel %s', ipcName, panelID );
+        return;
     }
+
+    var fn = panelInfo.element[ipcName];
+    if ( !fn || typeof fn !== 'function' ) {
+        if ( ipcName !== 'panel:open') {
+            Editor.warn('Failed to respond ipc message %s in panel %s, Can not find implementation', ipcName, panelID );
+        }
+        return;
+    }
+    var args = [].slice.call( arguments, 2 );
+    fn.apply( panelInfo.element, args );
 };
 
 Panel.getLayout = function () {

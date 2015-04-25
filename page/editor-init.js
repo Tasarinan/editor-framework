@@ -47,53 +47,20 @@ Editor.JS = require( Editor.url('editor://share/js-utils'));
 require( Editor.url('editor://page/ipc-init'));
 
 // ==========================
-// logs API
+// console log API
 // ==========================
 
-Editor.log = function ( text ) {
+Editor.log = function () {
     'use strict';
-    if (arguments.length <= 1) {
-        text = '' + text;
-    }
-    else {
-        text = Util.format.apply(Util, arguments);
-    }
-    console.log(text);
-    Editor.sendToCore('console:log', {
-        message: text
-    });
+    console.log.apply( console, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:log'].concat(args) );
 };
 
-Editor.warn = function ( text ) {
+Editor.success = function () {
     'use strict';
-    if (arguments.length <= 1) {
-        text = '' + text;
-    }
-    else {
-        text = Util.format.apply(Util, arguments);
-    }
-    console.warn(text);
-    Editor.sendToCore('console:warn', {
-        message: text
-    });
-};
 
-Editor.error = function ( text ) {
-    'use strict';
-    if (arguments.length <= 1) {
-        text = '' + text;
-    }
-    else {
-        text = Util.format.apply(Util, arguments);
-    }
-    console.error(text);
-    Editor.sendToCore('console:error', {
-        message: text
-    });
-};
-
-Editor.success = function ( text ) {
-    'use strict';
+    var text = arguments.length > 0 ?  arguments[0] : '';
     if (arguments.length <= 1) {
         text = '' + text;
     }
@@ -101,13 +68,15 @@ Editor.success = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: green');
-    Editor.sendToCore('console:success', {
-        message: text
-    });
+
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:success'].concat(args) );
 };
 
-Editor.failed = function ( text ) {
+Editor.failed = function () {
     'use strict';
+
+    var text = arguments.length > 0 ?  arguments[0] : '';
     if (arguments.length <= 1) {
         text = '' + text;
     }
@@ -115,23 +84,30 @@ Editor.failed = function ( text ) {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: red');
-    Editor.sendToCore('console:failed', {
-        message: text
-    });
+
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:failed'].concat(args) );
 };
 
-Editor.info = function ( text ) {
+Editor.info = function () {
     'use strict';
-    if (arguments.length <= 1) {
-        text = '' + text;
-    }
-    else {
-        text = Util.format.apply(Util, arguments);
-    }
-    console.info(text);
-    Editor.sendToCore('console:info', {
-        message: text
-    });
+    console.info.apply( console, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:info'].concat(args) );
+};
+
+Editor.warn = function () {
+    'use strict';
+    console.warn.apply( console, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:warn'].concat(args) );
+};
+
+Editor.error = function () {
+    'use strict';
+    console.error.apply( console, arguments );
+    var args = [].slice.call(arguments);
+    Editor.sendToCore.apply( Editor, ['console:error'].concat(args) );
 };
 
 // ==========================

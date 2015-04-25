@@ -148,7 +148,7 @@ Editor.sendToWindows = function () {
 
 Editor.sendToCore = function () {
     if ( Ipc.emit.apply ( Ipc, arguments ) === false ) {
-        Editor.failed( 'sendToCore ' + arguments[0] + ' failed.' );
+        Editor.failed( 'sendToCore ' + arguments[0] + ' failed, not responded.' );
     }
 };
 
@@ -188,7 +188,7 @@ Editor.sendToAll = function () {
 Editor.sendToPanel = function ( panelID, message ) {
     var win = Editor.Panel.findWindow( panelID );
     if ( !win ) {
-        Editor.warn( "Failed to send %s to panel %s, can not find it.", message, panelID );
+        Editor.warn( "Failed to send %s, can not find panel %s.", message, panelID );
         return;
     }
 

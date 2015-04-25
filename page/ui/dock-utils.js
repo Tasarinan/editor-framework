@@ -195,11 +195,12 @@ EditorUI.DockUtils = (function () {
 
         if ( _resultDock ) {
             var rect = _resultDock.target.getBoundingClientRect();
+            var panelRect = panelEL.getBoundingClientRect();
             var maskRect = null;
-            var hintWidth = panelEL.computedWidth === 'auto' ? rect.width/2 : panelEL.curWidth;
+            var hintWidth = panelEL.computedWidth === 'auto' ? rect.width/2 : panelRect.width;
             hintWidth = Math.min( hintWidth, Math.min( rect.width/2, 200 ) );
 
-            var hintHeight = panelEL.computedHeight === 'auto' ? rect.height/2 : panelEL.curHeight;
+            var hintHeight = panelEL.computedHeight === 'auto' ? rect.height/2 : panelRect.height;
             hintHeight = Math.min( hintHeight, Math.min( rect.height/2, 200 ) );
 
             if ( _resultDock.position === 'top' ) {

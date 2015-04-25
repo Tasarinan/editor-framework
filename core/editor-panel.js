@@ -8,64 +8,6 @@ var Panel = {};
 var _panel2windows = {};
 var _panel2argv = {};
 
-Ipc.on('panel:page-ready', function ( reply, panelID ) {
-    if ( !panelID ) {
-        Editor.error( 'Empty panelID' );
-        reply( {} );
-        return;
-    }
-
-    // get panelInfo
-    var panelInfo = Editor.Package.panelInfo(panelID);
-
-    // load profiles
-    for ( var type in panelInfo.profiles ) {
-        var profile = panelInfo.profiles[type];
-        profile = Editor.loadProfile( panelID, type, profile );
-        panelInfo.profiles[type] = profile;
-    }
-
-    //
-    reply({
-        'panel-info': panelInfo,
-    });
-});
-
-Ipc.on('panel:ready', function ( panelID ) {
-    var argv = _panel2argv[panelID];
-    Editor.sendToPanel( panelID, 'panel:open', argv );
-});
-
-Ipc.on('panel:open', function ( panelID, argv ) {
-    Panel.open( panelID, argv );
-});
-
-Ipc.on('panel:dock', function ( event, panelID ) {
-    var browserWin = BrowserWindow.fromWebContents( event.sender );
-    var editorWin = Editor.Window.find(browserWin);
-    Panel.dock( panelID, editorWin );
-});
-
-Ipc.on('panel:undock', function ( event, panelID ) {
-    var browserWin = BrowserWindow.fromWebContents( event.sender );
-    var editorWin = Editor.Window.find(browserWin);
-    Panel.undock( panelID, editorWin );
-});
-
-//
-Ipc.on('panel:save-profile', function ( detail ) {
-    var panelID = detail.id;
-    var type = detail.type;
-    var panelProfile = detail.profile;
-
-    var profile = Editor.loadProfile( panelID, type );
-    if ( profile ) {
-        profile.clear();
-        Editor.JS.mixin(profile, panelProfile);
-        profile.save();
-    }
-});
-
 Panel.templateUrl = 'editor://static/window.html';
 
 //
@@ -239,5 +181,63 @@ Panel._onWindowClosed = function ( editorWin ) {
         }
     }
 };
+
+// ========================================
+// Ipc
+// ========================================
+
+Ipc.on('panel:page-ready', function ( reply, panelID ) {
+    if ( !panelID ) {
+        Editor.error( 'Empty panelID' );
+        reply( {} );
+        return;
+    }
+
+    // get panelInfo
+    var panelInfo = Editor.Package.panelInfo(panelID);
+
+    // load profiles
+    for ( var type in panelInfo.profiles ) {
+        var profile = panelInfo.profiles[type];
+        profile = Editor.loadProfile( panelID, type, profile );
+        panelInfo.profiles[type] = profile;
+    }
+
+    //
+    reply({
+        'panel-info': panelInfo,
+    });
+});
+
+Ipc.on('panel:ready', function ( panelID ) {
+    var argv = _panel2argv[panelID];
+    Editor.sendToPanel( panelID, 'panel:open', argv );
+});
+
+Ipc.on('panel:open', function ( panelID, argv ) {
+    Panel.open( panelID, argv );
+});
+
+Ipc.on('panel:dock', function ( event, panelID ) {
+    var browserWin = BrowserWindow.fromWebContents( event.sender );
+    var editorWin = Editor.Window.find(browserWin);
+    Panel.dock( panelID, editorWin );
+});
+
+Ipc.on('panel:undock', function ( event, panelID ) {
+    var browserWin = BrowserWindow.fromWebContents( event.sender );
+    var editorWin = Editor.Window.find(browserWin);
+    Panel.undock( panelID, editorWin );
+});
+
+//
+Ipc.on('panel:save-profile', function ( panelID, type, panelProfile ) {
+    var profile = Editor.loadProfile( panelID, type );
+    if ( profile ) {
+        profile.clear();
+        Editor.JS.mixin(profile, panelProfile);
+        profile.save();
+    }
+});
 
 module.exports = Panel;

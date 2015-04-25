@@ -5,17 +5,13 @@ module.exports = {
     unload: function () {
     },
 
-    'foobar:load': function () {
-        Editor.Package.load( Editor.url('editor://test/packages/foobar') );
+    'foo:bar': function () {
+        var Winston = require('winston');
+        var Util = require('util');
+
+        // var text = Util.format( '%s', new Error('foobar') );
+        // Winston.normal(text);
+        Editor.log('foobar %d', 20);
     },
 
-    'foobar:unload': function () {
-        Editor.Package.unload( Editor.url('editor://test/packages/foobar') );
-    },
-
-    'foobar:open': function () {
-        Editor.Panel.open( 'MyTest.Foobar', {
-            'message': 'Hello Foobar'
-        });
-    },
 };

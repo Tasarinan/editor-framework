@@ -4,4 +4,8 @@ module.exports = {
 
     unload: function () {
     },
+
+    'package-manager:open': function () {
+        Editor.Panel.open('package-manager.panel');
+    },
 };

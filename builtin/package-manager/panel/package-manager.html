@@ -1,0 +1,16 @@
+<dom-module id="package-manager">
+    <link rel="import" type="css" href="package-manager.css">
+
+    <template>
+        <ul>
+            <template class="hello" is="x-repeat" items="{{packages}}">
+                <li builtin$="{{item.builtin}}">
+                    <div class="flex-1">Name: <span>{{item.name}}</span></div>
+                    <div class="flex-1">Enabled: <span>{{item.enabled}}</span></div>
+                </li>
+            </template>
+        </ul>
+    </template>
+</dom-module>
+
+<script type="text/javascript" src="package-manager.js"></script>

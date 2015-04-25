@@ -17,7 +17,7 @@ EditorUI.Tab = Polymer({
         this.setIcon(null);
     },
 
-    constructor: function ( name ) {
+    factoryImpl: function ( name ) {
         this.name = name;
     },
 

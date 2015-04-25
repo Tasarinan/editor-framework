@@ -2,10 +2,9 @@ var Ipc = require('ipc');
 var Path = require('fire-path');
 var Fs = require('fire-fs');
 
+var Package = {};
 var _path2package = {};
 var _panel2info = {};
-
-var Package = {};
 
 Package.load = function ( path ) {
     if ( _path2package[path] )
@@ -60,7 +59,6 @@ Package.load = function ( path ) {
             var template = Editor.JS.mixin( {
                 label: Path.basename(menuPath),
             }, packageObj.menus[menuPath] );
-            // TODO: template = Editor.Menu.parseTemplate(template)
             Editor.MainMenu.add( parentMenuPath, template );
         }
     }
@@ -137,5 +135,24 @@ Package.reload = function ( path ) {
 Package.panelInfo = function ( panelID ) {
     return _panel2info[panelID];
 };
+
+// ========================================
+// Ipc
+// ========================================
+
+Ipc.on('package:query', function ( reply ) {
+    var builtinPath = Path.join( Editor.cwd, 'builtin' );
+    var results = [];
+    for ( var path in _path2package ) {
+        results.push({
+            path: path,
+            builtin: Path.contains( builtinPath, path ),
+            enabled: true, // TODO:
+            info: _path2package[path],
+        });
+    }
+
+    reply(results);
+});
 
 module.exports = Package;

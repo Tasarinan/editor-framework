@@ -121,6 +121,7 @@ function _dumpMenuTemplate ( nativeMenu ) {
 
 function EditorMenu ( template ) {
     if ( template ) {
+        EditorMenu.parseTemplate(template);
         this.nativeMenu = Menu.buildFromTemplate(template);
     }
     else {
@@ -137,6 +138,8 @@ EditorMenu.prototype.clear = function () {
 };
 
 EditorMenu.prototype.add = function ( path, template ) {
+    EditorMenu.parseTemplate(template);
+
     if ( !Array.isArray(template) )
         template = [template];
 
@@ -228,6 +231,44 @@ EditorMenu.prototype.set = function ( path, options ) {
         menuItem.position = options.position;
 
     return true;
+};
+
+EditorMenu.parseTemplate = function ( template ) {
+    if ( Array.isArray(template) ) {
+        for ( var i = 0; i < template.length; ++i ) {
+            EditorMenu.parseTemplate(template[i]);
+        }
+        return;
+    }
+
+    if ( template.message ) {
+        if ( template.click ) {
+            Editor.error('Not support to use click and message at the same time: ' + template.label);
+            return;
+        }
+
+        var args = [template.message];
+        if (template.params) {
+            if ( !Array.isArray(template.params) ) {
+                Editor.error('message parameters must be an array');
+                return;
+            }
+            args = args.concat(template.params);
+            delete template.params;
+        }
+        template.click = (function (args) {
+            return function () {
+                // response in next tick to prevent ipc blocking issue caused by atom-shell's menu.
+                setImmediate(function () {
+                    Editor.sendToCore.apply(Editor, args);
+                });
+            };
+        })(args);
+        delete template.message;
+    }
+    else if ( template.submenu ) {
+        EditorMenu.parseTemplate(template.submenu);
+    }
 };
 
 module.exports = EditorMenu;

@@ -170,9 +170,9 @@ function getDefaultMainMenu () {
                     label: 'Ipc Tests',
                     submenu: [
                         {
-                            label: 'send2panel \'foo:bar\' foobar@editor',
+                            label: 'send2panel \'foo:bar\' foobar.panel',
                             click: function() {
-                                Editor.sendToPanel( "foobar@editor", "foo:bar" );
+                                Editor.sendToPanel( "foobar.panel", "foo:bar" );
                             }
                         },
                     ],
