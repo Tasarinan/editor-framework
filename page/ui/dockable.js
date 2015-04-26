@@ -221,7 +221,7 @@ EditorUI.dockable = (function () {
         },
 
         collapse: function () {
-            if ( this['no-collapse'] )
+            if ( this.noCollapse )
                 return false;
 
             var thisDOM = Polymer.dom(this);

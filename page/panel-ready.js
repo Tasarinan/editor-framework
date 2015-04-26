@@ -7,9 +7,7 @@
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
     Editor.sendRequestToCore('panel:page-ready', Editor.argv.panelID,
-                             function ( detail ) {
-        var panelInfo = detail['panel-info'];
-
+                             function ( panelInfo ) {
         var Path = require('fire-path');
         var viewPath = Path.join( panelInfo.path, panelInfo.view );
 

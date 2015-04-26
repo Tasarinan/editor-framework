@@ -4,7 +4,23 @@ EditorUI.DockUtils = (function () {
     var _resultDock = null;
     var _potentialDocks = [];
     var _dockMask = null;
-    var _draggingTab = null;
+    var _dragenterCnt = 0;
+    var _draggingPanelID = '';
+    var _draggingPanelWidth = -1;
+    var _draggingPanelHeight = -1;
+
+    if ( Editor.isApp ) {
+        var Ipc = require('ipc');
+
+        Ipc.on( 'panel:dragstart', function ( info ) {
+            _draggingPanelID = info['panel-id'];
+            _draggingPanelWidth = info.width;
+            _draggingPanelHeight = info.height;
+        });
+        Ipc.on( 'panel:dragend', function () {
+            _reset();
+        });
+    }
 
     var _updateMask = function ( type, x, y, w, h ) {
         if ( !_dockMask ) {
@@ -42,7 +58,10 @@ EditorUI.DockUtils = (function () {
         }
 
         _resultDock = null;
-        _draggingTab = null;
+        _dragenterCnt = 0;
+        _draggingPanelID = '';
+        _draggingPanelWidth = -1;
+        _draggingPanelHeight = -1;
     };
 
     var DockUtils = {};
@@ -50,12 +69,26 @@ EditorUI.DockUtils = (function () {
     DockUtils.root = null;
 
     DockUtils.dragstart = function ( dataTransfer, tabEL ) {
-        _draggingTab = tabEL;
         dataTransfer.setData('editor/type', 'tab');
+
+        _draggingPanelID = tabEL.viewEL.getAttribute('id');
+
+        var panelEL = Polymer.dom(tabEL).parentNode.panelEL;
+        var panelRect = panelEL.getBoundingClientRect();
+        _draggingPanelWidth = panelEL.computedWidth === 'auto' ? -1 : panelRect.width;
+        _draggingPanelHeight = panelEL.computedHeight === 'auto' ? -1 : panelRect.height;
+
+        if ( Editor.sendToWindows ) {
+            Editor.sendToWindows('panel:dragstart', {
+                'panel-id': _draggingPanelID,
+                'width': _draggingPanelWidth,
+                'height': _draggingPanelHeight,
+            }, Editor.selfExcluded);
+        }
     };
 
     DockUtils.dragoverTab = function ( target ) {
-        if ( _draggingTab === null )
+        if ( _draggingPanelID === '' )
             return;
 
         // clear docks hints
@@ -71,32 +104,41 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.dropTab = function ( target, insertBeforeTabEL ) {
-        var viewEL = _draggingTab.viewEL;
-        var panelEL = Polymer.dom(_draggingTab).parentNode.panelEL;
-        var needCollapse = panelEL !== target.panelEL;
+        if ( _draggingPanelID === '' )
+            return;
 
-        if ( needCollapse ) {
-            panelEL.closeNoCollapse(_draggingTab);
+        var viewEL = Editor.Panel.find(_draggingPanelID);
+        if ( viewEL ) {
+            var panelEL = Polymer.dom(viewEL).parentNode;
+            var needCollapse = panelEL !== target.panelEL;
+            var currentTabEL = panelEL.$.tabs.find(viewEL);
+
+            if ( needCollapse ) {
+                panelEL.closeNoCollapse(currentTabEL);
+            }
+
+            //
+            var newPanel = target.panelEL;
+            var idx = newPanel.insert( currentTabEL, viewEL, insertBeforeTabEL );
+            newPanel.select(idx);
+
+            if ( needCollapse ) {
+                panelEL.collapse();
+            }
+
+            //
+            DockUtils.flush();
+
+            // reset internal states
+            _reset();
+            if ( Editor.sendToWindows ) {
+                Editor.sendToWindows( 'panel:dragend', Editor.selfExcluded );
+            }
         }
-
-        //
-        var newPanel = target.panelEL;
-        var idx = newPanel.insert( _draggingTab, viewEL, insertBeforeTabEL );
-        newPanel.select(idx);
-
-        if ( needCollapse ) {
-            panelEL.collapse();
-        }
-
-        //
-        DockUtils.flush();
-
-        // reset internal states
-        _reset();
     };
 
     DockUtils.dragoverDock = function ( target ) {
-        if ( _draggingTab === null )
+        if ( _draggingPanelID === '' )
             return;
 
         _potentialDocks.push(target);
@@ -137,14 +179,32 @@ EditorUI.DockUtils = (function () {
         DockUtils.reflow();
     });
 
-    document.addEventListener('dragover', function ( event ) {
-        if ( _draggingTab === null )
+    document.addEventListener('dragenter', function ( event ) {
+        if ( _draggingPanelID === '' )
             return;
 
+        event.stopPropagation();
+        ++_dragenterCnt;
+    });
+
+    document.addEventListener('dragleave', function ( event ) {
+        if ( _draggingPanelID === '' )
+            return;
+
+        event.stopPropagation();
+        --_dragenterCnt;
+
+        if ( _dragenterCnt === 0 ) {
+            if ( _dockMask ) {
+                _dockMask.remove();
+            }
+        }
+    });
+
+    document.addEventListener('dragover', function ( event ) {
         event.dataTransfer.dropEffect = 'move';
         event.preventDefault();
 
-        var panelEL = Polymer.dom(_draggingTab).parentNode.panelEL;
         var minDistance = null;
         _resultDock = null;
 
@@ -195,12 +255,14 @@ EditorUI.DockUtils = (function () {
 
         if ( _resultDock ) {
             var rect = _resultDock.target.getBoundingClientRect();
-            var panelRect = panelEL.getBoundingClientRect();
             var maskRect = null;
-            var hintWidth = panelEL.computedWidth === 'auto' ? rect.width/2 : panelRect.width;
+
+            // NOTE: _draggingPanelWidth === -1 means 'auto'
+            var hintWidth = _draggingPanelWidth === -1 ? rect.width/2 : _draggingPanelWidth;
             hintWidth = Math.min( hintWidth, Math.min( rect.width/2, 200 ) );
 
-            var hintHeight = panelEL.computedHeight === 'auto' ? rect.height/2 : panelRect.height;
+            // NOTE: _draggingPanelHeight === -1 means 'auto'
+            var hintHeight = _draggingPanelHeight === -1 ? rect.height/2 : _draggingPanelHeight;
             hintHeight = Math.min( hintHeight, Math.min( rect.height/2, 200 ) );
 
             if ( _resultDock.position === 'top' ) {
@@ -250,15 +312,25 @@ EditorUI.DockUtils = (function () {
     document.addEventListener('dragend', function ( event ) {
         // reset internal states
         _reset();
+        if ( Editor.sendToWindows ) {
+            Editor.sendToWindows( 'panel:dragend', Editor.selfExcluded );
+        }
     });
 
     document.addEventListener('drop', function ( event ) {
         if ( _resultDock === null ) {
             return;
         }
-        var draggingTabDOM = Polymer.dom(_draggingTab);
+        var viewEL = Editor.Panel.find(_draggingPanelID);
+        if ( !viewEL ) {
+            // TODO
+            return;
+        }
 
-        if ( _resultDock.target === draggingTabDOM.parentNode.panelEL &&
+        var panelEL = Polymer.dom(viewEL).parentNode;
+        var currentTabEL = panelEL.$.tabs.find(viewEL);
+
+        if ( _resultDock.target === panelEL &&
              _resultDock.target.tabCount === 1 )
         {
             return;
@@ -267,15 +339,13 @@ EditorUI.DockUtils = (function () {
         event.preventDefault();
         event.stopPropagation();
 
-        var viewEL = _draggingTab.viewEL;
-        var panelEL = draggingTabDOM.parentNode.panelEL;
         var panelDOM = Polymer.dom(panelEL);
 
         var panelRect = panelEL.getBoundingClientRect();
         var parentDock = panelDOM.parentNode;
 
         //
-        panelEL.closeNoCollapse(_draggingTab);
+        panelEL.closeNoCollapse(currentTabEL);
 
         //
         var newPanel = new EditorUI.Panel();

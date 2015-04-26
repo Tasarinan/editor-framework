@@ -28,6 +28,18 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         }
     },
 
+    find: function ( viewEL ) {
+        var thisDOM = Polymer.dom(this);
+
+        for ( var i = 0; i < thisDOM.children.length; ++i ) {
+            var tabEL = thisDOM.children[i];
+            if ( tabEL.viewEL === viewEL )
+                return tabEL;
+        }
+
+        return null;
+    },
+
     insert: function ( tabEL, insertBeforeTabEL ) {
         // do nothing if we insert to ourself
         if ( tabEL === insertBeforeTabEL )

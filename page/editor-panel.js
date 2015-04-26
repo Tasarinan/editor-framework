@@ -221,7 +221,7 @@ Panel.dispatch = function ( panelID, ipcName ) {
 
 Panel.getLayout = function () {
     var root = EditorUI.DockUtils.root;
-    if ( !root  )
+    if ( !root )
         return null;
 
     if ( root['ui-dockable'] ) {
@@ -243,6 +243,28 @@ Panel.getLayout = function () {
             'height': rect.height,
         };
     }
+};
+
+Panel.find = function ( panelID ) {
+    var panelInfo = _idToPanelInfo[panelID];
+    if ( !panelInfo ) {
+        return null;
+    }
+    return panelInfo.element;
+};
+
+// position: top, bottom, left, right, top-left, top-right, bottom-left, bottom-right
+Panel.dockTo = function ( position, panelEL ) {
+    var root = EditorUI.DockUtils.root;
+    if ( !root ) {
+        return null;
+    }
+
+    if ( !root['ui-dockable'] ) {
+        return null;
+    }
+
+    // TODO
 };
 
 module.exports = Panel;

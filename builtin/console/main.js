@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'console:open': function () {
+    'editor-console:open': function () {
         Editor.Panel.open('editor-console.panel');
     },
 };

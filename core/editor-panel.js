@@ -196,7 +196,7 @@ Panel._onWindowClosed = function ( editorWin ) {
 Ipc.on('panel:page-ready', function ( reply, panelID ) {
     if ( !panelID ) {
         Editor.error( 'Empty panelID' );
-        reply( {} );
+        reply();
         return;
     }
 
@@ -211,9 +211,7 @@ Ipc.on('panel:page-ready', function ( reply, panelID ) {
     }
 
     //
-    reply({
-        'panel-info': panelInfo,
-    });
+    reply(panelInfo);
 });
 
 Ipc.on('panel:ready', function ( panelID ) {

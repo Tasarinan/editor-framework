@@ -18,7 +18,12 @@
   </head>
 
   <body class="layout vertical">
-    <editor-dock class="flex-1" row no-collapse>
+    <!-- Test Case: Main Window -->
+    <editor-dock id="mainDock" class="flex-1" row no-collapse>
+      <editor-panel id="panel1"></editor-panel>
+      <editor-panel id="panel2"></editor-panel>
     </editor-dock>
+
+    <script type="text/javascript" src="editor://test/app-page-init.js"></script>
   </body>
 </html>

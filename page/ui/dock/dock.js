@@ -8,13 +8,13 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
     // mixins: [EditorUI.resizable, EditorUI.focusable, EditorUI.dockable],
 
     properties: {
-        'row': {
+        row: {
             type: Boolean,
             value: false,
             reflectToAttribute: true
         },
 
-        'no-collapse': {
+        noCollapse: {
             type: Boolean,
             value: false,
             reflectToAttribute: true
@@ -30,7 +30,7 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
         window.requestAnimationFrame( function () {
             if ( !EditorUI.DockUtils.root ) {
                 var thisDOM = Polymer.dom(this);
-                var isRootDock = this['no-collapse'] && !thisDOM.parentNode['ui-dockable'];
+                var isRootDock = this.noCollapse && !thisDOM.parentNode['ui-dockable'];
                 if ( isRootDock ) {
                     EditorUI.DockUtils.root = this;
                     this._finalizeSizeRecursively();

@@ -21,7 +21,9 @@ EditorUI.droppable = (function () {
             this._dragenterCnt = 0;
 
             dropAreaElement.addEventListener( 'dragenter', function (event) {
-                event.stopPropagation();
+                // NOTE: do not stopPropagation, otherwise dock-utils can not catch the event
+                // event.stopPropagation();
+
                 ++this._dragenterCnt;
 
                 if ( this._dragenterCnt === 1 ) {
@@ -40,7 +42,9 @@ EditorUI.droppable = (function () {
             }.bind(this));
 
             dropAreaElement.addEventListener( 'dragleave', function (event) {
-                event.stopPropagation();
+                // NOTE: do not stopPropagation, otherwise dock-utils can not catch the event
+                // event.stopPropagation();
+
                 --this._dragenterCnt;
 
                 if ( this._dragenterCnt === 0 ) {
