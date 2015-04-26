@@ -50,64 +50,76 @@ require( Editor.url('editor://page/ipc-init'));
 // console log API
 // ==========================
 
-Editor.log = function () {
+Editor.log = function ( text ) {
     'use strict';
-    console.log.apply( console, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:log'].concat(args) );
+
+    if ( arguments.length <= 1 ) {
+        text = '' + text;
+    } else {
+        text = Util.format.apply(Util, arguments);
+    }
+    console.log(text);
+    Editor.sendToCore('console:log', text);
 };
 
-Editor.success = function () {
+Editor.success = function ( text ) {
     'use strict';
 
-    var text = arguments.length > 0 ?  arguments[0] : '';
-    if (arguments.length <= 1) {
+    if ( arguments.length <= 1 ) {
         text = '' + text;
-    }
-    else {
+    } else {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: green');
-
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:success'].concat(args) );
+    Editor.sendToCore('console:success', text);
 };
 
-Editor.failed = function () {
+Editor.failed = function ( text ) {
     'use strict';
 
-    var text = arguments.length > 0 ?  arguments[0] : '';
-    if (arguments.length <= 1) {
+    if ( arguments.length <= 1 ) {
         text = '' + text;
-    }
-    else {
+    } else {
         text = Util.format.apply(Util, arguments);
     }
     console.log('%c' + text, 'color: red');
-
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:failed'].concat(args) );
+    Editor.sendToCore('console:failed', text);
 };
 
-Editor.info = function () {
+Editor.info = function ( text ) {
     'use strict';
-    console.info.apply( console, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:info'].concat(args) );
+
+    if ( arguments.length <= 1 ) {
+        text = '' + text;
+    } else {
+        text = Util.format.apply(Util, arguments);
+    }
+    console.info(text);
+    Editor.sendToCore('console:info', text);
 };
 
-Editor.warn = function () {
+Editor.warn = function ( text ) {
     'use strict';
-    console.warn.apply( console, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:warn'].concat(args) );
+
+    if ( arguments.length <= 1 ) {
+        text = '' + text;
+    } else {
+        text = Util.format.apply(Util, arguments);
+    }
+    console.warn(text);
+    Editor.sendToCore('console:warn', text);
 };
 
-Editor.error = function () {
+Editor.error = function ( text ) {
     'use strict';
-    console.error.apply( console, arguments );
-    var args = [].slice.call(arguments);
-    Editor.sendToCore.apply( Editor, ['console:error'].concat(args) );
+
+    if ( arguments.length <= 1 ) {
+        text = '' + text;
+    } else {
+        text = Util.format.apply(Util, arguments);
+    }
+    console.error(text);
+    Editor.sendToCore('console:error', text);
 };
 
 // ==========================

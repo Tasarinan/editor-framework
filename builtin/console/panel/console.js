@@ -14,34 +14,28 @@ window['editor-console'].panel = Polymer( {
         this.logs = [];
     },
 
-    'console:log': function () {
-        var text = this._format(arguments);
-        this.add( 'log', text );
+    'console:log': function ( message ) {
+        this.add( 'log', message );
     },
 
-    'console:success': function () {
-        var text = this._format(arguments);
-        this.add( 'success', text );
+    'console:success': function ( message ) {
+        this.add( 'success', message );
     },
 
-    'console:failed': function () {
-        var text = this._format(arguments);
-        this.add( 'failed', text );
+    'console:failed': function ( message ) {
+        this.add( 'failed', message );
     },
 
-    'console:info': function () {
-        var text = this._format(arguments);
-        this.add( 'info', text );
+    'console:info': function ( message ) {
+        this.add( 'info', message );
     },
 
-    'console:warn': function () {
-        var text = this._format(arguments);
-        this.add( 'warn', text );
+    'console:warn': function ( message ) {
+        this.add( 'warn', message );
     },
 
-    'console:error': function () {
-        var text = this._format(arguments);
-        this.add( 'error', text );
+    'console:error': function ( message ) {
+        this.add( 'error', message );
     },
 
     add: function ( type, text ) {
@@ -50,7 +44,11 @@ window['editor-console'].panel = Polymer( {
             text: text,
             count: 0,
         });
-        this.logs = this.logs.slice();
+
+        // to make sure after layout and before render
+        window.requestAnimationFrame ( function () {
+            this.scrollTop = this.scrollHeight;
+        }.bind(this) );
     },
 
     clear: function () {
