@@ -101,7 +101,7 @@ var replyCallbacks = {};
  * @param {string} request - the request to send
  * @param {...*} [arg] - whatever arguments the request needs
  * @param {function} reply - the callback used to handle replied arguments
- * @return {number} - session id, can be used in Editor.cancelRequest
+ * @return {number} - session id, can be used in Editor.cancelRequestToCore
  */
 Editor.sendRequestToCore = function (request) {
     'use strict';
@@ -128,7 +128,7 @@ Editor.sendRequestToCore = function (request) {
     return -1;
 };
 
-Editor.cancelRequest = function (sessionId) {
+Editor.cancelRequestToCore = function (sessionId) {
     'use strict';
     var key = "" + sessionId;
     var cb = replyCallbacks[key];
