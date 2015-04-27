@@ -12,9 +12,7 @@ Each package use a `package.json` file to descript it.
   - `menus` Object - The menu list.
     - `key` String - Menu path, example: `foo/bar/foobar`
     - `value` Object - Menu options
-      - `message` String - ipc messages to invoke.
-      - `params` Array - ipc messages parameters.
-      - [Electron's Menu Item Options](https://github.com/atom/electron/blob/master/docs/api/menu-item.md)
+      - [Editor Menu Template](https://github.com/fireball-x/editor-framework/blob/master/docs/api/core/editor-menu.md)
   - `panels` Object - The panel list.
     - `key` String - Panel name, this name will be used with package name to create an ID (e.g. `PackageName.PanelName`).
     - `value` Object - Panel options.
