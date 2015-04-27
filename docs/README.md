@@ -9,6 +9,7 @@
 Modules for the main process (core):
 
   * [Editor](api/core/editor.md)
+  * [Editor.Menu](api/core/editor-menu.md)
 
 Modules for the renderer process (page):
 
