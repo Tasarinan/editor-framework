@@ -1,9 +1,5 @@
 (function () {
 
-// NOTE: there are two way to initialize a panel,
-// panel:ready happends when a panel open in a new window
-// panel:open happends when a panel open in a exists window
-
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
     Editor.sendRequestToCore('panel:query-info', Editor.argv.panelID, function ( panelInfo ) {

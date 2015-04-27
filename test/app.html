@@ -3,13 +3,16 @@
     <title>Main Window</title>
     <style>
       body {
-        margin: 5px;
+        margin: 3px;
         padding: 0px;
         border: 0px;
 
         overflow: hidden;
         color: #ddd;
         background-color: #333;
+      }
+      #mainDock {
+        position: relative;
       }
     </style>
     <script type="text/javascript" src="editor://page/page-init.js"></script>
@@ -18,12 +21,7 @@
   </head>
 
   <body class="layout vertical">
-    <!-- Test Case: Main Window -->
-    <editor-dock id="mainDock" class="flex-1" row no-collapse>
-      <editor-panel id="panel1"></editor-panel>
-      <editor-panel id="panel2"></editor-panel>
-    </editor-dock>
-
+    <div id="mainDock" class="flex-1"></div>
     <script type="text/javascript" src="editor://test/app-page-init.js"></script>
   </body>
 </html>

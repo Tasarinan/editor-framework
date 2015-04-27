@@ -15,6 +15,25 @@ module.exports = {
         // TODO: load your profile, and disable packages here
 
         Editor.registerPackagePath( Editor.url('editor://test/packages') );
+
+        Editor.MainMenu.add('Layout', {
+            label: 'Reset',
+            click: function () {
+                Editor.sendToMainWindow( 'editor:reset-layout', {
+                    'no-collapse': true,
+                    'row': false,
+                    'type': 'dock',
+                    'docks': [
+                        {
+                            'type': 'panel',
+                            'panels': [
+                                'package-manager.panel'
+                            ]
+                        }
+                    ],
+                });
+            }
+        });
     },
 
     run: function () {

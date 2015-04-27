@@ -118,7 +118,14 @@ Ipc.on ( 'editor:sendreq2core', function (event, request, args, sessionId) {
             Editor.error('The callback which reply to "%s" can only be called once!', request);
         }
     }
-    args.unshift(request, replyCallback);
+
+    var options = getOptions(args);
+    if (options && options['require-ipc-event']) {
+        args.unshift(request, event, replyCallback);
+    }
+    else {
+        args.unshift(request, replyCallback);
+    }
     if ( !Ipc.emit.apply(Ipc, args) ) {
         Editor.error('The listener of request "%s" is not yet registered!', request);
     }

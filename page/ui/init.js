@@ -171,6 +171,70 @@
         }
     };
 
+    function _createLayouts ( parentEL, infos, importList ) {
+        for ( var i = 0; i < infos.length; ++i ) {
+            var info = infos[i];
+
+            var el;
+
+            if ( info.type === 'dock' ) {
+                el = new EditorUI.Dock();
+            }
+            else if ( info.type === 'panel' ) {
+                el = new EditorUI.Panel();
+            }
+
+            if ( !el ) continue;
+
+            if ( info.row !== undefined ) {
+                el.row = info.row;
+            }
+            if ( info.width !== undefined ) {
+                el.curWidth = info.width;
+            }
+            if ( info.height !== undefined ) {
+                el.curHeight = info.height;
+            }
+
+            if ( info.docks ) {
+                _createLayouts ( el, info.docks, importList );
+            }
+            else if ( info.panels ) {
+                for ( var j = 0; j < info.panels.length; ++j ) {
+                    importList.push( { dockEL: el, panelID: info.panels[j] } );
+                }
+            }
+
+            Polymer.dom(parentEL).appendChild(el);
+        }
+        parentEL._initResizers();
+    }
+
+    EditorUI.createLayout = function ( parentEL, layoutInfo ) {
+        var importList = [];
+
+        // if we have root, clear all children in it
+        var rootEL = EditorUI.DockUtils.root;
+        if ( rootEL ) {
+            rootEL.remove();
+            EditorUI.DockUtils.root = null;
+        }
+
+        rootEL = new EditorUI.Dock();
+        rootEL.classList.add('fit');
+        rootEL.setAttribute('no-collapse', '');
+
+        if ( layoutInfo ) {
+            if ( layoutInfo.row ) rootEL.setAttribute('row', '');
+            _createLayouts( rootEL, layoutInfo.docks, importList );
+        }
+
+        Polymer.dom(parentEL).appendChild(rootEL);
+        EditorUI.DockUtils.root = rootEL;
+
+        return importList;
+    };
+
     //
     EditorUI.mixin = function ( obj ) {
         'use strict';

@@ -51,7 +51,7 @@ Panel.open = function ( panelID, argv ) {
         // find window by name
         editorWin = Editor.Window.find(windowName);
         if ( editorWin ) {
-            // TODO: ??? how can I dock it???
+            // TODO: use the panelInfo.position to dock it to the exists window
             return;
         }
 

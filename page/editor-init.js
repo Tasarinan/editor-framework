@@ -5,6 +5,7 @@ var Ipc = require('ipc');
 var Util = require('util');
 var Path = require('fire-path');
 var Url = require('fire-url');
+var Async = require('async');
 
 window.Editor = window.Editor || {};
 
@@ -121,6 +122,57 @@ Editor.error = function ( text ) {
     console.error(text);
     Editor.sendToCore('console:error', text);
 };
+
+// ==========================
+// Layout API
+// ==========================
+
+var _importPanel = function ( dockAt, panelID, cb ) {
+    Editor.sendRequestToCore ('panel:query-info', panelID, function ( panelInfo ) {
+        var viewPath = Path.join( panelInfo.path, panelInfo.view );
+        Editor.Panel.load (viewPath, panelID, panelInfo, function ( err, viewEL ) {
+            dockAt.add(viewEL);
+            dockAt.$.tabs.select(0);
+            cb();
+        });
+    });
+};
+
+Editor.loadLayout = function ( anchorEL, cb ) {
+    Editor.sendRequestToCore( 'window:query-layout', Editor.requireIpcEvent, function (wininfo) {
+        if ( !wininfo ) {
+            cb();
+            return;
+        }
+
+        Editor.resetLayout( anchorEL, wininfo.layout, cb );
+    });
+};
+
+Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
+    var importList = EditorUI.createLayout( anchorEL, layoutInfo );
+    Async.each( importList, function ( item, done ) {
+        _importPanel ( item.dockEL, item.panelID, done );
+    }, function ( err ) {
+        EditorUI.DockUtils.flush();
+        cb ();
+    } );
+};
+
+// ==========================
+// Ipc events
+// ==========================
+
+Ipc.on( 'editor:reset-layout', function ( layoutInfo ) {
+    var anchorEL = document.body;
+    if ( EditorUI.DockUtils.root ) {
+        anchorEL = Polymer.dom(EditorUI.DockUtils.root).parentNode;
+    }
+
+    Editor.resetLayout( anchorEL, layoutInfo, function () {
+        EditorUI.DockUtils.flush();
+    });
+});
 
 // ==========================
 // load modules

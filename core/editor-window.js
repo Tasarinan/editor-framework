@@ -259,6 +259,19 @@ Ipc.on ( 'window:open', function ( name, url, options ) {
     editorWin.show();
 } );
 
+Ipc.on ( 'window:query-layout', function ( event, reply ) {
+    var win = BrowserWindow.fromWebContents( event.sender );
+    var editorWin = Editor.Window.find(win);
+    if ( !editorWin ) {
+        Editor.warn('Failed to query layout, can not find the window.');
+        reply();
+        return;
+    }
+
+    var winInfo = _windowLayouts[editorWin.name];
+    reply(winInfo);
+} );
+
 Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
     var win = BrowserWindow.fromWebContents( event.sender );
     var editorWin = Editor.Window.find(win);
@@ -285,7 +298,7 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
     if ( layoutInfo ) {
         if ( layoutInfo.type === 'standalone' ) {
             panels.push({
-                name: layoutInfo.panel,
+                id: layoutInfo.panel,
                 width: layoutInfo.width,
                 height: layoutInfo.height,
             });
@@ -297,7 +310,7 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
 
     for ( var i = 0; i < panels.length; ++i ) {
         var panel = panels[i];
-        profile.panels[panel.name] = {
+        profile.panels[panel.id] = {
             window: editorWin.name,
             x: winPos[0],
             y: winPos[1],
