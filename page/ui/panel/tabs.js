@@ -177,6 +177,20 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
             style.left = (el.offsetLeft + el.offsetWidth) + 'px';
         }
     },
+
+    _onMenuPopup: function ( event ) {
+        var rect = this.$.menu.getBoundingClientRect();
+        var panelID = '';
+        if ( this.activeTab ) {
+            panelID = this.activeTab.viewEL.getAttribute('id','');
+        }
+
+        Editor.Menu.popup( rect.left + 5, rect.bottom + 5, [
+            { label: 'Pop Out', message: 'panel:popup', params: [panelID] },
+            { label: 'Close', message: 'panel:close', params: [panelID] },
+        ]);
+    },
+
 }, EditorUI.droppable));
 
 })();

@@ -181,7 +181,9 @@ Panel.undock = function ( panelID, win ) {
                 break;
             }
         }
-        if ( !found ) {
+
+        // if not panel exists in this window, and it is not the main window, close it.
+        if ( !found && !editorWin.isMainWindow ) {
             editorWin.close();
         }
 

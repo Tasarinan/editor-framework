@@ -19,13 +19,7 @@ EditorUI.DockUtils = (function () {
         });
         Ipc.on( 'panel:drop', function ( panelID ) {
             // close panel
-            var viewEL = Editor.Panel.find(panelID);
-            if ( viewEL ) {
-                var panelEL = Polymer.dom(viewEL).parentNode;
-                var currentTabEL = panelEL.$.tabs.find(viewEL);
-                panelEL.close(currentTabEL);
-                Editor.Panel.close(panelID);
-            }
+            Editor.Panel.close(panelID);
         });
 
     }

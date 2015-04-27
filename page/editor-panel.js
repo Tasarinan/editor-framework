@@ -178,14 +178,23 @@ Panel.open = function ( panelID, argv ) {
 };
 
 Panel.close = function ( panelID ) {
-    var panelInfo = _idToPanelInfo[panelID];
+    // remove panel element from tab
+    var viewEL = Editor.Panel.find(panelID);
+    if ( viewEL ) {
+        var panelEL = Polymer.dom(viewEL).parentNode;
+        var currentTabEL = panelEL.$.tabs.find(viewEL);
+        panelEL.close(currentTabEL);
+    }
 
+    // remove panelInfo
+    var panelInfo = _idToPanelInfo[panelID];
     if ( panelInfo) {
         panelInfo.ipcListener.clear();
         delete _idToPanelInfo[panelID];
-    }
 
-    Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
+        // send undock message
+        Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
+    }
 };
 
 Panel.closeAll = function () {
@@ -266,5 +275,15 @@ Panel.dockTo = function ( position, panelEL ) {
 
     // TODO
 };
+
+// ==========================
+// Ipc events
+// ==========================
+
+var Ipc = require('ipc');
+
+Ipc.on('panel:close', function ( panelID ) {
+    Editor.Panel.close(panelID);
+});
 
 module.exports = Panel;

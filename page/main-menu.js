@@ -9,7 +9,9 @@ MainMenu.apply = function () {
 };
 
 MainMenu.add = function ( path, template ) {
-    Editor.sendToCore('main-menu:add', path, template);
+    if ( Editor.Menu.checkTemplate(template) ) {
+        Editor.sendToCore('main-menu:add', path, template);
+    }
 };
 
 MainMenu.remove = function ( path ) {

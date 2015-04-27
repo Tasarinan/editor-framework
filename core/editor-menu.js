@@ -1,3 +1,4 @@
+var BrowserWindow = require('browser-window');
 var Ipc = require('ipc');
 var Menu = require('menu');
 var MenuItem = require('menu-item');
@@ -115,13 +116,9 @@ function _cloneMenuExcept ( newMenu, nativeMenu, exceptPath, curPath ) {
     return result;
 }
 
-function _dumpMenuTemplate ( nativeMenu ) {
-    // TODO
-}
-
-function EditorMenu ( template ) {
+function EditorMenu ( template, webContents ) {
     if ( template ) {
-        EditorMenu.parseTemplate(template);
+        EditorMenu.parseTemplate(template, webContents);
         this.nativeMenu = Menu.buildFromTemplate(template);
     }
     else {
@@ -233,10 +230,10 @@ EditorMenu.prototype.set = function ( path, options ) {
     return true;
 };
 
-EditorMenu.parseTemplate = function ( template ) {
+EditorMenu.parseTemplate = function ( template, webContents ) {
     if ( Array.isArray(template) ) {
         for ( var i = 0; i < template.length; ++i ) {
-            EditorMenu.parseTemplate(template[i]);
+            EditorMenu.parseTemplate(template[i], webContents);
         }
         return;
     }
@@ -257,18 +254,36 @@ EditorMenu.parseTemplate = function ( template ) {
             delete template.params;
         }
         template.click = (function (args) {
-            return function () {
-                // response in next tick to prevent ipc blocking issue caused by atom-shell's menu.
-                setImmediate(function () {
-                    Editor.sendToCore.apply(Editor, args);
-                });
-            };
+            if ( webContents ) {
+                return function () {
+                    webContents.send.apply(webContents,args);
+                };
+            }
+            else {
+                return function () {
+                    // response in next tick to prevent ipc blocking issue caused by atom-shell's menu.
+                    setImmediate(function () {
+                        Editor.sendToCore.apply(Editor, args);
+                    });
+                };
+            }
         })(args);
         delete template.message;
     }
     else if ( template.submenu ) {
-        EditorMenu.parseTemplate(template.submenu);
+        EditorMenu.parseTemplate(template.submenu, webContents);
     }
 };
+
+// ========================================
+// Ipc
+// ========================================
+
+Ipc.on('menu:popup', function ( event, x, y, template ) {
+    var editorMenu = new Editor.Menu(template,event.sender);
+    if ( x ) x = Math.floor(x);
+    if ( y ) y = Math.floor(y);
+    editorMenu.nativeMenu.popup(BrowserWindow.fromWebContents(event.sender), x, y);
+});
 
 module.exports = EditorMenu;

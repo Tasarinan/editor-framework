@@ -180,6 +180,7 @@ Ipc.on( 'editor:reset-layout', function ( layoutInfo ) {
 // ==========================
 
 Editor.Panel = require( Editor.url('editor://page/editor-panel'));
+Editor.Menu = require( Editor.url('editor://page/editor-menu'));
 Editor.MainMenu = require( Editor.url('editor://page/main-menu'));
 
 })();
