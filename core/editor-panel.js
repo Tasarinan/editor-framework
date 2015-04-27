@@ -155,15 +155,39 @@ Panel.findPanels = function ( packageName ) {
 };
 
 Panel.dock = function ( panelID, win ) {
-    // Editor.hint('dock %s', panelID ); // DEBUG
+    // Editor.info('dock %s', panelID ); // DEBUG
+
+    var editorWin = _panel2windows[panelID];
+
+    // if we found same panel dock in different place
+    if ( editorWin && editorWin !== win ) {
+        // TODO: should we report error ????
+    }
+
     _panel2windows[panelID] = win;
 };
 
 Panel.undock = function ( panelID, win ) {
-    // Editor.hint('undock %s', panelID ); // DEBUG
+    // Editor.info('undock %s', panelID ); // DEBUG
     var editorWin = _panel2windows[panelID];
-    if ( editorWin === win )
-        return delete _panel2windows[panelID];
+    if ( editorWin === win ) {
+        delete _panel2windows[panelID];
+
+        // check if we have other panels in the same window
+        // if no panels left, we close the window
+        var found = false;
+        for ( var id in _panel2windows ) {
+            if ( win === _panel2windows[id] ) {
+                found = true;
+                break;
+            }
+        }
+        if ( !found ) {
+            editorWin.close();
+        }
+
+        return true;
+    }
     return false;
 };
 
@@ -193,7 +217,7 @@ Panel._onWindowClosed = function ( editorWin ) {
 // Ipc
 // ========================================
 
-Ipc.on('panel:page-ready', function ( reply, panelID ) {
+Ipc.on('panel:query-info', function ( reply, panelID ) {
     if ( !panelID ) {
         Editor.error( 'Empty panelID' );
         reply();

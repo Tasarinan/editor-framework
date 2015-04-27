@@ -6,22 +6,21 @@
 
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
-    Editor.sendRequestToCore('panel:page-ready', Editor.argv.panelID,
-                             function ( panelInfo ) {
+    Editor.sendRequestToCore('panel:query-info', Editor.argv.panelID, function ( panelInfo ) {
         var Path = require('fire-path');
         var viewPath = Path.join( panelInfo.path, panelInfo.view );
 
         Editor.Panel.load( viewPath,
                            Editor.argv.panelID,
                            panelInfo,
-                           function ( err, element ) {
+                           function ( err, viewEL ) {
                                if ( panelInfo.type === 'dockable' ) {
                                    var dock = new EditorUI.Dock();
                                    dock.setAttribute('no-collapse', '');
                                    dock.classList.add('fit');
 
                                    var panel = new EditorUI.Panel();
-                                   panel.add(element);
+                                   panel.add(viewEL);
                                    panel.select(0);
 
                                    Polymer.dom(dock).appendChild(panel);
@@ -30,9 +29,9 @@ if ( Editor.argv.panelID ) {
                                    EditorUI.DockUtils.root = dock;
                                }
                                else {
-                                   document.body.appendChild(element);
+                                   document.body.appendChild(viewEL);
 
-                                   EditorUI.DockUtils.root = element;
+                                   EditorUI.DockUtils.root = viewEL;
                                }
                                EditorUI.DockUtils.reset();
 

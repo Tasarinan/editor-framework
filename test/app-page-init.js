@@ -2,15 +2,15 @@
     var Async = require('async');
 
     var importPanel = function ( dockAt, panelID, cb ) {
-        Editor.sendRequestToCore( 'panel:page-ready', panelID, function ( panelInfo ) {
+        Editor.sendRequestToCore( 'panel:query-info', panelID, function ( panelInfo ) {
             var Path = require('fire-path');
             var viewPath = Path.join( panelInfo.path, panelInfo.view );
 
             Editor.Panel.load(viewPath,
                               panelID,
                               panelInfo,
-                              function ( err, element ) {
-                                  dockAt.add(element);
+                              function ( err, viewEL ) {
+                                  dockAt.add(viewEL);
                                   dockAt.$.tabs.select(0);
                                   cb();
                               });

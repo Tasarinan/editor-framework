@@ -14,9 +14,7 @@ var Winston = require('winston');
 process.removeAllListeners('uncaughtException');
 process.on('uncaughtException', function(error) {
     if ( Editor && Editor.sendToWindows ) {
-        Editor.sendToWindows('console:error', {
-            message: error.stack || error
-        });
+        Editor.sendToWindows('console:error', error.stack || error);
     }
     Winston.uncaught( error.stack || error );
 });
