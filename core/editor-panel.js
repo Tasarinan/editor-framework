@@ -11,7 +11,7 @@ var _panel2argv = {};
 Panel.templateUrl = 'editor://static/window.html';
 
 //
-Panel.open = function ( panelID, argv ) {
+Panel.open = function ( panelID, openNew, argv ) {
     var panelInfo = Editor.Package.panelInfo(panelID);
     if ( !panelInfo ) {
         Editor.error('Failed to open panel %s, panel info not found.', panelID);
@@ -22,6 +22,11 @@ Panel.open = function ( panelID, argv ) {
 
     var editorWin = Panel.findWindow(panelID);
     if ( editorWin ) {
+        if ( openNew ) {
+            Editor.error('Can not open panel %s in a new window, it already exists.', panelID);
+            return;
+        }
+
         // if we found the window, send panel:open to it
         Editor.sendToPanel( panelID, 'panel:open', argv );
         editorWin.show();
@@ -44,8 +49,9 @@ Panel.open = function ( panelID, argv ) {
     // load layout-settings, and find windows by name
     var layoutProfile = Editor.loadProfile('layout.' + panelID, 'local' );
     if ( layoutProfile ) {
-        if ( layoutProfile.window )
+        if ( !openNew && layoutProfile.window ) {
             windowName = layoutProfile.window;
+        }
 
         // find window by name
         editorWin = Editor.Window.find(windowName);
@@ -245,7 +251,11 @@ Ipc.on('panel:ready', function ( panelID ) {
 });
 
 Ipc.on('panel:open', function ( panelID, argv ) {
-    Panel.open( panelID, argv );
+    Panel.open( panelID, false, argv );
+});
+
+Ipc.on('panel:new', function ( panelID, argv ) {
+    Panel.open( panelID, true, argv );
 });
 
 Ipc.on('panel:dock', function ( event, panelID ) {

@@ -5,21 +5,27 @@
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
-    "Foo/Bar": {
+    "Foobar/Open Foobar": {
       "message": "foobar:open"
+    },
+    "Foobar/Test 01": {
+      "message": "foobar:test",
+      "params": ["hello", "world"],
+      "panel": "foobar.panel"
     }
   },
   "panels": {
     "panel": {
       "type": "dockable",
-      "view": "foobar.html",
+      "view": "panel.html",
       "title": "Foobar",
       "width": 500,
       "height": 800,
       "min-width": 400,
       "min-height": 200,
       "messages": [
-        "foobar:hello-world"
+        "foobar:hello-world",
+        "foobar:test"
       ]
     }
   }

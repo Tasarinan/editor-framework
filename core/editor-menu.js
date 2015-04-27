@@ -253,10 +253,23 @@ EditorMenu.parseTemplate = function ( template, webContents ) {
             args = args.concat(template.params);
             delete template.params;
         }
+        if ( template.panel ) {
+            args.unshift(template.panel);
+        }
+
         template.click = (function (args) {
-            if ( webContents ) {
+            if ( template.panel ) {
                 return function () {
-                    webContents.send.apply(webContents,args);
+                    setImmediate(function () {
+                        Editor.sendToPanel.apply(Editor, args);
+                    });
+                };
+            }
+            else if ( webContents ) {
+                return function () {
+                    setImmediate(function () {
+                        webContents.send.apply(webContents,args);
+                    });
                 };
             }
             else {

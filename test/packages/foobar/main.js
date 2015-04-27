@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'foobar:foo-bar': function ( text ) {
-        Editor.success(text);
+    'foobar:open': function () {
+        Editor.Panel.open( 'foobar.panel' );
     },
 };

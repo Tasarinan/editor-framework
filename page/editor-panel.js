@@ -286,4 +286,9 @@ Ipc.on('panel:close', function ( panelID ) {
     Editor.Panel.close(panelID);
 });
 
+Ipc.on('panel:popup', function ( panelID ) {
+    Editor.Panel.close(panelID);
+    Editor.sendToCore('panel:new', panelID);
+});
+
 module.exports = Panel;

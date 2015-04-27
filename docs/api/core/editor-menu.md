@@ -10,6 +10,7 @@ and add some other values:
 - `template`: Array or Object
     - `message`: String - Ipc message name
     - `params`: Array - The parameters passed through ipc
+    - `panel`: String - The panelID, if specified, the message will send to panel
 
 ## Class Method: reset(template)
 
