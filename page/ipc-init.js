@@ -97,9 +97,11 @@ var nextSessionId = 0;
 var replyCallbacks = {};
 
 /**
+ * @method sendRequestToCore
  * @param {string} request - the request to send
  * @param {...*} [arg] - whatever arguments the request needs
  * @param {function} reply - the callback used to handle replied arguments
+ * @return {number} - session id, can be used in Editor.cancelRequest
  */
 Editor.sendRequestToCore = function (request) {
     'use strict';
@@ -114,6 +116,7 @@ Editor.sendRequestToCore = function (request) {
             replyCallbacks[key] = reply;
 
             Ipc.send('editor:sendreq2core', request, args, sessionId);
+            return sessionId;
         }
         else {
             Editor.error('The reply must be of type function');
@@ -121,6 +124,16 @@ Editor.sendRequestToCore = function (request) {
     }
     else {
         Editor.error('The request must be of type string');
+    }
+    return -1;
+};
+
+Editor.cancelRequest = function (sessionId) {
+    'use strict';
+    var key = "" + sessionId;
+    var cb = replyCallbacks[key];
+    if ( cb ) {
+        delete replyCallbacks[key];
     }
 };
 
@@ -136,9 +149,9 @@ Ipc.on('editor:sendreq2core:reply', function replyCallback (args, sessionId) {
         //}
         delete replyCallbacks[key];
     }
-    else {
-        Editor.error('non-exists callback of session:', sessionId);
-    }
+    // else {
+    //     Editor.error('non-exists callback of session:', sessionId);
+    // }
 });
 
 Ipc.on('editor:send2panel', function () {

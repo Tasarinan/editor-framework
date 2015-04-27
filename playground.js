@@ -5,7 +5,12 @@ module.exports = {
     unload: function () {
     },
 
-    'foo:bar': function () {
+    'foo:bar': function ( reply ) {
+        console.log('foobar in core');
+        setTimeout(function () {
+            reply();
+        }, 1000 );
+
         // var Winston = require('winston');
         // Winston.query({
         //     from: new Date() - 24 * 60 * 60 * 1000,
