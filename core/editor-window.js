@@ -150,7 +150,7 @@ EditorWindow.prototype.restorePositionAndSize = function () {
     var size = this.nativeWin.getSize();
     var winPosX, winPosY, winSizeX = size[0], winSizeY = size[1];
 
-    var profile = Editor.loadProfile('layout', 'local');
+    var profile = Editor.loadProfile('layout.windows', 'local');
     if ( profile.windows && profile.windows[this.name] ) {
         var winInfo = profile.windows[this.name];
         winPosX = winInfo.x;
@@ -176,9 +176,8 @@ Object.defineProperty(EditorWindow, 'windows', {
 EditorWindow.loadLayouts = function () {
     _windowLayouts = {};
 
-    var profile = Editor.loadProfile( 'layout', 'local', {
+    var profile = Editor.loadProfile( 'layout.windows', 'local', {
         windows: {},
-        panels: {},
     });
     for ( var name in profile.windows ) {
         var info = profile.windows[name];
@@ -228,7 +227,7 @@ EditorWindow.saveLayout = function () {
     if ( !Editor.mainWindow )
         return;
 
-    var profile = Editor.loadProfile( 'layout', 'local' );
+    var profile = Editor.loadProfile( 'layout.windows', 'local' );
     profile.windows = {};
     for ( var i = 0; i < _windows.length; ++i ) {
         var win = _windows[i];
@@ -290,40 +289,27 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
         layout: layoutInfo
     };
 
-    // save panel last edit info
-    var profile = Editor.loadProfile( 'layout', 'local' );
-    profile.panels = profile.panels || {};
+    // save windows layout
+    _windowLayouts[editorWin.name] = winInfo;
+    EditorWindow.saveLayout();
 
+    // save panel standalone layout
     var panels = [];
     if ( layoutInfo ) {
-        if ( layoutInfo.type === 'standalone' ) {
-            panels.push({
-                id: layoutInfo.panel,
-                width: layoutInfo.width,
-                height: layoutInfo.height,
-            });
-        }
-        else {
+        if ( layoutInfo.type === 'dock' ) {
             _getPanels( layoutInfo.docks, panels );
         }
     }
-
     for ( var i = 0; i < panels.length; ++i ) {
         var panel = panels[i];
-        profile.panels[panel.id] = {
-            window: editorWin.name,
-            x: winPos[0],
-            y: winPos[1],
-            width: panel.width,
-            height: panel.height,
-        };
+        var panelProfile = Editor.loadProfile( 'layout.' + panel.name, 'local' );
+        panelProfile.window = editorWin.name;
+        panelProfile.x = winPos[0];
+        panelProfile.y = winPos[1];
+        panelProfile.width = panel.width;
+        panelProfile.height = panel.height;
+        panelProfile.save();
     }
-
-    profile.save();
-
-    // cache and save window layout
-    _windowLayouts[editorWin.name] = winInfo;
-    EditorWindow.saveLayout();
 } );
 
 var _getPanels = function ( docks, panels ) {

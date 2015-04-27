@@ -42,11 +42,10 @@ Panel.open = function ( panelID, argv ) {
     };
 
     // load layout-settings, and find windows by name
-    var profile = Editor.loadProfile('layout', 'local' );
-    var panels = profile.panels;
-    if ( profile.panels && profile.panels[panelID] ) {
-        var panelProfile = profile.panels[panelID];
-        windowName = panelProfile.window;
+    var layoutProfile = Editor.loadProfile('layout.' + panelID, 'local' );
+    if ( layoutProfile ) {
+        if ( layoutProfile.window )
+            windowName = layoutProfile.window;
 
         // find window by name
         editorWin = Editor.Window.find(windowName);
@@ -55,10 +54,10 @@ Panel.open = function ( panelID, argv ) {
             return;
         }
 
-        options.x = parseInt(panelProfile.x);
-        options.y = parseInt(panelProfile.y);
-        options.width = parseInt(panelProfile.width);
-        options.height = parseInt(panelProfile.height);
+        options.x = parseInt(layoutProfile.x);
+        options.y = parseInt(layoutProfile.y);
+        options.width = parseInt(layoutProfile.width);
+        options.height = parseInt(layoutProfile.height);
     }
 
     // create new window

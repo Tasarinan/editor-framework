@@ -155,7 +155,10 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
         _importPanel ( item.dockEL, item.panelID, done );
     }, function ( err ) {
         EditorUI.DockUtils.flush();
-        cb ();
+        Editor.sendToCore('window:save-layout',
+                          Editor.Panel.getLayout(),
+                          Editor.requireIpcEvent);
+        if ( cb ) cb ();
     } );
 };
 
@@ -169,9 +172,7 @@ Ipc.on( 'editor:reset-layout', function ( layoutInfo ) {
         anchorEL = Polymer.dom(EditorUI.DockUtils.root).parentNode;
     }
 
-    Editor.resetLayout( anchorEL, layoutInfo, function () {
-        EditorUI.DockUtils.flush();
-    });
+    Editor.resetLayout( anchorEL, layoutInfo );
 });
 
 // ==========================
