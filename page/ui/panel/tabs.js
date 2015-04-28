@@ -187,7 +187,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
 
         Editor.Menu.popup( rect.left + 5, rect.bottom + 5, [
             { label: 'Pop Out', message: 'panel:popup', params: [panelID] },
-            { label: 'Close', message: 'panel:close', params: [panelID] },
+            { label: 'Close', command: 'Editor.Panel.close', params: [panelID] },
         ]);
     },
 

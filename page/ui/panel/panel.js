@@ -264,7 +264,8 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         //
         tabs.removeTab(tabEL);
         if ( tabEL.viewEL ) {
-            tabEL.viewEL.remove();
+            var panelDOM = Polymer.dom(Polymer.dom(tabEL.viewEL).parentNode);
+            panelDOM.removeChild(tabEL.viewEL);
             tabEL.viewEL = null;
         }
 

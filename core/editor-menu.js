@@ -238,13 +238,15 @@ EditorMenu.parseTemplate = function ( template, webContents ) {
         return;
     }
 
+    var args;
+
     if ( template.message ) {
         if ( template.click ) {
             Editor.error('Not support to use click and message at the same time: ' + template.label);
             return;
         }
 
-        var args = [template.message];
+        args = [template.message];
         if (template.params) {
             if ( !Array.isArray(template.params) ) {
                 Editor.error('message parameters must be an array');
@@ -282,6 +284,33 @@ EditorMenu.parseTemplate = function ( template, webContents ) {
             }
         })(args);
         delete template.message;
+    }
+    else if ( template.command ) {
+        var paths = template.command.split('.');
+        var idx = 0;
+        var tmp = global[paths[idx]];
+        ++idx;
+        while ( tmp && idx < paths.length ) {
+            tmp = tmp[paths[idx]];
+            ++idx;
+        }
+        if ( tmp && typeof tmp === 'function' ) {
+            args = [];
+            if (template.params) {
+                if ( !Array.isArray(template.params) ) {
+                    Editor.error('message parameters must be an array');
+                    return;
+                }
+                args = args.concat(template.params);
+                delete template.params;
+            }
+            template.click = (function (args) {
+                return function () {
+                    tmp.apply(Editor, args);
+                };
+            })(args);
+        }
+        delete template.command;
     }
     else if ( template.submenu ) {
         EditorMenu.parseTemplate(template.submenu, webContents);

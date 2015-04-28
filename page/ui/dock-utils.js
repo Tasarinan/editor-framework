@@ -17,11 +17,6 @@ EditorUI.DockUtils = (function () {
         Ipc.on( 'panel:dragend', function () {
             _reset();
         });
-        Ipc.on( 'panel:drop', function ( panelID ) {
-            // close panel
-            Editor.Panel.close(panelID);
-        });
-
     }
 
     var _updateMask = function ( type, x, y, w, h ) {
@@ -135,9 +130,11 @@ EditorUI.DockUtils = (function () {
             _reset();
         }
         else {
-            if ( Editor.sendToWindows ) {
-                Editor.sendToWindows( 'panel:drop', panelID, Editor.selfExcluded );
-            }
+            Editor.Panel.close(panelID);
+
+            // TODO: should be Editor.Panel.dockTo(panelID,...);
+            Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
+
             Editor.sendRequestToCore('panel:query-info', panelID, function ( panelInfo ) {
                 var Path = require('fire-path');
                 var viewPath = Path.join( panelInfo.path, panelInfo.view );

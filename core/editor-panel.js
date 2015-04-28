@@ -10,6 +10,31 @@ var _panel2argv = {};
 
 Panel.templateUrl = 'editor://static/window.html';
 
+_dock = function ( panelID, win ) {
+    // Editor.info('%s dock to %s', panelID, win.name ); // DEBUG
+
+    var editorWin = _panel2windows[panelID];
+
+    // if we found same panel dock in different place
+    if ( editorWin && editorWin !== win ) {
+        // TODO: should we report error ????
+    }
+
+    _panel2windows[panelID] = win;
+};
+
+_undock = function ( panelID ) {
+    var editorWin = _panel2windows[panelID];
+    // Editor.info('%s undock from %s', panelID, editorWin.name ); // DEBUG
+
+    if ( editorWin ) {
+        editorWin.sendToPage( 'panel:undock', panelID );
+        delete _panel2windows[panelID];
+        return editorWin;
+    }
+    return null;
+};
+
 //
 Panel.open = function ( panelID, openNew, argv ) {
     var panelInfo = Editor.Package.panelInfo(panelID);
@@ -57,6 +82,7 @@ Panel.open = function ( panelID, openNew, argv ) {
         editorWin = Editor.Window.find(windowName);
         if ( editorWin ) {
             // TODO: use the panelInfo.position to dock it to the exists window
+            _dock( panelID, editorWin );
             return;
         }
 
@@ -108,6 +134,7 @@ Panel.open = function ( panelID, openNew, argv ) {
 
     //
     editorWin = new Editor.Window(windowName, options);
+    _dock( panelID, editorWin );
 
     // BUG: https://github.com/atom/atom-shell/issues/1321
     editorWin.nativeWin.setContentSize( options.width, options.height );
@@ -116,6 +143,26 @@ Panel.open = function ( panelID, openNew, argv ) {
         panelID: panelID
     });
     editorWin.focus();
+};
+
+Panel.close = function ( panelID ) {
+    var editorWin = _undock(panelID);
+    if ( editorWin ) {
+        // check if we have other panels in the same window
+        // if no panels left, we close the window
+        var found = false;
+        for ( var id in _panel2windows ) {
+            if ( editorWin === _panel2windows[id] ) {
+                found = true;
+                break;
+            }
+        }
+
+        // if not panel exists in this window, and it is not the main window, close it.
+        if ( !found && !editorWin.isMainWindow ) {
+            editorWin.close();
+        }
+    }
 };
 
 Panel.findWindow = function ( panelID ) {
@@ -157,45 +204,6 @@ Panel.findPanels = function ( packageName ) {
     }
 
     return panels;
-};
-
-Panel.dock = function ( panelID, win ) {
-    // Editor.info('dock %s', panelID ); // DEBUG
-
-    var editorWin = _panel2windows[panelID];
-
-    // if we found same panel dock in different place
-    if ( editorWin && editorWin !== win ) {
-        // TODO: should we report error ????
-    }
-
-    _panel2windows[panelID] = win;
-};
-
-Panel.undock = function ( panelID, win ) {
-    // Editor.info('undock %s', panelID ); // DEBUG
-    var editorWin = _panel2windows[panelID];
-    if ( editorWin === win ) {
-        delete _panel2windows[panelID];
-
-        // check if we have other panels in the same window
-        // if no panels left, we close the window
-        var found = false;
-        for ( var id in _panel2windows ) {
-            if ( win === _panel2windows[id] ) {
-                found = true;
-                break;
-            }
-        }
-
-        // if not panel exists in this window, and it is not the main window, close it.
-        if ( !found && !editorWin.isMainWindow ) {
-            editorWin.close();
-        }
-
-        return true;
-    }
-    return false;
 };
 
 // TODO: we need to check if the windows panel only have that panel so that we can close the window
@@ -261,13 +269,11 @@ Ipc.on('panel:new', function ( panelID, argv ) {
 Ipc.on('panel:dock', function ( event, panelID ) {
     var browserWin = BrowserWindow.fromWebContents( event.sender );
     var editorWin = Editor.Window.find(browserWin);
-    Panel.dock( panelID, editorWin );
+    _dock( panelID, editorWin );
 });
 
-Ipc.on('panel:undock', function ( event, panelID ) {
-    var browserWin = BrowserWindow.fromWebContents( event.sender );
-    var editorWin = Editor.Window.find(browserWin);
-    Panel.undock( panelID, editorWin );
+Ipc.on('panel:close', function ( panelID ) {
+    Panel.close( panelID );
 });
 
 //

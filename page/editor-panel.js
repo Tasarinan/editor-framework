@@ -162,7 +162,6 @@ Panel.load = function ( url, panelID, panelInfo, cb ) {
             messages: panelInfo.messages,
             ipcListener: ipcListener
         };
-        Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
 
         viewEL.profiles = panelInfo.profiles;
         for ( var type in panelInfo.profiles ) {
@@ -178,6 +177,17 @@ Panel.open = function ( panelID, argv ) {
 };
 
 Panel.close = function ( panelID ) {
+    Panel.undock(panelID);
+    Editor.sendToCore('panel:close', panelID);
+};
+
+Panel.closeAll = function () {
+    for ( var id in _idToPanelInfo ) {
+        Panel.close(id);
+    }
+};
+
+Panel.undock = function ( panelID ) {
     // remove panel element from tab
     var viewEL = Editor.Panel.find(panelID);
     if ( viewEL ) {
@@ -193,15 +203,6 @@ Panel.close = function ( panelID ) {
     if ( panelInfo) {
         panelInfo.ipcListener.clear();
         delete _idToPanelInfo[panelID];
-
-        // send undock message
-        Editor.sendToCore('panel:undock', panelID, Editor.requireIpcEvent);
-    }
-};
-
-Panel.closeAll = function () {
-    for ( var id in _idToPanelInfo ) {
-        Panel.close(id);
     }
 };
 
@@ -294,8 +295,16 @@ Ipc.on('panel:close', function ( panelID ) {
 });
 
 Ipc.on('panel:popup', function ( panelID ) {
-    Editor.Panel.close(panelID);
-    Editor.sendToCore('panel:new', panelID);
+    window.requestAnimationFrame( function () {
+        Editor.Panel.close(panelID);
+        Editor.sendToCore('panel:new', panelID);
+    });
+});
+
+Ipc.on('panel:undock', function ( panelID ) {
+    window.requestAnimationFrame( function () {
+        Editor.Panel.undock(panelID);
+    });
 });
 
 module.exports = Panel;
