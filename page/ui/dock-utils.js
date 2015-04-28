@@ -75,14 +75,20 @@ EditorUI.DockUtils = (function () {
             panelID: panelID,
             panelRectWidth: panelRect.width,
             panelRectHeight: panelRect.height,
-            panelMinWidth: panelEL.minWidth,
-            panelMinHeight: panelEL.minHeight,
-            panelMaxWidth: panelEL.maxWidth,
-            panelMaxHeight: panelEL.maxHeight,
+
+            panelWidth: panelEL.width,
+            panelHeight: panelEL.height,
             panelComputedWidth: panelEL.computedWidth,
             panelComputedHeight: panelEL.computedHeight,
             panelCurWidth: panelEL.curWidth,
             panelCurHeight: panelEL.curHeight,
+
+            panelMinWidth: panelEL.minWidth,
+            panelMinHeight: panelEL.minHeight,
+            panelMaxWidth: panelEL.maxWidth,
+            panelMaxHeight: panelEL.maxHeight,
+
+            parentDockRow: Polymer.dom(panelEL).parentNode.row,
         };
 
         if ( Editor.sendToWindows ) {
@@ -352,6 +358,23 @@ EditorUI.DockUtils = (function () {
         }
 
         var panelID = _draggingInfo.panelID;
+        var panelRectWidth = _draggingInfo.panelRectWidth;
+        var panelRectHeight = _draggingInfo.panelRectHeight;
+
+        var panelWidth = _draggingInfo.panelWidth;
+        var panelHeight = _draggingInfo.panelHeight;
+        var panelComputedWidth = _draggingInfo.panelComputedWidth;
+        var panelComputedHeight = _draggingInfo.panelComputedHeight;
+        var panelCurWidth = _draggingInfo.panelCurWidth;
+        var panelCurHeight = _draggingInfo.panelCurHeight;
+
+        var panelMinWidth = _draggingInfo.panelMinWidth;
+        var panelMinHeight = _draggingInfo.panelMinHeight;
+        var panelMaxWidth = _draggingInfo.panelMaxWidth;
+        var panelMaxHeight = _draggingInfo.panelMaxHeight;
+
+        var parentDockRow = _draggingInfo.parentDockRow;
+
         var targetDockEL = _resultDock.target;
         var dockPosition = _resultDock.position;
 
@@ -362,20 +385,46 @@ EditorUI.DockUtils = (function () {
             Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
             Editor.Panel.load( panelID, function ( err, viewEL ) {
 
-                // var newPanel = new EditorUI.Panel();
-                // newPanel['min-width'] = panelEL['min-width'];
-                // newPanel['max-width'] = panelEL['max-width'];
-                // newPanel['min-height'] = panelEL['min-height'];
-                // newPanel['max-height'] = panelEL['max-height'];
-                // newPanel.width = panelEL.width;
-                // newPanel.height = panelEL.height;
+                var newPanel = new EditorUI.Panel();
+                newPanel.width = panelWidth;
+                newPanel.height = panelHeight;
+                newPanel.minWidth = panelMinWidth;
+                newPanel.maxWidth = panelMaxWidth;
+                newPanel.minHeight = panelMinHeight;
+                newPanel.maxHeight = panelMaxHeight;
+
+                // NOTE: here must use viewEL's width, height attribute to determine computed size
+                var elWidth = parseInt(viewEL.getAttribute('width'));
+                elWidth = isNaN(elWidth) ? 'auto' : elWidth;
+                newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
+
+                var elHeight = parseInt(viewEL.getAttribute('height'));
+                elHeight = isNaN(elHeight) ? 'auto' : elHeight;
+                newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
+
+                // if parent is row, the height will be ignore
+                if ( parentDockRow ) {
+                    newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRectWidth;
+                    newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelCurHeight;
+                }
+                // else if parent is column, the width will be ignore
+                else {
+                    newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelCurWidth;
+                    newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
+                }
+
+                newPanel.add(viewEL);
+                newPanel.select(0);
+
+                //
+                targetDockEL.addDock( dockPosition, newPanel );
 
 
-                // //
-                // DockUtils.flush();
+                //
+                DockUtils.flush();
 
-                // // reset internal states
-                // _reset();
+                // reset internal states
+                _reset();
             });
 
             return;
@@ -390,9 +439,6 @@ EditorUI.DockUtils = (function () {
         }
 
         var panelDOM = Polymer.dom(panelEL);
-
-        var panelRectWidth = _draggingInfo.panelRectWidth;
-        var panelRectHeight = _draggingInfo.panelRectHeight;
         var parentDock = panelDOM.parentNode;
 
         //
@@ -401,30 +447,30 @@ EditorUI.DockUtils = (function () {
 
         //
         var newPanel = new EditorUI.Panel();
-        newPanel.minWidth = panelEL.minWidth;
-        newPanel.maxWidth = panelEL.maxWidth;
-        newPanel.minHeight = panelEL.minHeight;
-        newPanel.maxHeight = panelEL.maxHeight;
-        newPanel.width = panelEL.width;
-        newPanel.height = panelEL.height;
+        newPanel.width = panelWidth;
+        newPanel.height = panelHeight;
+        newPanel.minWidth = panelMinWidth;
+        newPanel.maxWidth = panelMaxWidth;
+        newPanel.minHeight = panelMinHeight;
+        newPanel.maxHeight = panelMaxHeight;
 
         // NOTE: here must use viewEL's width, height attribute to determine computed size
         var elWidth = parseInt(viewEL.getAttribute('width'));
         elWidth = isNaN(elWidth) ? 'auto' : elWidth;
-        newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelEL.computedWidth;
+        newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
 
         var elHeight = parseInt(viewEL.getAttribute('height'));
         elHeight = isNaN(elHeight) ? 'auto' : elHeight;
-        newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelEL.computedHeight;
+        newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
 
         // if parent is row, the height will be ignore
         if ( parentDock.row ) {
             newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRectWidth;
-            newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelEL.curHeight;
+            newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelCurHeight;
         }
         // else if parent is column, the width will be ignore
         else {
-            newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelEL.curWidth;
+            newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelCurWidth;
             newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
         }
 
@@ -462,11 +508,11 @@ EditorUI.DockUtils = (function () {
                 if ( hasSameAncient ) {
                     var size = 0;
                     if ( parentDock.row ) {
-                        size = sibling.curWidth + _resizerSpace + panelEL.curWidth;
+                        size = sibling.curWidth + _resizerSpace + panelCurWidth;
                         sibling.curWidth = size;
                     }
                     else {
-                        size = sibling.curHeight + _resizerSpace + panelEL.curHeight;
+                        size = sibling.curHeight + _resizerSpace + panelCurHeight;
                         sibling.curHeight = size;
                     }
 

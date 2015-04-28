@@ -4,13 +4,13 @@ EditorUI.droppable = (function () {
         'ui-droppable': true,
 
         properties: {
-            'droppable': {
+            droppable: {
                 type: String,
                 value: 'file',
                 reflectToAttribute: true,
             },
 
-            'single-drop': {
+            singleDrop: {
                 type: Boolean,
                 value: false,
                 reflectToAttribute: true,
@@ -119,7 +119,7 @@ EditorUI.droppable = (function () {
             }
 
             var dragItems = EditorUI.DragDrop.items(dataTransfer);
-            if ( this['single-drop'] && dragItems.length > 1 ) {
+            if ( this.singleDrop && dragItems.length > 1 ) {
                 fn.call( this, false, dragType, dragItems );
                 return;
             }
