@@ -9,6 +9,7 @@ and add some other values:
 
 - `template`: Array or Object
     - `message`: String - Ipc message name
+    - `command`: String - A global function in core level (e.g. Editor.foo.bar )
     - `params`: Array - The parameters passed through ipc
     - `panel`: String - The panelID, if specified, the message will send to panel
 
