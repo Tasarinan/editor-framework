@@ -14,6 +14,7 @@ li {
     display: block;
     padding: 5px;
     padding-left: 10px;
+    overflow-x: hidden;
 
     color: #999;
     background: #222;
@@ -28,4 +29,8 @@ li.error {
 }
 li.warn {
     color: #990;
+}
+
+li>span {
+    white-space: pre-wrap;
 }
