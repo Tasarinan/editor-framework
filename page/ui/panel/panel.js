@@ -8,10 +8,10 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
     // mixins: [EditorUI.resizable, EditorUI.focusable, EditorUI.dockable],
 
     properties: {
-        'width': { type: String, value: '200', },
-        'height': { type: String, value: '200', },
-        'min-width': { type: String, value: '200', },
-        'min-height': { type: String, value: '200', },
+        width: { type: String, value: '200', },
+        height: { type: String, value: '200', },
+        minWidth: { type: String, value: '200', },
+        minHeight: { type: String, value: '200', },
     },
 
     ready: function () {
@@ -116,7 +116,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
             // min-width
             var minWidth = parseInt(el.getAttribute('min-width'));
             if ( minWidth ) {
-                if ( this['min-width'] === 'auto' || minWidth > this['min-width'] ) {
+                if ( this.minWidth === 'auto' || minWidth > this.minWidth ) {
                     this.computedMinWidth = minWidth;
                 }
             }
@@ -124,7 +124,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
             // min-height
             var minHeight = parseInt(el.getAttribute('min-height'));
             if ( minHeight ) {
-                if ( this['min-height'] === 'auto' || minHeight > this['min-height'] ) {
+                if ( this.minHeight === 'auto' || minHeight > this.minHeight ) {
                     this.computedMinHeight = minHeight;
                 }
             }
@@ -137,10 +137,10 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
                 this.computedMaxWidth = 'auto';
             }
             else {
-                if ( this['max-width'] === 'auto' ) {
+                if ( this.maxWidth === 'auto' ) {
                     infWidth = true;
                 }
-                else if ( maxWidth && maxWidth > this['max-width'] ) {
+                else if ( maxWidth && maxWidth > this.maxWidth ) {
                     this.computedMaxWidth = maxWidth;
                 }
             }
@@ -153,10 +153,10 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
                 this.computedMaxHeight = 'auto';
             }
             else {
-                if ( this['max-height'] === 'auto' ) {
+                if ( this.maxHeight === 'auto' ) {
                     infHeight = true;
                 }
-                else if ( maxHeight && maxHeight > this['max-height'] ) {
+                else if ( maxHeight && maxHeight > this.maxHeight ) {
                     this.computedMaxHeight = maxHeight;
                 }
             }

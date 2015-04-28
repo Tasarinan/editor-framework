@@ -17,13 +17,13 @@ EditorUI.resizable = (function () {
         'ui-resizable': true,
 
         properties: {
-            'width': { type: String, value: 'auto', },
-            'min-width': { type: String, value: 'auto', },
-            'max-width': { type: String, value: 'auto', },
+            width: { type: String, value: 'auto', },
+            minWidth: { type: String, value: 'auto', },
+            maxWidth: { type: String, value: 'auto', },
 
-            'height': { type: String, value: 'auto', },
-            'min-height': { type: String, value: 'auto', },
-            'max-height': { type: String, value: 'auto', },
+            height: { type: String, value: 'auto', },
+            minHeight: { type: String, value: 'auto', },
+            maxHeight: { type: String, value: 'auto', },
         },
 
         calcWidth: function ( width ) {
@@ -52,22 +52,22 @@ EditorUI.resizable = (function () {
 
         // init size from its own attributes
         initSize: function () {
-            var minWidth = this['min-width'];
-            var maxWidth = this['max-width'];
+            var minWidth = this.minWidth;
+            var maxWidth = this.maxWidth;
             if ( maxWidth !== 'auto' &&
                  minWidth !== 'auto' &&
                  maxWidth < minWidth )
             {
-                this['max-width'] = maxWidth = minWidth;
+                this.maxWidth = maxWidth = minWidth;
             }
 
-            var minHeight = this['min-height'];
-            var maxHeight = this['max-height'];
+            var minHeight = this.minHeight;
+            var maxHeight = this.maxHeight;
             if ( maxHeight !== 'auto' &&
                  minHeight !== 'auto' &&
                  maxHeight < minHeight )
             {
-                this['max-height'] = maxHeight = minHeight;
+                this.maxHeight = maxHeight = minHeight;
             }
 
             // width
@@ -158,8 +158,8 @@ EditorUI.resizable = (function () {
 
             this.computedMinWidth = elements.length > 0 ? 3 * (elements.length-1) : 0; // preserve resizers' width
             this.computedMinHeight = elements.length > 0 ? 3 * (elements.length-1) : 0; // preserve resizers' height
-            this.computedMaxWidth = this['max-width'];
-            this.computedMaxHeight = this['max-height'];
+            this.computedMaxWidth = this.maxWidth;
+            this.computedMaxHeight = this.maxHeight;
 
             // collect child elements' size
 
@@ -236,18 +236,18 @@ EditorUI.resizable = (function () {
                 }
             }
 
-            if ( this['min-width'] !== 'auto' &&
+            if ( this.minWidth !== 'auto' &&
                  this.computedMinWidth !== 'auto' &&
-                 this['min-width'] > this.computedMinWidth )
+                 this.minWidth > this.computedMinWidth )
             {
-                this.computedMinWidth = this['min-width'];
+                this.computedMinWidth = this.minWidth;
             }
 
-            if ( this['min-height'] !== 'auto' &&
+            if ( this.minHeight !== 'auto' &&
                  this.computedMinHeight !== 'auto' &&
-                 this['min-height'] > this.computedMinHeight )
+                 this.minHeight > this.computedMinHeight )
             {
-                this.computedMinHeight = this['min-height'];
+                this.computedMinHeight = this.minHeight;
             }
 
             // final decision
@@ -293,7 +293,7 @@ EditorUI.resizable = (function () {
             // parse properties
             // NOTE: since we use String for size properties, we have to
             //       parse them for the right type
-            [ 'width', 'height', 'min-width', 'min-height', 'max-width', 'max-height']
+            [ 'width', 'height', 'minWidth', 'minHeight', 'maxWidth', 'maxHeight']
             .forEach(function ( prop ) {
                 if ( this[prop] !== 'auto' )
                     this[prop] = parseInt(this[prop]);

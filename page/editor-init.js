@@ -127,17 +127,6 @@ Editor.error = function ( text ) {
 // Layout API
 // ==========================
 
-var _importPanel = function ( dockAt, panelID, cb ) {
-    Editor.sendRequestToCore ('panel:query-info', panelID, function ( panelInfo ) {
-        var viewPath = Path.join( panelInfo.path, panelInfo.view );
-        Editor.Panel.load (viewPath, panelID, panelInfo, function ( err, viewEL ) {
-            dockAt.add(viewEL);
-            dockAt.$.tabs.select(0);
-            cb();
-        });
-    });
-};
-
 Editor.loadLayout = function ( anchorEL, cb ) {
     Editor.sendRequestToCore( 'window:query-layout', Editor.requireIpcEvent, function (layout) {
         if ( !layout ) {
@@ -152,7 +141,12 @@ Editor.loadLayout = function ( anchorEL, cb ) {
 Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
     var importList = EditorUI.createLayout( anchorEL, layoutInfo );
     Async.each( importList, function ( item, done ) {
-        _importPanel ( item.dockEL, item.panelID, done );
+        Editor.Panel.load (item.panelID, function ( err, viewEL ) {
+            var dockAt = item.dockEL;
+            dockAt.add(viewEL);
+            dockAt.$.tabs.select(0);
+            done();
+        });
     }, function ( err ) {
         EditorUI.DockUtils.flush();
         Editor.sendToCore('window:save-layout',

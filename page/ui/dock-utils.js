@@ -66,15 +66,23 @@ EditorUI.DockUtils = (function () {
     DockUtils.dragstart = function ( dataTransfer, tabEL ) {
         dataTransfer.setData('editor/type', 'tab');
 
-        var panelID = tabEL.viewEL.getAttribute('id');
-        var panelEL = Polymer.dom(tabEL).parentNode.panelEL;
+        var viewEL = tabEL.viewEL;
+        var panelID = viewEL.getAttribute('id');
+        var panelEL = Polymer.dom(viewEL).parentNode;
         var panelRect = panelEL.getBoundingClientRect();
 
         _draggingInfo = {
             panelID: panelID,
-            panelEL: panelEL,
             panelRectWidth: panelRect.width,
             panelRectHeight: panelRect.height,
+            panelMinWidth: panelEL.minWidth,
+            panelMinHeight: panelEL.minHeight,
+            panelMaxWidth: panelEL.maxWidth,
+            panelMaxHeight: panelEL.maxHeight,
+            panelComputedWidth: panelEL.computedWidth,
+            panelComputedHeight: panelEL.computedHeight,
+            panelCurWidth: panelEL.curWidth,
+            panelCurHeight: panelEL.curHeight,
         };
 
         if ( Editor.sendToWindows ) {
@@ -106,8 +114,10 @@ EditorUI.DockUtils = (function () {
         var viewEL = Editor.Panel.find(panelID);
 
         if ( viewEL ) {
-            var panelEL = _draggingInfo.panelEL;
-            var needCollapse = panelEL !== target.panelEL;
+            var panelEL = Polymer.dom(viewEL).parentNode;
+            var targetPanelEL = target.panelEL;
+
+            var needCollapse = panelEL !== targetPanelEL;
             var currentTabEL = panelEL.$.tabs.findTab(viewEL);
 
             if ( needCollapse ) {
@@ -115,9 +125,8 @@ EditorUI.DockUtils = (function () {
             }
 
             //
-            var newPanel = target.panelEL;
-            var idx = newPanel.insert( currentTabEL, viewEL, insertBeforeTabEL );
-            newPanel.select(idx);
+            var idx = targetPanelEL.insert( currentTabEL, viewEL, insertBeforeTabEL );
+            targetPanelEL.select(idx);
 
             if ( needCollapse ) {
                 panelEL.collapse();
@@ -132,25 +141,18 @@ EditorUI.DockUtils = (function () {
         else {
             Editor.Panel.close(panelID);
 
-            // TODO: should be Editor.Panel.dockTo(panelID,...);
             Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
+            Editor.Panel.load( panelID, function ( err, viewEL ) {
+                var targetPanelEL = target.panelEL;
+                var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
+                var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
+                targetPanelEL.select(idx);
 
-            Editor.sendRequestToCore('panel:query-info', panelID, function ( panelInfo ) {
-                var Path = require('fire-path');
-                var viewPath = Path.join( panelInfo.path, panelInfo.view );
+                //
+                DockUtils.flush();
 
-                Editor.Panel.load( viewPath, panelID, panelInfo, function ( err, viewEL ) {
-                    var newPanel = target.panelEL;
-                    var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
-                    var idx = newPanel.insert( newTabEL, viewEL, insertBeforeTabEL );
-                    newPanel.select(idx);
-
-                    //
-                    DockUtils.flush();
-
-                    // reset internal states
-                    _reset();
-                });
+                // reset internal states
+                _reset();
             });
         }
     };
@@ -278,14 +280,15 @@ EditorUI.DockUtils = (function () {
             var rect = _resultDock.target.getBoundingClientRect();
             var maskRect = null;
 
-            var panelEL = _draggingInfo.panelEL;
+            var panelComputedWidth = _draggingInfo.panelComputedWidth;
+            var panelComputedHeight = _draggingInfo.panelComputedHeight;
             var panelRectWidth = _draggingInfo.panelRectWidth;
             var panelRectHeight = _draggingInfo.panelRectHeight;
 
-            var hintWidth = panelEL.computedWidth === 'auto' ? rect.width/2 : panelRectWidth;
+            var hintWidth = panelComputedWidth === 'auto' ? rect.width/2 : panelRectWidth;
             hintWidth = Math.min( hintWidth, Math.min( rect.width/2, 200 ) );
 
-            var hintHeight = panelEL.computedHeight === 'auto' ? rect.height/2 : panelRectHeight;
+            var hintHeight = panelComputedHeight === 'auto' ? rect.height/2 : panelRectHeight;
             hintHeight = Math.min( hintHeight, Math.min( rect.height/2, 200 ) );
 
             if ( _resultDock.position === 'top' ) {
@@ -347,19 +350,41 @@ EditorUI.DockUtils = (function () {
         if ( _resultDock === null ) {
             return;
         }
-        var viewEL = Editor.Panel.find(_draggingInfo.panelID);
+
+        var panelID = _draggingInfo.panelID;
+        var targetDockEL = _resultDock.target;
+        var dockPosition = _resultDock.position;
+
+        var viewEL = Editor.Panel.find(panelID);
         if ( !viewEL ) {
-            // TODO
-            // if ( Editor.sendToWindows ) {
-            //     Editor.sendToWindows( 'panel:drop', _draggingInfo.panelID, Editor.selfExcluded );
-            // }
+            Editor.Panel.close(panelID);
+
+            Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
+            Editor.Panel.load( panelID, function ( err, viewEL ) {
+
+                // var newPanel = new EditorUI.Panel();
+                // newPanel['min-width'] = panelEL['min-width'];
+                // newPanel['max-width'] = panelEL['max-width'];
+                // newPanel['min-height'] = panelEL['min-height'];
+                // newPanel['max-height'] = panelEL['max-height'];
+                // newPanel.width = panelEL.width;
+                // newPanel.height = panelEL.height;
+
+
+                // //
+                // DockUtils.flush();
+
+                // // reset internal states
+                // _reset();
+            });
+
             return;
         }
 
         var panelEL = Polymer.dom(viewEL).parentNode;
 
-        if ( _resultDock.target === panelEL &&
-             _resultDock.target.tabCount === 1 )
+        if ( targetDockEL === panelEL &&
+             targetDockEL.tabCount === 1 )
         {
             return;
         }
@@ -376,10 +401,10 @@ EditorUI.DockUtils = (function () {
 
         //
         var newPanel = new EditorUI.Panel();
-        newPanel['min-width'] = panelEL['min-width'];
-        newPanel['max-width'] = panelEL['max-width'];
-        newPanel['min-height'] = panelEL['min-height'];
-        newPanel['max-height'] = panelEL['max-height'];
+        newPanel.minWidth = panelEL.minWidth;
+        newPanel.maxWidth = panelEL.maxWidth;
+        newPanel.minHeight = panelEL.minHeight;
+        newPanel.maxHeight = panelEL.maxHeight;
         newPanel.width = panelEL.width;
         newPanel.height = panelEL.height;
 
@@ -407,7 +432,7 @@ EditorUI.DockUtils = (function () {
         newPanel.select(0);
 
         //
-        _resultDock.target.addDock( _resultDock.position, newPanel );
+        targetDockEL.addDock( dockPosition, newPanel );
 
         //
         var totallyRemoved = panelDOM.children.length === 0;
