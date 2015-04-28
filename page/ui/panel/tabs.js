@@ -28,7 +28,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         }
     },
 
-    find: function ( viewEL ) {
+    findTab: function ( viewEL ) {
         var thisDOM = Polymer.dom(this);
 
         for ( var i = 0; i < thisDOM.children.length; ++i ) {
@@ -40,7 +40,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         return null;
     },
 
-    insert: function ( tabEL, insertBeforeTabEL ) {
+    insertTab: function ( tabEL, insertBeforeTabEL ) {
         // do nothing if we insert to ourself
         if ( tabEL === insertBeforeTabEL )
             return tabEL;
@@ -57,7 +57,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         return tabEL;
     },
 
-    add: function ( name ) {
+    addTab: function ( name ) {
         var thisDOM = Polymer.dom(this);
 
         var tabEL = new EditorUI.Tab(name);
@@ -67,7 +67,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         return tabEL;
     },
 
-    remove: function ( tab ) {
+    removeTab: function ( tab ) {
         var thisDOM = Polymer.dom(this);
 
         var tabEL = null;

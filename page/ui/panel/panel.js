@@ -33,7 +33,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
 
             //
             var name = el.getAttribute('name');
-            var tabEL = tabs.add(name);
+            var tabEL = tabs.addTab(name);
             tabEL.setAttribute('draggable', 'true');
 
             el.style.display = 'none';
@@ -216,7 +216,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         var tabs = this.$.tabs;
 
         var name = viewEL.getAttribute('name');
-        tabs.insert(tabEL, insertBeforeTabEL);
+        tabs.insertTab(tabEL, insertBeforeTabEL);
         tabEL.setAttribute('draggable', 'true');
 
         // NOTE: if we just move tabs, we must not hide viewEL
@@ -241,7 +241,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         var tabs = this.$.tabs;
 
         var name = viewEL.getAttribute('name');
-        var tabEL = tabs.add(name);
+        var tabEL = tabs.addTab(name);
         tabEL.setAttribute('draggable', 'true');
 
         viewEL.style.display = 'none';
@@ -262,7 +262,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         var tabs = this.$.tabs;
 
         //
-        tabs.remove(tabEL);
+        tabs.removeTab(tabEL);
         if ( tabEL.viewEL ) {
             tabEL.viewEL.remove();
             tabEL.viewEL = null;

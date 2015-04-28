@@ -54,6 +54,7 @@ module.exports = {
         mainWin.show();
 
         // page-level test case
+        // mainWin.load( 'editor://test/page-level/simple/simple.html' );
         // mainWin.load( 'editor://test/page-level/lifecycle/lifecycle.html' );
         // mainWin.load( 'editor://test/page-level/import/test-import.html' );
         // mainWin.load( 'editor://test/page-level/dockable/dockable.html' );

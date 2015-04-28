@@ -1,0 +1,114 @@
+<dom-module id="simple-tabs">
+    <style>
+        :host {
+            display: block;
+        }
+        .border {
+            border: 1px solid blue;
+        }
+    </style>
+
+    <template>
+        <div class="border layout horizontal">
+            <content/>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+    window.SimpleTabs = Polymer({
+        is: 'simple-tabs',
+
+        activeTab: null,
+
+        ready: function () {
+            this.select(1);
+        },
+
+        remove: function (tab) {
+            var thisDOM = Polymer.dom(this);
+
+            var tabEL = null;
+            if ( typeof tab === 'number' ) {
+                if ( tab < thisDOM.children.length ) {
+                    tabEL = thisDOM.children[tab];
+                }
+            }
+            else if ( tab instanceof SimpleTab ) {
+                tabEL = tab;
+            }
+
+            //
+            if ( tabEL !== null ) {
+                if ( this.activeTab === tabEL ) {
+                    this.activeTab = null;
+
+                    var nextTab = tabEL.nextElementSibling;
+                    if ( !nextTab ) {
+                        nextTab = tabEL.previousElementSibling;
+                    }
+
+                    this.select(nextTab);
+                }
+
+                thisDOM.removeChild(tabEL);
+            }
+        },
+
+        select: function ( tab ) {
+            var thisDOM = Polymer.dom(this);
+            var tabEL = null;
+
+            if ( typeof tab === 'number' ) {
+                if ( tab < thisDOM.children.length ) {
+                    tabEL = thisDOM.children[tab];
+                }
+            }
+            else if ( tab instanceof SimpleTab ) {
+                tabEL = tab;
+            }
+
+            //
+            if ( tabEL !== null ) {
+                if ( tabEL !== this.activeTab ) {
+                    this.fire( 'tab-changed', { old: this.activeTab, new: tabEL  } );
+
+                    if ( this.activeTab !== null ) {
+                        this.activeTab.classList.remove('active');
+                    }
+                    this.activeTab = tabEL;
+                    this.activeTab.classList.add('active');
+                }
+            }
+        },
+    });
+</script>
+
+<dom-module id="simple-tab">
+    <style>
+        :host {
+            display: block;
+            margin: 2px;
+        }
+        .border {
+            border: 1px solid black;
+            background: red;
+            padding: 5px;
+        }
+        :host.active .border {
+            background: green;
+        }
+    </style>
+
+    <template>
+        <div class="border layout horizontal">
+            <content/>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+    window.SimpleTab = Polymer({
+        is: 'simple-tab',
+    });
+</script>

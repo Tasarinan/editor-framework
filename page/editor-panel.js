@@ -182,8 +182,10 @@ Panel.close = function ( panelID ) {
     var viewEL = Editor.Panel.find(panelID);
     if ( viewEL ) {
         var panelEL = Polymer.dom(viewEL).parentNode;
-        var currentTabEL = panelEL.$.tabs.find(viewEL);
+        var currentTabEL = panelEL.$.tabs.findTab(viewEL);
         panelEL.close(currentTabEL);
+
+        EditorUI.DockUtils.flush();
     }
 
     // remove panelInfo
@@ -283,7 +285,12 @@ Panel.dockTo = function ( position, panelEL ) {
 var Ipc = require('ipc');
 
 Ipc.on('panel:close', function ( panelID ) {
-    Editor.Panel.close(panelID);
+    // NOTE: if we don't do this in requestAnimationFrame,
+    // the tab will remain, something wrong for Polymer.dom
+    // operation when they are in ipc callback.
+    window.requestAnimationFrame( function () {
+        Editor.Panel.close(panelID);
+    });
 });
 
 Ipc.on('panel:popup', function ( panelID ) {

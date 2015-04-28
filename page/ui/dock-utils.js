@@ -113,7 +113,7 @@ EditorUI.DockUtils = (function () {
         if ( viewEL ) {
             var panelEL = _draggingInfo.panelEL;
             var needCollapse = panelEL !== target.panelEL;
-            var currentTabEL = panelEL.$.tabs.find(viewEL);
+            var currentTabEL = panelEL.$.tabs.findTab(viewEL);
 
             if ( needCollapse ) {
                 panelEL.closeNoCollapse(currentTabEL);
@@ -135,7 +135,6 @@ EditorUI.DockUtils = (function () {
             _reset();
         }
         else {
-            // TODO: we need to make sure panel undocked first, sendToCore('panel:close', panelID) ???
             if ( Editor.sendToWindows ) {
                 Editor.sendToWindows( 'panel:drop', panelID, Editor.selfExcluded );
             }
@@ -375,7 +374,7 @@ EditorUI.DockUtils = (function () {
         var parentDock = panelDOM.parentNode;
 
         //
-        var currentTabEL = panelEL.$.tabs.find(viewEL);
+        var currentTabEL = panelEL.$.tabs.findTab(viewEL);
         panelEL.closeNoCollapse(currentTabEL);
 
         //

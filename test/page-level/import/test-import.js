@@ -27,7 +27,7 @@ Polymer( {
 
     clickAction: function ( event ) {
         ++index;
-        importElement( 'editor://test/import/foo-bar.html?' + index, function () {
+        importElement( 'editor://test/page-level/import/foo-bar.html?' + index, function () {
             Polymer.dom(this).appendChild( new Editor.Foobar() );
         }.bind(this));
     }
