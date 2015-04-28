@@ -18,7 +18,7 @@ bower install .
 gulp update-atom-shell
 
 # run the framework
-sh atom.sh
+sh electron.sh
 ```
 
 ## Features

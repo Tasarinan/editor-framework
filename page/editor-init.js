@@ -139,13 +139,13 @@ var _importPanel = function ( dockAt, panelID, cb ) {
 };
 
 Editor.loadLayout = function ( anchorEL, cb ) {
-    Editor.sendRequestToCore( 'window:query-layout', Editor.requireIpcEvent, function (wininfo) {
-        if ( !wininfo ) {
+    Editor.sendRequestToCore( 'window:query-layout', Editor.requireIpcEvent, function (layout) {
+        if ( !layout ) {
             cb();
             return;
         }
 
-        Editor.resetLayout( anchorEL, wininfo.layout, cb );
+        Editor.resetLayout( anchorEL, layout, cb );
     });
 };
 

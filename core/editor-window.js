@@ -267,8 +267,13 @@ Ipc.on ( 'window:query-layout', function ( event, reply ) {
         return;
     }
 
+    var layout = null;
     var winInfo = _windowLayouts[editorWin.name];
-    reply(winInfo);
+    if ( winInfo && winInfo.layout ) {
+        layout = winInfo.layout;
+    }
+
+    reply(layout);
 } );
 
 Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
