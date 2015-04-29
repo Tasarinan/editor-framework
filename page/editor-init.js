@@ -149,17 +149,23 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
 
             var dockAt = item.dockEL;
             dockAt.add(viewEL);
-            dockAt.$.tabs.select(0);
+            if ( item.active ) {
+                dockAt.select(viewEL);
+            }
             done();
         });
     }, function ( err ) {
         // close error panels
         EditorUI.DockUtils.flushWithCollapse();
-        Editor.sendToCore('window:save-layout',
-                          Editor.Panel.getLayout(),
-                          Editor.requireIpcEvent);
+        Editor.saveLayout();
         if ( cb ) cb ();
     } );
+};
+
+Editor.saveLayout = function () {
+    window.requestAnimationFrame ( function () {
+        Editor.sendToCore('window:save-layout', Editor.Panel.dumpLayout(), Editor.requireIpcEvent);
+    });
 };
 
 // ==========================

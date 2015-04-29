@@ -205,13 +205,28 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         return this.$.tabs.activeTab;
     },
 
+    get activeIndex () {
+        return EditorUI.index(this.$.tabs.activeTab);
+    },
+
     get tabCount () {
         return Polymer.dom(this.$.tabs).children.length;
     },
 
-    select: function ( tab ) {
+    select: function ( idxOrViewEL ) {
         var tabs = this.$.tabs;
-        tabs.select(tab);
+        if ( typeof idxOrViewEL === 'number' ) {
+            tabs.select(idxOrViewEL);
+        }
+        else {
+            var thisDOM = Polymer.dom(this);
+            for ( var i = 0; i < thisDOM.children.length; ++i ) {
+                if ( idxOrViewEL === thisDOM.children[i] ) {
+                    tabs.select(i);
+                    break;
+                }
+            }
+        }
     },
 
     insert: function ( tabEL, viewEL, insertBeforeTabEL ) {
@@ -231,7 +246,12 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         tabEL.setIcon( viewEL.icon ); // TEMP HACK
 
         //
-        thisDOM.appendChild(viewEL);
+        if ( insertBeforeTabEL ) {
+            thisDOM.insertBefore(viewEL, insertBeforeTabEL.viewEL);
+        }
+        else {
+            thisDOM.appendChild(viewEL);
+        }
 
         //
         this._applyViewMinMax();

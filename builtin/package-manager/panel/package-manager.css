@@ -15,3 +15,21 @@ li {
 li[builtin] {
     color: #888;
 }
+
+.icon-button {
+    color: #09f;
+    padding: 2px 4px;
+    border-radius: 0px;
+    border: none;
+
+    cursor: pointer;
+}
+
+
+.icon-button:hover {
+    background-color: #333;
+}
+
+.icon-button:active {
+    background-color: #555;
+}

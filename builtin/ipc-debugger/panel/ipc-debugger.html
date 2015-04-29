@@ -3,10 +3,11 @@
 
     <template>
         <ul>
-            <template is="x-repeat" items="{{ipcInfos}}">
+            <template is="x-repeat" id="list" items="{{ipcInfos}}">
                 <li>
                     <div class="flex-1"><span>{{item.level}}</span></div>
                     <div class="flex-2"><span>{{item.name}}</span></div>
+                    <i class="fa fa-eye btn" on-click="_onInspect"></i>
                 </li>
             </template>
         </ul>

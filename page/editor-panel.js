@@ -33,6 +33,7 @@ _getDocks = function ( dockEL ) {
 
         if ( childEL instanceof EditorUI.Panel ) {
             info.type = 'panel';
+            info.active = childEL.activeIndex;
             info.panels = _getPanels(childEL);
         }
         else {
@@ -263,7 +264,7 @@ Panel.dispatch = function ( panelID, ipcName ) {
     fn.apply( panelInfo.view, args );
 };
 
-Panel.getLayout = function () {
+Panel.dumpLayout = function () {
     var root = EditorUI.DockUtils.root;
     if ( !root )
         return null;

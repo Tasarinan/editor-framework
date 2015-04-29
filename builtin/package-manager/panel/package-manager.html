@@ -3,10 +3,13 @@
 
     <template>
         <ul>
-            <template is="x-repeat" items="{{packages}}">
+            <template is="x-repeat" id="list" items="{{packages}}">
                 <li builtin$="{{item.builtin}}">
-                    <div class="flex-1">Name: <span>{{item.name}}</span></div>
+                    <div class="flex-1"><span>{{item.name}}</span></div>
                     <div class="flex-1">Enabled: <span>{{item.enabled}}</span></div>
+                    <div class="icon-button">
+                        <i class="fa fa-rotate-left" on-click="_onReload"></i>
+                    </div>
                 </li>
             </template>
         </ul>

@@ -17,6 +17,13 @@ window[name].panel = Polymer( {
             });
         }.bind(this));
     },
+
+    _onReload: function ( event ) {
+        event.stopPropagation();
+
+        var item = this.$.list.itemForElement(event.target);
+        Editor.sendToCore( 'package:reload', item.name );
+    },
 });
 
 })();

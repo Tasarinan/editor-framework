@@ -31,11 +31,7 @@ if ( Editor.argv.panelID ) {
         Editor.sendToCore( 'panel:ready', Editor.argv.panelID );
 
         // save layout after css layouted
-        window.requestAnimationFrame ( function () {
-            Editor.sendToCore( 'window:save-layout',
-                              Editor.Panel.getLayout(),
-                              Editor.requireIpcEvent );
-        });
+        Editor.saveLayout();
     });
 }
 

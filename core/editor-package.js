@@ -163,4 +163,22 @@ Ipc.on('package:query', function ( reply ) {
     reply(results);
 });
 
+Ipc.on('package:reload', function ( name ) {
+    var path = null;
+    for ( var p in _path2package ) {
+        var packageInfo = _path2package[p];
+        if ( packageInfo.name === name ) {
+            path = p;
+            break;
+        }
+    }
+
+    if ( !path ) {
+        Editor.error('Failed to reload package %s, not found', name);
+        return;
+    }
+
+    Package.reload(path);
+});
+
 module.exports = Package;

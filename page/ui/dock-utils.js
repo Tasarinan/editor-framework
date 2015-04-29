@@ -143,6 +143,7 @@ EditorUI.DockUtils = (function () {
 
             //
             DockUtils.flush();
+            Editor.saveLayout();
         }
         else {
             Editor.Panel.close(panelID);
@@ -163,6 +164,7 @@ EditorUI.DockUtils = (function () {
 
                     //
                     DockUtils.flush();
+                    Editor.saveLayout();
                 });
             });
         }
@@ -446,6 +448,7 @@ EditorUI.DockUtils = (function () {
 
                     //
                     DockUtils.flush();
+                    Editor.saveLayout();
                 });
             });
 
@@ -548,6 +551,7 @@ EditorUI.DockUtils = (function () {
 
         //
         DockUtils.flush();
+        Editor.saveLayout();
     });
 
     return DockUtils;

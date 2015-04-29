@@ -20,3 +20,12 @@ li {
 li[builtin] {
     color: #888;
 }
+
+.btn {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.btn.active {
+    color: #0f0;
+}

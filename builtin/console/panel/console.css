@@ -24,11 +24,27 @@ li:nth-child(even) {
     background: #292929;
 }
 
+li.log {
+    color: #999;
+}
 li.error {
     color: #900;
 }
 li.warn {
     color: #990;
+}
+
+li.info {
+    font-weight: bold;
+    color: #09f;
+}
+li.failed {
+    font-weight: bold;
+    color: #900;
+}
+li.success {
+    font-weight: bold;
+    color: #090;
 }
 
 li>span {

@@ -39,8 +39,10 @@ try {
 
     window.onunload = function () {
         if ( Editor && Editor.Panel ) {
+            // NOTE: do not use Editor.saveLayout() which will be invoked in requestAnimationFrame.
+            // It will not be called in window.onunload
             Editor.sendToCore( 'window:save-layout',
-                               Editor.Panel.getLayout(),
+                               Editor.Panel.dumpLayout(),
                                Editor.requireIpcEvent );
         }
         else {

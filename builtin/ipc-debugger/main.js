@@ -1,11 +1,16 @@
 var Async = require('async');
 var Ipc = require('ipc');
 
+var inspects = {};
+
 module.exports = {
     load: function () {
     },
 
     unload: function () {
+        for ( var name in inspects ) {
+            Ipc.removeListener( name, inspects[name] );
+        }
     },
 
     'ipc-debugger:open': function () {
@@ -19,6 +24,7 @@ module.exports = {
             infoList.push({
                 name: p,
                 level: 'core',
+                inspect: false,
             });
         }
 
@@ -30,5 +36,23 @@ module.exports = {
         }, function ( err ) {
             reply(infoList);
         });
+    },
+
+    'ipc-debugger:inspect': function ( name ) {
+        var fn = function () {
+            var args = [].slice.call( arguments, 0 );
+            args.unshift( 'ipc-debugger[core][' + name + ']' );
+            Editor.success.apply( Editor, args );
+        };
+        inspects[name] = fn;
+        Ipc.on( name, fn );
+    },
+
+    'ipc-debugger:uninspect': function ( name ) {
+        var fn = inspects[name];
+        if ( fn ) {
+            Ipc.removeListener( name, fn );
+            delete inspects[name];
+        }
     },
 };
