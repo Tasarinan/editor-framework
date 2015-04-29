@@ -17,7 +17,8 @@ module.exports = {
         var infoList = [];
         for ( var p in Ipc._events ) {
             infoList.push({
-                name: '[core] ' + p,
+                name: p,
+                level: 'core',
             });
         }
 

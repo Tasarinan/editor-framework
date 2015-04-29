@@ -173,7 +173,8 @@ Ipc.on( 'ipc-debugger:query', function ( reply ) {
     var ipcInfos = [];
     for ( var p in Ipc._events ) {
         ipcInfos.push({
-            name: '[page] ' + p,
+            name: p,
+            level: 'page',
         });
     }
     reply(ipcInfos);
