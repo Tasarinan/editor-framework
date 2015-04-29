@@ -1,0 +1,25 @@
+{
+  "name": "grids",
+  "version": "0.0.1",
+  "description": "Grids",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Panels/Grids": {
+      "message": "grids:open"
+    }
+  },
+  "panels": {
+    "pixi": {
+      "type": "dockable",
+      "view": "panel/pixi-grids.html",
+      "title": "Grids",
+      "width": 800,
+      "height": 600,
+      "min-width": 400,
+      "min-height": 300,
+      "messages": [
+      ]
+    }
+  }
+}

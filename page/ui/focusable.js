@@ -46,7 +46,7 @@ EditorUI.focusable = (function () {
             },
         },
 
-        listener: {
+        listeners: {
             'focus': '_onFocus',
             'blur': '_onBlur',
         },

@@ -241,12 +241,13 @@ Ipc.on('panel:query-info', function ( reply, panelID ) {
 
     // get panelInfo
     var panelInfo = Editor.Package.panelInfo(panelID);
-
-    // load profiles
-    for ( var type in panelInfo.profiles ) {
-        var profile = panelInfo.profiles[type];
-        profile = Editor.loadProfile( panelID, type, profile );
-        panelInfo.profiles[type] = profile;
+    if ( panelInfo ) {
+        // load profiles
+        for ( var type in panelInfo.profiles ) {
+            var profile = panelInfo.profiles[type];
+            profile = Editor.loadProfile( panelID, type, profile );
+            panelInfo.profiles[type] = profile;
+        }
     }
 
     //

@@ -98,10 +98,15 @@ Panel.import = function ( url, cb ) {
 };
 
 Panel.load = function ( panelID, cb ) {
-    Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
     Editor.sendRequestToCore('panel:query-info', panelID, function ( panelInfo ) {
+        if ( !panelInfo ) {
+            Editor.error('Panel %s import faield. panelInfo not found', panelID );
+            cb ( new Error('Panel info not found') );
+            return;
+        }
+
         var Path = require('fire-path');
-        var viewPath = Path.join( panelInfo.path, panelInfo.view );
+        viewPath = Path.join( panelInfo.path, panelInfo.view );
 
         Panel.import(viewPath, function () {
             var ctorPath = panelID.split('.');
@@ -122,8 +127,11 @@ Panel.load = function ( panelID, cb ) {
 
             if ( ctorNotFound ) {
                 Editor.error('Panel import faield. Can not find constructor %s', panelInfo.ctor );
+                cb ( new Error( 'Constructor ' + panelInfo.ctor + ' not found' ) );
                 return;
             }
+
+            Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
 
             var viewEL = new viewCtor();
             viewEL.setAttribute('id', panelID);
@@ -210,9 +218,14 @@ Panel.undock = function ( panelID ) {
     // remove panel element from tab
     var viewEL = Editor.Panel.find(panelID);
     if ( viewEL ) {
-        var panelEL = Polymer.dom(viewEL).parentNode;
-        var currentTabEL = panelEL.$.tabs.findTab(viewEL);
-        panelEL.close(currentTabEL);
+        var parentEL = Polymer.dom(viewEL).parentNode;
+        if ( parentEL instanceof EditorUI.Panel ) {
+            var currentTabEL = parentEL.$.tabs.findTab(viewEL);
+            parentEL.close(currentTabEL);
+        }
+        else {
+            Polymer.dom(parentEL).removeChild(viewEL);
+        }
 
         EditorUI.DockUtils.flush();
     }

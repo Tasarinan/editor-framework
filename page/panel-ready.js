@@ -3,6 +3,10 @@
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
     Editor.Panel.load( Editor.argv.panelID, function ( err, viewEL, panelInfo ) {
+        if ( err ) {
+            return;
+        }
+
         if ( panelInfo.type === 'dockable' ) {
             var dock = new EditorUI.Dock();
             dock.setAttribute('no-collapse', '');

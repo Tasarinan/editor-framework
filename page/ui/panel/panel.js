@@ -44,6 +44,10 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         tabs.select(0);
     },
 
+    _collapseRecursively: function () {
+        this.collapse();
+    },
+
     _finalizeSizeRecursively: function () {
         this._applyViewSize();
     },

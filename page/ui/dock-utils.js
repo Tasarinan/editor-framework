@@ -138,26 +138,32 @@ EditorUI.DockUtils = (function () {
                 panelEL.collapse();
             }
 
-            //
-            DockUtils.flush();
-
             // reset internal states
             _reset();
+
+            //
+            DockUtils.flush();
         }
         else {
             Editor.Panel.close(panelID);
 
             Editor.Panel.load( panelID, function ( err, viewEL ) {
-                var targetPanelEL = target.panelEL;
-                var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
-                var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
-                targetPanelEL.select(idx);
+                if ( err ) {
+                    return;
+                }
 
-                //
-                DockUtils.flush();
+                requestAnimationFrame ( function () {
+                    var targetPanelEL = target.panelEL;
+                    var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
+                    var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
+                    targetPanelEL.select(idx);
 
-                // reset internal states
-                _reset();
+                    // reset internal states
+                    _reset();
+
+                    //
+                    DockUtils.flush();
+                });
             });
         }
     };
@@ -170,6 +176,7 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.reset = function () {
+        Polymer.dom.flush();
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeSizeRecursively();
             this.root._finalizeMinMaxRecursively();
@@ -182,6 +189,19 @@ EditorUI.DockUtils = (function () {
 
     DockUtils.flush = function () {
         Polymer.dom.flush();
+        if ( DockUtils.root['ui-dockable'] ) {
+            this.root._finalizeMinMaxRecursively();
+            this.root._finalizeStyleRecursively();
+            this.root._notifyResize();
+        } else {
+            DockUtils.root.dispatchEvent( new CustomEvent('resize') );
+        }
+    };
+
+    DockUtils.flushWithCollapse = function () {
+        this.root._collapseRecursively();
+        Polymer.dom.flush();
+
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeMinMaxRecursively();
             this.root._finalizeStyleRecursively();
@@ -382,47 +402,51 @@ EditorUI.DockUtils = (function () {
             Editor.Panel.close(panelID);
 
             Editor.Panel.load( panelID, function ( err, viewEL ) {
-
-                var newPanel = new EditorUI.Panel();
-                newPanel.width = panelWidth;
-                newPanel.height = panelHeight;
-                newPanel.minWidth = panelMinWidth;
-                newPanel.maxWidth = panelMaxWidth;
-                newPanel.minHeight = panelMinHeight;
-                newPanel.maxHeight = panelMaxHeight;
-
-                // NOTE: here must use viewEL's width, height attribute to determine computed size
-                var elWidth = parseInt(viewEL.getAttribute('width'));
-                elWidth = isNaN(elWidth) ? 'auto' : elWidth;
-                newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
-
-                var elHeight = parseInt(viewEL.getAttribute('height'));
-                elHeight = isNaN(elHeight) ? 'auto' : elHeight;
-                newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
-
-                // if parent is row, the height will be ignore
-                if ( parentDockRow ) {
-                    newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRectWidth;
-                    newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelCurHeight;
-                }
-                // else if parent is column, the width will be ignore
-                else {
-                    newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelCurWidth;
-                    newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
+                if ( err ) {
+                    return;
                 }
 
-                newPanel.add(viewEL);
-                newPanel.select(0);
+                requestAnimationFrame ( function () {
+                    var newPanel = new EditorUI.Panel();
+                    newPanel.width = panelWidth;
+                    newPanel.height = panelHeight;
+                    newPanel.minWidth = panelMinWidth;
+                    newPanel.maxWidth = panelMaxWidth;
+                    newPanel.minHeight = panelMinHeight;
+                    newPanel.maxHeight = panelMaxHeight;
 
-                //
-                targetDockEL.addDock( dockPosition, newPanel );
+                    // NOTE: here must use viewEL's width, height attribute to determine computed size
+                    var elWidth = parseInt(viewEL.getAttribute('width'));
+                    elWidth = isNaN(elWidth) ? 'auto' : elWidth;
+                    newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
 
+                    var elHeight = parseInt(viewEL.getAttribute('height'));
+                    elHeight = isNaN(elHeight) ? 'auto' : elHeight;
+                    newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
 
-                //
-                DockUtils.flush();
+                    // if parent is row, the height will be ignore
+                    if ( parentDockRow ) {
+                        newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelRectWidth;
+                        newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelCurHeight;
+                    }
+                    // else if parent is column, the width will be ignore
+                    else {
+                        newPanel.curWidth = newPanel.computedWidth === 'auto' ? 'auto' : panelCurWidth;
+                        newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
+                    }
 
-                // reset internal states
-                _reset();
+                    newPanel.add(viewEL);
+                    newPanel.select(0);
+
+                    //
+                    targetDockEL.addDock( dockPosition, newPanel );
+
+                    // reset internal states
+                    _reset();
+
+                    //
+                    DockUtils.flush();
+                });
             });
 
             return;
@@ -519,11 +543,11 @@ EditorUI.DockUtils = (function () {
             }
         }
 
-        //
-        DockUtils.flush();
-
         // reset internal states
         _reset();
+
+        //
+        DockUtils.flush();
     });
 
     return DockUtils;

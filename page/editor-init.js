@@ -142,13 +142,19 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
     var importList = EditorUI.createLayout( anchorEL, layoutInfo );
     Async.each( importList, function ( item, done ) {
         Editor.Panel.load (item.panelID, function ( err, viewEL ) {
+            if ( err ) {
+                done();
+                return;
+            }
+
             var dockAt = item.dockEL;
             dockAt.add(viewEL);
             dockAt.$.tabs.select(0);
             done();
         });
     }, function ( err ) {
-        EditorUI.DockUtils.flush();
+        // close error panels
+        EditorUI.DockUtils.flushWithCollapse();
         Editor.sendToCore('window:save-layout',
                           Editor.Panel.getLayout(),
                           Editor.requireIpcEvent);

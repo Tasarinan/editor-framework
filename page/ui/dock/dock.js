@@ -60,6 +60,21 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
         }
     },
 
+    _collapseRecursively: function () {
+        var elements = [];
+        var thisDOM = Polymer.dom(this);
+
+        //
+        for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
+            var el = thisDOM.children[i];
+            if ( el['ui-dockable'] ) {
+                el._collapseRecursively();
+            }
+        }
+
+        this.collapse();
+    },
+
     // depth first calculate the width and height
     _finalizeSizeRecursively: function () {
         var elements = [];
