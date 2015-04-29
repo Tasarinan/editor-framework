@@ -147,7 +147,6 @@ EditorUI.DockUtils = (function () {
         else {
             Editor.Panel.close(panelID);
 
-            Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
             Editor.Panel.load( panelID, function ( err, viewEL ) {
                 var targetPanelEL = target.panelEL;
                 var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
@@ -382,7 +381,6 @@ EditorUI.DockUtils = (function () {
         if ( !viewEL ) {
             Editor.Panel.close(panelID);
 
-            Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
             Editor.Panel.load( panelID, function ( err, viewEL ) {
 
                 var newPanel = new EditorUI.Panel();

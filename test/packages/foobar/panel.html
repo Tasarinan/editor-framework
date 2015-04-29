@@ -23,11 +23,10 @@
           }
       },
 
-      'foobar:hello-world': function () {
-          console.log('hello world in page');
-      },
-
-      'foobar:test': function () {
+      'foobar:hello': function ( reply ) {
+          setTimeout( function () {
+              reply('world');
+          }, 1000 );
       },
   });
 </script>

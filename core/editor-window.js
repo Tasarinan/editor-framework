@@ -7,6 +7,8 @@ var Ipc = require('ipc');
 //
 function EditorWindow ( name, options ) {
     this._loaded = false;
+    this._nextSessionId = 0;
+    this._replyCallbacks = {};
 
     // init options
     this.name = name;
@@ -251,14 +253,76 @@ EditorWindow.prototype.sendToPage = function () {
                   arguments[0], this.name);
 };
 
-Ipc.on ( 'window:open', function ( name, url, options ) {
+/**
+ * @method sendRequestToPage
+ * @param {string} request - the request to send
+ * @param {...*} [arg] - whatever arguments the request needs
+ * @param {function} reply - the callback used to handle replied arguments
+ * @return {number} - session id, can be used in Editor.cancelRequestToCore
+ */
+EditorWindow.prototype.sendRequestToPage = function (request) {
+    'use strict';
+    if (typeof request === 'string') {
+        var args = [].slice.call(arguments, 1);
+        var reply = args[args.length - 1];
+        if (typeof reply === 'function') {
+            args.pop();
+
+            var sessionId = this._nextSessionId++;
+            var key = "" + sessionId;
+            this._replyCallbacks[key] = reply;
+
+            this.sendToPage('editor:sendreq2page', request, args, sessionId);
+            return sessionId;
+        }
+        else {
+            Editor.error('The reply must be of type function');
+        }
+    }
+    else {
+        Editor.error('The request must be of type string');
+    }
+    return -1;
+};
+
+EditorWindow.prototype.cancelRequestToPage = function (sessionId) {
+    'use strict';
+    var key = "" + sessionId;
+    var cb = this._replyCallbacks[key];
+    if ( cb ) {
+        delete this._replyCallbacks[key];
+    }
+};
+
+EditorWindow.prototype._reply = function (args,sessionId) {
+    'use strict';
+    var key = "" + sessionId;
+    var cb = this._replyCallbacks[key];
+    if (cb) {
+        cb.apply(null, args);
+        delete this._replyCallbacks[key];
+    }
+};
+
+Ipc.on('editor:sendreq2page:reply', function replyCallback (event, args, sessionId) {
+    var win = BrowserWindow.fromWebContents( event.sender );
+    var editorWin = Editor.Window.find(win);
+    if ( !editorWin ) {
+        Editor.warn('editor:sendreq2page:reply failed: Can not find the window.' );
+        return;
+    }
+
+    editorWin._reply(args,sessionId);
+});
+
+Ipc.on('window:open', function ( name, url, options ) {
     var editorWin = new Editor.Window(name, options);
     editorWin.nativeWin.setMenuBarVisibility(false);
     editorWin.load(url, options.argv);
     editorWin.show();
-} );
+});
 
-Ipc.on ( 'window:query-layout', function ( event, reply ) {
+Ipc.on('window:query-layout', function ( event, reply ) {
     var win = BrowserWindow.fromWebContents( event.sender );
     var editorWin = Editor.Window.find(win);
     if ( !editorWin ) {
@@ -274,9 +338,9 @@ Ipc.on ( 'window:query-layout', function ( event, reply ) {
     }
 
     reply(layout);
-} );
+});
 
-Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
+Ipc.on('window:save-layout', function ( event, layoutInfo ) {
     var win = BrowserWindow.fromWebContents( event.sender );
     var editorWin = Editor.Window.find(win);
     if ( !editorWin ) {
@@ -315,7 +379,7 @@ Ipc.on ( 'window:save-layout', function ( event, layoutInfo ) {
         panelProfile.height = panel.height;
         panelProfile.save();
     }
-} );
+});
 
 var _getPanels = function ( docks, panels ) {
     for ( var i = 0; i < docks.length; ++i ) {

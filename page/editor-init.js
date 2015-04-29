@@ -169,6 +169,16 @@ Ipc.on( 'editor:reset-layout', function ( layoutInfo ) {
     Editor.resetLayout( anchorEL, layoutInfo );
 });
 
+Ipc.on( 'ipc-debugger:query', function ( reply ) {
+    var ipcInfos = [];
+    for ( var p in Ipc._events ) {
+        ipcInfos.push({
+            name: '[page] ' + p,
+        });
+    }
+    reply(ipcInfos);
+});
+
 // ==========================
 // load modules
 // ==========================

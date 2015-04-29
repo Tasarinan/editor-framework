@@ -36,7 +36,7 @@ Package.load = function ( path ) {
                     continue;
 
                 if ( typeof main[prop] === 'function' ) {
-                    ipcListener.on( prop, main[prop] );
+                    ipcListener.on( prop, main[prop].bind(main) );
                 }
             }
             packageObj._ipc = ipcListener;

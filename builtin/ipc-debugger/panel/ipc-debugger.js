@@ -10,7 +10,10 @@ window[name].panel = Polymer({
     properties: {
     },
 
-    'panel:open': function () {
+    ready: function () {
+        Editor.sendRequestToCore( 'ipc-debugger:query', function ( results ) {
+            this.ipcInfos = results;
+        }.bind(this));
     },
 });
 

@@ -4,7 +4,49 @@ var Ipc = require('ipc');
 
 require( Editor.url('editor://share/ipc-init') );
 
-// messages
+// Messages
+
+Ipc.on('editor:sendreq2core:reply', function replyCallback (args, sessionId) {
+    'use strict';
+    var key = "" + sessionId;
+    var cb = replyCallbacks[key];
+    if (cb) {
+        cb.apply(null, args);
+
+        //if (sessionId + 1 === nextSessionId) {
+        //    --nextSessionId;
+        //}
+        delete replyCallbacks[key];
+    }
+    // else {
+    //     Editor.error('non-exists callback of session:', sessionId);
+    // }
+});
+
+Ipc.on('editor:send2panel', function () {
+    Editor.Panel.dispatch.apply(Editor.Panel,arguments);
+});
+
+Ipc.on('editor:sendreq2page', function (request, args, sessionId) {
+    var called = false;
+    function replyCallback () {
+        if ( !called ) {
+            called = true;
+            Ipc.send( 'editor:sendreq2page:reply', [].slice.call(arguments), sessionId );
+        }
+        else {
+            Editor.error('The callback which reply to "%s" can only be called once!', request);
+        }
+    }
+
+    args.unshift(request, replyCallback);
+    if ( !Ipc.emit.apply(Ipc, args) ) {
+        Editor.error('The listener of request "%s" is not yet registered!', request);
+    }
+});
+
+// Communication Patterns
+
 
 /**
  * Send message to editor-core, which is so called as main app, or atom shell's browser side.
@@ -91,8 +133,6 @@ Editor.sendToPanel = function ( panelID, message ) {
     }
 };
 
-// Communication Patterns
-
 var nextSessionId = 0;
 var replyCallbacks = {};
 
@@ -136,26 +176,5 @@ Editor.cancelRequestToCore = function (sessionId) {
         delete replyCallbacks[key];
     }
 };
-
-Ipc.on('editor:sendreq2core:reply', function replyCallback (args, sessionId) {
-    'use strict';
-    var key = "" + sessionId;
-    var cb = replyCallbacks[key];
-    if (cb) {
-        cb.apply(null, args);
-
-        //if (sessionId + 1 === nextSessionId) {
-        //    --nextSessionId;
-        //}
-        delete replyCallbacks[key];
-    }
-    // else {
-    //     Editor.error('non-exists callback of session:', sessionId);
-    // }
-});
-
-Ipc.on('editor:send2panel', function () {
-    Editor.Panel.dispatch.apply(Editor.Panel,arguments);
-});
 
 })();

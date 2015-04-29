@@ -2,7 +2,13 @@
     <link rel="import" type="css" href="ipc-debugger.css">
 
     <template>
-        <div class='label'>{{foobar}}</div>
+        <ul>
+            <template is="x-repeat" items="{{ipcInfos}}">
+                <li>
+                    <div class="flex-1">Name: <span>{{item.name}}</span></div>
+                </li>
+            </template>
+        </ul>
     </template>
 </dom-module>
 

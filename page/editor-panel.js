@@ -98,6 +98,7 @@ Panel.import = function ( url, cb ) {
 };
 
 Panel.load = function ( panelID, cb ) {
+    Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
     Editor.sendRequestToCore('panel:query-info', panelID, function ( panelInfo ) {
         var Path = require('fire-path');
         var viewPath = Path.join( panelInfo.path, panelInfo.view );
