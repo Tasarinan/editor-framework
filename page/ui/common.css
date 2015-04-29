@@ -3,6 +3,19 @@
     -webkit-user-select: none;
 }
 
+body {
+    margin: 3px;
+    padding: 0px;
+    border: 0px;
+
+    font-size: 13px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+
+    color: #ddd;
+    background-color: #333;
+}
+
 ::-webkit-scrollbar {
     height: 5px;
     width: 5px;
@@ -11,7 +24,7 @@
     background: rgba(255,255,255,0.3);
 }
 ::-webkit-scrollbar-track {
-    // background-clip: padding-box;
+    /* background-clip: padding-box; */
     background-color: rgba(255,255,255,0.1);
 }
 ::-webkit-scrollbar-corner {
