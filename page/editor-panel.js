@@ -162,9 +162,10 @@ Panel.load = function ( panelID, cb ) {
 
             //
             _idToPanelInfo[panelID] = {
-                element: viewEL,
+                view: viewEL,
                 messages: panelInfo.messages,
-                ipcListener: ipcListener
+                ipcListener: ipcListener,
+                popable: panelInfo.popable,
             };
 
             viewEL.profiles = panelInfo.profiles;
@@ -179,6 +180,18 @@ Panel.load = function ( panelID, cb ) {
 
 Panel.open = function ( panelID, argv ) {
     Editor.sendToCore('panel:open', panelID, argv);
+};
+
+Panel.popup = function ( panelID ) {
+    var panelCounts = 0;
+    for ( var id in _idToPanelInfo ) {
+        ++panelCounts;
+    }
+
+    if ( panelCounts > 1 ) {
+        Panel.close(panelID);
+        Editor.sendToCore('panel:new', panelID);
+    }
 };
 
 Panel.close = function ( panelID ) {
@@ -225,7 +238,7 @@ Panel.dispatch = function ( panelID, ipcName ) {
         return;
     }
 
-    var fn = panelInfo.element[ipcName];
+    var fn = panelInfo.view[ipcName];
     if ( !fn || typeof fn !== 'function' ) {
         if ( ipcName !== 'panel:open') {
             Editor.warn('Failed to respond ipc message %s in panel %s, Can not find implementation', ipcName, panelID );
@@ -233,7 +246,7 @@ Panel.dispatch = function ( panelID, ipcName ) {
         return;
     }
     var args = [].slice.call( arguments, 2 );
-    fn.apply( panelInfo.element, args );
+    fn.apply( panelInfo.view, args );
 };
 
 Panel.getLayout = function () {
@@ -267,7 +280,11 @@ Panel.find = function ( panelID ) {
     if ( !panelInfo ) {
         return null;
     }
-    return panelInfo.element;
+    return panelInfo.view;
+};
+
+Panel.getPanelInfo = function ( panelID ) {
+    return _idToPanelInfo[panelID];
 };
 
 // position: top, bottom, left, right, top-left, top-right, bottom-left, bottom-right

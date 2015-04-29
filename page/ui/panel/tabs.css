@@ -40,11 +40,16 @@
     pointer-events: none;
 }
 
-.menu {
+.icon {
     color: #777;
+    margin-left: 10px;
 }
 
-.menu:hover {
+.icon.hide {
+    display: none;
+}
+
+.icon:hover {
     color: #aaa;
     cursor: pointer;
 }

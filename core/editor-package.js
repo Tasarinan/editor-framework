@@ -72,8 +72,16 @@ Package.load = function ( path ) {
                 continue;
             }
 
-            _panel2info[panelID] = packageObj.panels[panelName];
-            _panel2info[panelID].path = path;
+            // setup default properties
+            var panelInfo = packageObj.panels[panelName];
+            Editor.JS.addon(panelInfo, {
+                messages: [],
+                popable: true,
+                path: path,
+            });
+
+            //
+            _panel2info[panelID] = panelInfo;
         }
     }
 

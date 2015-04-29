@@ -19,6 +19,7 @@ Each package use a `package.json` file to descript it.
       - `type` String - Can be `dockable`, `float`, `fixed-size`, `quick`.
       - `view` String - The path of the panel view polymer element.
       - `title` String - The panel title show in the tab.
+      - `popable` Boolean - Indicate if the panel is popable.
       - `width` Integer [Optional] - The width of the panel view.
       - `height` Integer [Optional] - The height of the panel view.
       - `min-width` Integer [Optional] - The min-width of the panel view.

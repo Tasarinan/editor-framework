@@ -120,7 +120,14 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
                 }
                 this.activeTab = tabEL;
                 this.activeTab.classList.add('active');
-                tabEL.fire('active');
+
+                tabEL.viewEL.fire('panel-active');
+
+                var panelID = tabEL.viewEL.getAttribute('id');
+                var panelInfo = Editor.Panel.getPanelInfo(panelID);
+                if ( panelInfo ) {
+                    this.$.popup.classList.toggle('hide', !panelInfo.popable);
+                }
             }
         }
     },
@@ -178,6 +185,13 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
         }
     },
 
+    _onPopup: function ( event ) {
+        if ( this.activeTab ) {
+            var panelID = this.activeTab.viewEL.getAttribute('id','');
+            Editor.Panel.popup(panelID);
+        }
+    },
+
     _onMenuPopup: function ( event ) {
         var rect = this.$.menu.getBoundingClientRect();
         var panelID = '';
@@ -185,9 +199,19 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
             panelID = this.activeTab.viewEL.getAttribute('id','');
         }
 
+        var panelInfo = Editor.Panel.getPanelInfo(panelID);
+        var popable = true;
+        if ( panelInfo ) {
+            popable = panelInfo.popable;
+        }
+
         Editor.Menu.popup( rect.left + 5, rect.bottom + 5, [
-            { label: 'Pop Out', message: 'panel:popup', params: [panelID] },
+            { label: 'Maximize', message: 'panel:maximize', params: [panelID] },
+            { label: 'Pop Out', message: 'panel:popup', enabled: popable, params: [panelID] },
             { label: 'Close', command: 'Editor.Panel.close', params: [panelID] },
+            { label: 'Add Tab', submenu: [
+                { label: 'TODO' },
+            ] },
         ]);
     },
 
