@@ -361,44 +361,6 @@ Ipc.on('window:save-layout', function ( event, layoutInfo ) {
     // save windows layout
     _windowLayouts[editorWin.name] = winInfo;
     EditorWindow.saveLayout();
-
-    // save panel standalone layout
-    var panels = [];
-    if ( layoutInfo ) {
-        if ( layoutInfo.type === 'dock' ) {
-            _getPanels( layoutInfo.docks, panels );
-        }
-    }
-    for ( var i = 0; i < panels.length; ++i ) {
-        var panel = panels[i];
-        var panelProfile = Editor.loadProfile( 'layout.' + panel.name, 'local' );
-        panelProfile.window = editorWin.name;
-        panelProfile.x = winPos[0];
-        panelProfile.y = winPos[1];
-        panelProfile.width = panel.width;
-        panelProfile.height = panel.height;
-        panelProfile.save();
-    }
 });
-
-var _getPanels = function ( docks, panels ) {
-    for ( var i = 0; i < docks.length; ++i ) {
-        var info = docks[i];
-
-        if ( info.type === 'dock' ) {
-            _getPanels( info.docks, panels );
-        }
-        else if ( info.type === 'panel' ) {
-            for ( var j = 0; j < info.panels.length; ++j ) {
-                var panel = info.panels[j];
-                panels.push({
-                    name: panel,
-                    width: info.width,
-                    height: info.height,
-                });
-            }
-        }
-    }
-};
 
 module.exports = EditorWindow;

@@ -10,7 +10,7 @@ var _panel2argv = {};
 
 Panel.templateUrl = 'editor://static/window.html';
 
-_dock = function ( panelID, win ) {
+var _dock = function ( panelID, win ) {
     // Editor.info('%s dock to %s', panelID, win.name ); // DEBUG
 
     var editorWin = _panel2windows[panelID];
@@ -23,7 +23,7 @@ _dock = function ( panelID, win ) {
     _panel2windows[panelID] = win;
 };
 
-_undock = function ( panelID ) {
+var _undock = function ( panelID ) {
     var editorWin = _panel2windows[panelID];
     // Editor.info('%s undock from %s', panelID, editorWin.name ); // DEBUG
 
@@ -35,8 +35,23 @@ _undock = function ( panelID ) {
     return null;
 };
 
+var _saveLayout = function ( editorWin, panelID ) {
+    // save standalone panel's layout
+    if ( !editorWin.isMainWindow ) {
+        var panelProfile = Editor.loadProfile( 'layout.' + panelID, 'local' );
+        var winSize = editorWin.nativeWin.getContentSize();
+        var winPos = editorWin.nativeWin.getPosition();
+
+        panelProfile.x = winPos[0];
+        panelProfile.y = winPos[1];
+        panelProfile.width = winSize[0];
+        panelProfile.height = winSize[1];
+        panelProfile.save();
+    }
+};
+
 //
-Panel.open = function ( panelID, openNew, argv ) {
+Panel.open = function ( panelID, argv ) {
     var panelInfo = Editor.Package.panelInfo(panelID);
     if ( !panelInfo ) {
         Editor.error('Failed to open panel %s, panel info not found.', panelID);
@@ -47,11 +62,6 @@ Panel.open = function ( panelID, openNew, argv ) {
 
     var editorWin = Panel.findWindow(panelID);
     if ( editorWin ) {
-        if ( openNew ) {
-            Editor.error('Can not open panel %s in a new window, it already exists.', panelID);
-            return;
-        }
-
         // if we found the window, send panel:open to it
         Editor.sendToPanel( panelID, 'panel:open', argv );
         editorWin.show();
@@ -74,18 +84,6 @@ Panel.open = function ( panelID, openNew, argv ) {
     // load layout-settings, and find windows by name
     var layoutProfile = Editor.loadProfile('layout.' + panelID, 'local' );
     if ( layoutProfile ) {
-        if ( !openNew && layoutProfile.window ) {
-            windowName = layoutProfile.window;
-        }
-
-        // find window by name
-        editorWin = Editor.Window.find(windowName);
-        if ( editorWin ) {
-            // TODO: use the panelInfo.position to dock it to the exists window
-            _dock( panelID, editorWin );
-            return;
-        }
-
         options.x = parseInt(layoutProfile.x);
         options.y = parseInt(layoutProfile.y);
         options.width = parseInt(layoutProfile.width);
@@ -148,6 +146,9 @@ Panel.open = function ( panelID, openNew, argv ) {
 Panel.close = function ( panelID ) {
     var editorWin = _undock(panelID);
     if ( editorWin ) {
+
+        _saveLayout( editorWin, panelID );
+
         // check if we have other panels in the same window
         // if no panels left, we close the window
         var found = false;
@@ -223,6 +224,7 @@ Panel._onWindowClosed = function ( editorWin ) {
     for ( var id in _panel2windows ) {
         var win = _panel2windows[id];
         if ( win === editorWin ) {
+            _saveLayout( editorWin, id );
             delete _panel2windows[id];
         }
     }
@@ -260,11 +262,7 @@ Ipc.on('panel:ready', function ( panelID ) {
 });
 
 Ipc.on('panel:open', function ( panelID, argv ) {
-    Panel.open( panelID, false, argv );
-});
-
-Ipc.on('panel:new', function ( panelID, argv ) {
-    Panel.open( panelID, true, argv );
+    Panel.open( panelID, argv );
 });
 
 Ipc.on('panel:dock', function ( event, panelID ) {

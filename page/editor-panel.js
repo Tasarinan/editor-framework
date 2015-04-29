@@ -200,7 +200,7 @@ Panel.popup = function ( panelID ) {
 
     if ( panelCounts > 1 ) {
         Panel.close(panelID);
-        Editor.sendToCore('panel:new', panelID);
+        Editor.sendToCore('panel:open', panelID);
     }
 };
 
@@ -253,6 +253,10 @@ Panel.dispatch = function ( panelID, ipcName ) {
         return;
     }
 
+    if ( ipcName === 'panel:open' ) {
+        Panel.focus(panelID);
+    }
+
     var fn = panelInfo.view[ipcName];
     if ( !fn || typeof fn !== 'function' ) {
         if ( ipcName !== 'panel:open') {
@@ -298,6 +302,14 @@ Panel.find = function ( panelID ) {
     return panelInfo.view;
 };
 
+Panel.focus = function ( panelID ) {
+    var viewEL = Panel.find(panelID);
+    var parentEL = Polymer.dom(viewEL).parentNode;
+    if ( parentEL instanceof EditorUI.Panel ) {
+        parentEL.select(viewEL);
+    }
+};
+
 Panel.getPanelInfo = function ( panelID ) {
     return _idToPanelInfo[panelID];
 };
@@ -334,7 +346,7 @@ Ipc.on('panel:close', function ( panelID ) {
 Ipc.on('panel:popup', function ( panelID ) {
     window.requestAnimationFrame( function () {
         Editor.Panel.close(panelID);
-        Editor.sendToCore('panel:new', panelID);
+        Editor.sendToCore('panel:open', panelID);
     });
 });
 
