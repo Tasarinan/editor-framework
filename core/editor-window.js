@@ -73,6 +73,11 @@ Object.defineProperty(EditorWindow.prototype, 'isLoaded', {
     }
 });
 
+EditorWindow.prototype.dispose = function () {
+    // NOTE: Important to dereference the window object to allow for GC
+    this.nativeWin = null;
+};
+
 //
 EditorWindow.prototype.load = function ( editorUrl, argv ) {
     var resultUrl = Editor.url(editorUrl);
@@ -222,6 +227,8 @@ EditorWindow.removeWindow = function ( win ) {
         return;
     }
     _windows.splice(idx,1);
+
+    win.dispose();
 };
 
 EditorWindow.saveLayout = function () {

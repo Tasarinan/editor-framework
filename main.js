@@ -41,13 +41,6 @@ if ( !Fs.existsSync(settingsPath) ) {
     Fs.mkdirSync(settingsPath);
 }
 
-// load user App definition
-if ( Fs.existsSync('./app.js') ) {
-    Editor.App = require('./app');
-} else {
-    Editor.App = require('./test/app'); // run unit test
-}
-
 // ---------------------------
 // initialize logs/
 // ---------------------------
@@ -161,6 +154,29 @@ Winston.add( Winston.transports.Console, {
         return text;
     }
 });
+
+// ---------------------------
+// initialize Editor.App
+// ---------------------------
+
+// load user App definition
+var packageJson = JSON.parse(Fs.readFileSync('./package.json'));
+if ( packageJson.app ) {
+    if ( !Fs.existsSync( packageJson.app ) ) {
+        Winston.error( 'Can not find app %s, programme exists.', packageJson.app );
+        process.exit(1);
+        return;
+    }
+    Editor.App = require( Path.resolve(packageJson.app) );
+}
+else {
+    if ( !Fs.existsSync('./app.js') ) {
+        Winston.error( 'Can not find app.js, programme exists.' );
+        process.exit(1);
+        return;
+    }
+    Editor.App = require('./app');
+}
 
 // ---------------------------
 // initialize Commander

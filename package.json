@@ -31,5 +31,6 @@
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.25.1",
+  "app": "editor-framework-app/app.js",
   "main": "main.js"
 }

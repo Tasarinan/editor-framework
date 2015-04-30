@@ -126,6 +126,10 @@ function EditorMenu ( template, webContents ) {
     }
 }
 
+EditorMenu.prototype.dispose = function () {
+    this.nativeMenu = null;
+};
+
 EditorMenu.prototype.reset = function (template) {
     this.nativeMenu = Menu.buildFromTemplate(template);
 };
@@ -326,6 +330,7 @@ Ipc.on('menu:popup', function ( event, x, y, template ) {
     if ( x ) x = Math.floor(x);
     if ( y ) y = Math.floor(y);
     editorMenu.nativeMenu.popup(BrowserWindow.fromWebContents(event.sender), x, y);
+    editorMenu.dispose();
 });
 
 module.exports = EditorMenu;

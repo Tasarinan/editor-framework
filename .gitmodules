@@ -1,0 +1,3 @@
+[submodule "editor-framework-app"]
+	path = editor-framework-app
+	url = https://github.com/fireball-x/editor-framework-app
