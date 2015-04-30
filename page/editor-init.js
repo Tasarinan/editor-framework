@@ -196,8 +196,10 @@ Ipc.on( 'ipc-debugger:query', function ( reply ) {
 // load modules
 // ==========================
 
-Editor.Panel = require( Editor.url('editor://page/editor-panel'));
+Editor.Window = require( Editor.url('editor://page/editor-window'));
 Editor.Menu = require( Editor.url('editor://page/editor-menu'));
+Editor.Panel = require( Editor.url('editor://page/editor-panel'));
+
 Editor.MainMenu = require( Editor.url('editor://page/main-menu'));
 
 })();

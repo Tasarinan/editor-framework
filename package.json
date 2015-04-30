@@ -21,7 +21,8 @@
     "chalk": "1.0.0",
     "winston": "1.0.0",
     "globby": "2.0.0",
-    "async": "0.9.0"
+    "async": "0.9.0",
+    "semver": "4.3.3"
   },
   "devDependencies": {
     "gulp": "",

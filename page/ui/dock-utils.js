@@ -100,6 +100,8 @@ EditorUI.DockUtils = (function () {
         if ( !_draggingInfo )
             return;
 
+        Editor.Window.focus();
+
         // clear docks hints
         _potentialDocks = [];
         if ( _dockMask ) {
@@ -254,6 +256,8 @@ EditorUI.DockUtils = (function () {
 
         event.dataTransfer.dropEffect = 'move';
         event.preventDefault();
+
+        Editor.Window.focus();
 
         var minDistance = null;
         _resultDock = null;

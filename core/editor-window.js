@@ -363,4 +363,17 @@ Ipc.on('window:save-layout', function ( event, layoutInfo ) {
     EditorWindow.saveLayout();
 });
 
+Ipc.on('window:focus', function ( event ) {
+    var win = BrowserWindow.fromWebContents( event.sender );
+    var editorWin = Editor.Window.find(win);
+    if ( !editorWin ) {
+        Editor.warn('Failed to focus, can not find the window.');
+        return;
+    }
+
+    if ( !editorWin.isFocused ) {
+        editorWin.focus();
+    }
+});
+
 module.exports = EditorWindow;
