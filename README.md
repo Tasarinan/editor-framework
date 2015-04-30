@@ -14,8 +14,8 @@ npm install .
 # Install bower packages
 bower install .
 
-# Install atom-shell
-gulp update-atom-shell
+# Install electron
+gulp update-electron
 
 # run the framework
 sh electron.sh
@@ -23,21 +23,30 @@ sh electron.sh
 
 ## Features
 
- - Manage Packages
- - Manage Panels
-   - Dockable panel on window
-   - Save and load panel settings
-   - Allow register and customize key mappings
- - Manage Ipc
-   - Ipc message send to specific panel
-   - Allow register ipc message to dom event
- - Manage Log
+ - Package Manager
+   - Allow dynamically load and unload packages
+   - Allow register menu items
+   - Allow register custom panels
+   - Allow register key mappings for panel
+   - Allow register messages for panel
+ - Dockable Panels
+   - Freely docking panel in multiple window
+   - Save and restore the last edit layout
+   - Save and load panel profiles
+ - Enhance Ipc Programming Experience
+   - Lots of Ipc APIs for easily control ipc send and recv
+   - Can sending ipc message to specific panel
+   - Can sending ipc message to specific window
+   - Add ipc callback, which can wait for a callback message
+   - Inspect and Develop Ipc in ipc-debugger
+ - Improve Log System
+   - Use Winston for low level log system
    - Log to file
+   - A editor-console Panel for displaying logs
+ - Manage Menu
+   - Can dynamically add and remove main menu items
  - Manage Dialog
    - Remember dialog last edit position
- - Manage Menu
-   - Provide main menu registry API
-   - Register and customize menu item for panel
  - Manage Command
    - Register and customize command based on panel
    - Search and execute command in command window

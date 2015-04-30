@@ -24,7 +24,6 @@ Each package use a `package.json` file to descript it.
       - `height` Integer [Optional] - The height of the panel view.
       - `min-width` Integer [Optional] - The min-width of the panel view.
       - `min-height` Integer [Optional] - The min-height of the panel view.
-      - `position` String [Optional] - The default position for the panel. (e.g. `main/top-left`)
       - `messages` Array - The ipc message name list.
       - `profiles` Object - The list of default profile settings.
         - `key` String - The profile type, by default it can be `local` and `global`. You can register more profile type through `Editor.registerProfilePath`

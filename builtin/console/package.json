@@ -16,7 +16,6 @@
       "title": "Editor Console",
       "height": 300,
       "min-height": 200,
-      "position": "main/bottom-right",
       "messages": [
           "console:log",
           "console:success",
