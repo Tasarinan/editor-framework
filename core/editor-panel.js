@@ -8,7 +8,7 @@ var Panel = {};
 var _panel2windows = {};
 var _panel2argv = {};
 
-Panel.templateUrl = 'editor://static/window.html';
+Panel.templateUrl = 'editor-framework://static/window.html';
 
 var _dock = function ( panelID, win ) {
     // Editor.info('%s dock to %s', panelID, win.name ); // DEBUG

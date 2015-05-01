@@ -1,3 +1,23 @@
+global.Editor = {};
+
+// ---------------------------
+// precheck
+// ---------------------------
+
+if ( !__app ) {
+    console.error( '\'global.__app\' is undefined.');
+    process.exit(1);
+    return;
+}
+Editor.App = __app;
+
+if ( !__app.path ) {
+    console.error( '\'__app.path\' is undefined. please set `path: __dirname` manually in your __app structure.');
+    process.exit(1);
+    return;
+}
+Editor.cwd = __app.path;
+
 // ---------------------------
 // load modules
 // ---------------------------
@@ -23,10 +43,8 @@ process.on('uncaughtException', function(error) {
 // initialize minimal Editor
 // ---------------------------
 
-global.Editor = {};
-
 Editor.name = App.getName();
-Editor.cwd = __dirname;
+Editor.frameworkPath = __dirname;
 // NOTE: Editor.dataPath = ~/.{app-name}
 Editor.dataPath = Path.join( App.getPath('home'), '.' + Editor.name );
 
@@ -156,29 +174,6 @@ Winston.add( Winston.transports.Console, {
 });
 
 // ---------------------------
-// initialize Editor.App
-// ---------------------------
-
-// load user App definition
-var packageJson = JSON.parse(Fs.readFileSync('./package.json'));
-if ( packageJson.app ) {
-    if ( !Fs.existsSync( packageJson.app ) ) {
-        Winston.error( 'Can not find app %s, programme exists.', packageJson.app );
-        process.exit(1);
-        return;
-    }
-    Editor.App = require( Path.resolve(packageJson.app) );
-}
-else {
-    if ( !Fs.existsSync('./app.js') ) {
-        Winston.error( 'Can not find app.js, programme exists.' );
-        process.exit(1);
-        return;
-    }
-    Editor.App = require('./app');
-}
-
-// ---------------------------
 // initialize Commander
 // ---------------------------
 
@@ -259,7 +254,7 @@ App.on('ready', function() {
     Editor.registerProfilePath( 'local', defaultProfilePath );
 
     // register package path
-    Editor.registerPackagePath( Path.join( Editor.cwd, 'builtin' ) );
+    Editor.registerPackagePath( Path.join( Editor.frameworkPath, 'builtin' ) );
     Editor.registerPackagePath( Path.join( Editor.dataPath, 'extends' ) );
 
     // init user App

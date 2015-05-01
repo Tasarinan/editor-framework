@@ -135,14 +135,6 @@ function getDefaultMainMenu () {
                     click: function() {
                         BrowserWindow.getFocusedWindow().reload();
                         // BrowserWindow.getFocusedWindow().reloadIgnoringCache();
-                        Editor.reloadPlayground();
-                    }
-                },
-                {
-                    label: 'Reload Playground',
-                    accelerator: 'CmdOrCtrl+Shift+R',
-                    click: function() {
-                        Editor.reloadPlayground();
                     }
                 },
                 {

@@ -17,8 +17,8 @@ bower install .
 # Install electron
 gulp update-electron
 
-# run the framework
-sh electron.sh
+# play some test
+sh test.sh
 ```
 
 ## Features

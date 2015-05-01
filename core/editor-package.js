@@ -149,12 +149,11 @@ Package.panelInfo = function ( panelID ) {
 // ========================================
 
 Ipc.on('package:query', function ( reply ) {
-    var builtinPath = Path.join( Editor.cwd, 'builtin' );
     var results = [];
     for ( var path in _path2package ) {
         results.push({
             path: path,
-            builtin: Path.contains( builtinPath, path ),
+            builtin: false, // TODO:
             enabled: true, // TODO:
             info: _path2package[path],
         });

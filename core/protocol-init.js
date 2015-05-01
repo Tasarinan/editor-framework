@@ -4,8 +4,20 @@ var Path = require('fire-path');
 
 // native protocol register
 
-// register protocol editor://
-Protocol.registerProtocol('editor', function(request) {
+// register protocol editor-framework://
+Protocol.registerProtocol('editor-framework', function(request) {
+    var url = decodeURIComponent(request.url);
+    var data = Url.parse(url);
+    var relativePath = data.hostname;
+    if ( data.pathname ) {
+        relativePath = Path.join( relativePath, data.pathname );
+    }
+    var file = Path.join( Editor.frameworkPath, relativePath );
+    return new Protocol.RequestFileJob(file);
+});
+
+// register protocol app://
+Protocol.registerProtocol('app', function(request) {
     var url = decodeURIComponent(request.url);
     var data = Url.parse(url);
     var relativePath = data.hostname;
@@ -20,11 +32,13 @@ Protocol.registerProtocol('editor', function(request) {
 
 Editor._protocol2fn = {};
 
-var _urlToPath = function ( urlInfo ) {
-    if ( urlInfo.pathname ) {
-        return Path.join( Editor.cwd, urlInfo.host, urlInfo.pathname );
-    }
-    return Path.join( Editor.cwd, urlInfo.host );
+var _urlToPath = function ( base ) {
+    return function ( urlInfo ) {
+        if ( urlInfo.pathname ) {
+            return Path.join( base, urlInfo.host, urlInfo.pathname );
+        }
+        return Path.join( base, urlInfo.host );
+    };
 };
 
 Editor.url = function ( url ) {
@@ -48,4 +62,5 @@ Editor.registerProtocol = function ( protocol, fn ) {
     Editor._protocol2fn[protocol+':'] = fn;
 };
 
-Editor.registerProtocol('editor', _urlToPath);
+Editor.registerProtocol('editor-framework', _urlToPath(Editor.frameworkPath));
+Editor.registerProtocol('app', _urlToPath(Editor.cwd));

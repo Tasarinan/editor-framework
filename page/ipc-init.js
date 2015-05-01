@@ -2,7 +2,7 @@
 
 var Ipc = require('ipc');
 
-require( Editor.url('editor://share/ipc-init') );
+require( Editor.url('editor-framework://share/ipc-init') );
 
 // Messages
 

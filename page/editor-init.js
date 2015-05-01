@@ -25,27 +25,35 @@ Editor.argv = queries;
 
 // init & cache remote
 Editor.remote = Remote.getGlobal('Editor');
-Editor.cwd = Editor.remote.url('editor://');
+Editor.cwd = Editor.remote.url('app://');
+Editor.frameworkPath = Editor.remote.url('editor-framework://');
 Editor.isDev = Editor.remote.isDev;
+
+var _urlToPath = function ( base, urlInfo ) {
+    if ( urlInfo.pathname ) {
+        return Path.join( base, urlInfo.host, urlInfo.pathname );
+    }
+    return Path.join( base, urlInfo.host );
+};
 
 // url
 Editor.url = function (url) {
-    // NOTE: we cache editor:// protocol to get rid of ipc-sync function calls
+    // NOTE: we cache app:// and editor-framework:// protocol to get rid of ipc-sync function calls
     var urlInfo = Url.parse(url);
-    if ( urlInfo.protocol === 'editor:' ) {
-        if ( urlInfo.pathname ) {
-            return Path.join( Editor.cwd, urlInfo.host, urlInfo.pathname );
-        }
-        return Path.join( Editor.cwd, urlInfo.host );
+    if ( urlInfo.protocol === 'app:' ) {
+        return _urlToPath( Editor.cwd, urlInfo );
+    }
+    else if ( urlInfo.protocol === 'editor-framework:' ) {
+        return _urlToPath( Editor.frameworkPath, urlInfo );
     }
 
     // try ipc-sync function
     return Editor.remote.url(url);
 };
 
-require( Editor.url('editor://share/platform'));
-Editor.JS = require( Editor.url('editor://share/js-utils'));
-require( Editor.url('editor://page/ipc-init'));
+require( Editor.url('editor-framework://share/platform') );
+Editor.JS = require( Editor.url('editor-framework://share/js-utils') );
+require( Editor.url('editor-framework://page/ipc-init') );
 
 // ==========================
 // console log API
@@ -196,10 +204,10 @@ Ipc.on( 'ipc-debugger:query', function ( reply ) {
 // load modules
 // ==========================
 
-Editor.Window = require( Editor.url('editor://page/editor-window'));
-Editor.Menu = require( Editor.url('editor://page/editor-menu'));
-Editor.Panel = require( Editor.url('editor://page/editor-panel'));
+Editor.Window = require( Editor.url('editor-framework://page/editor-window') );
+Editor.Menu = require( Editor.url('editor-framework://page/editor-menu') );
+Editor.Panel = require( Editor.url('editor-framework://page/editor-panel') );
 
-Editor.MainMenu = require( Editor.url('editor://page/main-menu'));
+Editor.MainMenu = require( Editor.url('editor-framework://page/main-menu') );
 
 })();

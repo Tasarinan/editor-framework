@@ -5,8 +5,8 @@ var Path = require('fire-path');
 var Winston = require('winston');
 var Globby = require('globby');
 
-require( Editor.url('editor://share/platform')) ;
-Editor.JS = require( Editor.url('editor://share/js-utils')) ;
+require('../share/platform') ;
+Editor.JS = require('../share/js-utils') ;
 require('./ipc-init');
 
 // ==========================
@@ -151,49 +151,6 @@ Editor.quit = function () {
     var winlist = Editor.Window.windows;
     for ( var i = 0; i < winlist.length; ++i ) {
         winlist[i].close();
-    }
-};
-
-var _playgroundListener = new Editor.IpcListener();
-Editor.reloadPlayground = function () {
-    var cache = require.cache;
-    var playgroundPath = Path.join(Editor.cwd,'playground.js');
-    var module = cache[playgroundPath];
-    var exports = null;
-
-    // unload
-    try {
-        if ( module ) {
-            exports = module.exports;
-            if ( exports && exports.unload ) {
-                exports.unload();
-            }
-        }
-    }
-    catch (err) {
-        Editor.failed( 'Failed to unload Playground.', err.stack );
-    }
-
-    _playgroundListener.clear();
-    delete cache[playgroundPath];
-
-    // load
-    try {
-        exports = require(playgroundPath);
-        if ( exports && exports.load ) {
-            exports.load();
-        }
-        for ( var prop in exports ) {
-            if ( prop === 'load' || prop === 'unload' )
-                continue;
-
-            if ( typeof exports[prop] === 'function' ) {
-                _playgroundListener.on( prop, exports[prop] );
-            }
-        }
-    }
-    catch (err) {
-        Editor.failed( 'Failed to load Playground.', err.stack );
     }
 };
 

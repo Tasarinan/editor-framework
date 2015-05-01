@@ -1,6 +1,6 @@
 ﻿var Ipc = require('ipc');
 
-require( Editor.url('editor://share/ipc-init') );
+require('../share/ipc-init');
 
 // message operation
 
