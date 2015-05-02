@@ -133,8 +133,15 @@ function getDefaultMainMenu () {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
                     click: function() {
-                        BrowserWindow.getFocusedWindow().reload();
-                        // BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+                        // BrowserWindow.getFocusedWindow().reload();
+                        BrowserWindow.getFocusedWindow().reloadIgnoringCache();
+                    }
+                },
+                {
+                    label: 'Reload App',
+                    accelerator: 'CmdOrCtrl+Shift+R',
+                    click: function() {
+                        Editor.App.reload();
                     }
                 },
                 {

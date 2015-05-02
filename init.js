@@ -44,7 +44,15 @@ process.on('uncaughtException', function(error) {
 // ---------------------------
 
 Editor.name = App.getName();
+
+// mainEntry = ./app.js
+var _packageJsonPath = Path.join( Editor.cwd, 'package.json' );
+var _packageJson = JSON.parse(Fs.readFileSync(_packageJsonPath));
+Editor.mainEntry = Path.join( Editor.cwd, _packageJson.main );
+
+// frameworkPath = ./editor-framework/
 Editor.frameworkPath = __dirname;
+
 // NOTE: Editor.dataPath = ~/.{app-name}
 Editor.dataPath = Path.join( App.getPath('home'), '.' + Editor.name );
 
@@ -213,7 +221,72 @@ Commander.parse(process.argv);
 Editor.isDev = Commander.dev;
 Editor.showDevtools = Commander.showDevtools;
 
+// ---------------------------
+// Define Editor.App APIs
+// ---------------------------
+
+var _editorAppIpc;
+function _loadEditorApp () {
+    var editorApp = Editor.App;
+
+    if ( editorApp.load ) {
+        try {
+            Editor.App.load();
+        }
+        catch (err) {
+            Editor.failed( 'Failed to load Editor.App, %s.', err.stack );
+            return;
+        }
+    }
+
+    // register ipcs
+    var ipcListener = new Editor.IpcListener();
+    for ( var prop in editorApp ) {
+        if ( prop.indexOf('app:') !== 0 )
+            continue;
+
+        if ( typeof editorApp[prop] === 'function' ) {
+            ipcListener.on( prop, editorApp[prop].bind(editorApp) );
+        }
+    }
+    _editorAppIpc = ipcListener;
+}
+
+function _unloadEditorApp () {
+    var editorApp = Editor.App;
+
+    // unregister main ipcs
+    _editorAppIpc.clear();
+    _editorAppIpc = null;
+
+    // unload main
+    var cache = require.cache;
+    if ( editorApp.unload ) {
+        try {
+            editorApp.unload();
+        }
+        catch (err) {
+            Editor.failed( 'Failed to unload Editor.App, %s.', err.stack );
+        }
+    }
+
+    delete cache[Editor.mainEntry];
+    delete global.__app;
+}
+
+function _reloadEditorApp () {
+    _unloadEditorApp();
+    require(Editor.mainEntry);
+    Editor.App = __app;
+    Editor.App.reload = _reloadEditorApp;
+    _loadEditorApp();
+
+    Editor.success('Editor.App reloaded');
+}
+
+// ---------------------------
 // register App events
+// ---------------------------
 
 // DISABLE: http cache only happends afterwhile, not satisefy our demand (which need to happend immediately).
 // App.commandLine.appendSwitch('disable-http-cache');
@@ -271,6 +344,10 @@ App.on('ready', function() {
         App.terminate();
         return;
     }
+
+    // register user App Ipcs
+    _loadEditorApp();
+    Editor.App.reload = _reloadEditorApp;
 
     //
     Winston.success('Initial success!');

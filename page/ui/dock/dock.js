@@ -184,9 +184,12 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
 
     reflow: function () {
         var i, rect, el;
+        var parentRect;
         var sizeList = [];
         var totalSize = 0;
         var thisDOM = Polymer.dom(this);
+
+        parentRect = this.getBoundingClientRect();
 
         for ( i = 0; i < thisDOM.children.length; ++i ) {
             el = thisDOM.children[i];
@@ -207,8 +210,10 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
 
             if ( this.row ) {
                 el.curWidth = sizeList[i];
+                el.curHeight = parentRect.height;
             }
             else {
+                el.curWidth = parentRect.width;
                 el.curHeight = sizeList[i];
             }
         }

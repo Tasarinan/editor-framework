@@ -5,6 +5,10 @@ var _playgroundListener = null;
 global.__app = {
     path: __dirname,
 
+    initCommander: function ( commander ) {
+        // TODO:
+    },
+
     init: function ( options ) {
         // initialize ./test/.settings
         var settingsPath = Path.join(Editor.cwd, 'test', '.settings');
@@ -36,15 +40,7 @@ global.__app = {
                     });
                 }
             },
-            {
-                label: 'Reload Playground',
-                accelerator: 'CmdOrCtrl+Shift+R',
-                click: function() {
-                    Editor.App.reloadPlayground();
-                }
-            },
-        ]
-        );
+        ]);
     },
 
     run: function () {
@@ -77,49 +73,16 @@ global.__app = {
         mainWin.focus();
     },
 
-    reloadPlayground: function () {
-        if ( !_playgroundListener )
-            _playgroundListener = new Editor.IpcListener();
+    load: function () {
+        // TODO
+    },
 
-        var cache = require.cache;
-        var playgroundPath = Path.join(Editor.cwd, 'test', 'playground.js');
-        var module = cache[playgroundPath];
-        var exports = null;
+    unload: function () {
+        // TODO
+    },
 
-        // unload
-        try {
-            if ( module ) {
-                exports = module.exports;
-                if ( exports && exports.unload ) {
-                    exports.unload();
-                }
-            }
-        }
-        catch (err) {
-            Editor.failed( 'Failed to unload Playground.', err.stack );
-        }
-
-        _playgroundListener.clear();
-        delete cache[playgroundPath];
-
-        // load
-        try {
-            exports = require(playgroundPath);
-            if ( exports && exports.load ) {
-                exports.load();
-            }
-            for ( var prop in exports ) {
-                if ( prop === 'load' || prop === 'unload' )
-                    continue;
-
-                if ( typeof exports[prop] === 'function' ) {
-                    _playgroundListener.on( prop, exports[prop] );
-                }
-            }
-        }
-        catch (err) {
-            Editor.failed( 'Failed to load Playground.', err.stack );
-        }
+    'app:foobar': function () {
+        Editor.log('foobar');
     },
 };
 

@@ -1,4 +1,6 @@
-## Guids
+## Manual
+
+  * [define your app](manual/define-your-app.md)
 
 ## Extends
 

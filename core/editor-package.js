@@ -22,29 +22,30 @@ Package.load = function ( path ) {
 
     // load main.js
     if ( packageObj.main ) {
+        var main;
         var mainPath = Path.join( path, packageObj.main );
         try {
-            var main = require(mainPath);
+            main = require(mainPath);
             if ( main && main.load ) {
                 main.load();
             }
-
-            // register main ipcs
-            var ipcListener = new Editor.IpcListener();
-            for ( var prop in main ) {
-                if ( prop === 'load' || prop === 'unload' )
-                    continue;
-
-                if ( typeof main[prop] === 'function' ) {
-                    ipcListener.on( prop, main[prop].bind(main) );
-                }
-            }
-            packageObj._ipc = ipcListener;
         }
         catch (err) {
             Editor.failed( 'Failed to load %s from %s. %s.', packageObj.main, packageObj.name, err.stack );
             return;
         }
+
+        // register main ipcs
+        var ipcListener = new Editor.IpcListener();
+        for ( var prop in main ) {
+            if ( prop === 'load' || prop === 'unload' )
+                continue;
+
+            if ( typeof main[prop] === 'function' ) {
+                ipcListener.on( prop, main[prop].bind(main) );
+            }
+        }
+        packageObj._ipc = ipcListener;
     }
 
     // register menu
@@ -110,25 +111,28 @@ Package.unload = function ( path ) {
         }
     }
 
-    // unregister main ipcs
-    packageObj._ipc.clear();
+    // unload main.js
+    if ( packageObj.main ) {
+        // unregister main ipcs
+        packageObj._ipc.clear();
 
-    // unload main
-    var cache = require.cache;
-    var mainPath = Path.join( path, packageObj.main );
-    var module = cache[mainPath];
-    try {
-        if ( module ) {
-            var main = module.exports;
-            if ( main && main.unload ) {
-                main.unload();
+        // unload main
+        var cache = require.cache;
+        var mainPath = Path.join( path, packageObj.main );
+        var module = cache[mainPath];
+        try {
+            if ( module ) {
+                var main = module.exports;
+                if ( main && main.unload ) {
+                    main.unload();
+                }
             }
         }
+        catch (err) {
+            Editor.failed( 'Failed to unload %s from %s. %s.', packageObj.main, packageObj.name, err.stack );
+        }
+        delete cache[mainPath];
     }
-    catch (err) {
-        Editor.failed( 'Failed to unload %s from %s. %s.', packageObj.main, packageObj.name, err.stack );
-    }
-    delete cache[mainPath];
 
     //
     delete _path2package[path];

@@ -42,6 +42,8 @@ function EditorWindow ( name, options ) {
 
     this.nativeWin.webContents.on('did-finish-load', function() {
         this._loaded = true;
+
+        // TODO: do we really need this?
         // Editor.sendToCore('window:reloaded', this);
     }.bind(this) );
 
