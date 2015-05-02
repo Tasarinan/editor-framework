@@ -1,15 +1,35 @@
 :host {
-    overflow: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-
     color: #aaa;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.toolbar {
+    padding: 5px 10px;
+}
+.toolbar .btn {
+    font-size: 12px;
+    padding: 3px;
+    margin-right: 0px;
+    color: #09f;
+}
+.toolbar .btn:hover {
+    background: #333;
+}
+
+.content {
+    overflow: auto;
 }
 
 ul {
     padding: 0px;
     margin: 0px;
+
     margin-left: 10px;
+    margin-bottom: 5px;
 }
 
 li {

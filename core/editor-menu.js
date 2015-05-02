@@ -106,7 +106,10 @@ function _cloneMenuExcept ( newMenu, nativeMenu, exceptPath, curPath ) {
                                                 path );
                 if ( removed ) result = removed;
             }
-            newMenu.append(newMenuItem);
+
+            if ( newMenuItem.submenu.items.length > 0 ) {
+                newMenu.append(newMenuItem);
+            }
         }
         else {
             newMenu.append(menuItem);

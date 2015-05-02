@@ -12,23 +12,11 @@ window[name].panel = Polymer({
 
     ready: function () {
         this.inspects = {};
+        this.refresh();
+    },
 
-        Editor.sendRequestToCore( 'ipc-debugger:query', function ( results ) {
-            this.ipcInfos = results.filter ( function ( item ) {
-                return !/^ATOM/.test(item.name);
-            });
-            this.ipcInfos.sort( function ( a, b ) {
-                var result = a.level.localeCompare( b.level );
-                if ( result === 0 ) {
-                    result = a.name.localeCompare(b.name);
-                }
-                return result;
-            });
-
-            // NOTE: the sort will not repaint in x-repeat,
-            // TODO: keep watching on Polymer updates
-            this.ipcInfos = this.ipcInfos.slice();
-        }.bind(this));
+    _onRefresh: function ( event ) {
+        this.refresh();
     },
 
     _onInspect: function ( event ) {
@@ -72,6 +60,34 @@ window[name].panel = Polymer({
             Ipc.removeListener( name, fn );
             delete this.inspects[name];
         }
+    },
+
+    refresh: function () {
+        Editor.sendRequestToCore( 'ipc-debugger:query', function ( results ) {
+            this.ipcInfos = results.filter ( function ( item ) {
+                return !/^ATOM/.test(item.name);
+            });
+
+            this.ipcInfos.sort( function ( a, b ) {
+                var result = a.level.localeCompare( b.level );
+                if ( result === 0 ) {
+                    result = a.name.localeCompare(b.name);
+                }
+                return result;
+            });
+
+            // NOTE: the sort will not repaint in x-repeat,
+            // TODO: keep watching on Polymer updates
+            // this.ipcInfos = this.ipcInfos.slice();
+
+            this.ipcInfos = this.ipcInfos.map( function ( item ) {
+                if ( item.level === 'page' ) {
+                    item.inspect = this.inspects[item.name] !== undefined;
+                }
+                return item;
+            }.bind(this));
+
+        }.bind(this));
     },
 });
 

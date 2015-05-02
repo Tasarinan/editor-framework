@@ -2,16 +2,22 @@
     <link rel="import" type="css" href="ipc-debugger.css">
 
     <template>
-        <ul>
-            <template is="x-repeat" id="list" items="{{ipcInfos}}">
-                <li>
-                    <div class="flex-1"><span>{{item.level}}</span></div>
-                    <div class="flex-2"><span>{{item.name}}</span></div>
-                    <div class="count">{{item.count}}</div>
-                    <i class="fa fa-eye btn" on-click="_onInspect"></i>
-                </li>
-            </template>
-        </ul>
+        <div class="toolbar layout horizontal">
+            <div class="space flex-1"></div>
+            <i class="fa fa-refresh btn" on-click="_onRefresh"></i>
+        </div>
+        <div class="content flex-1">
+            <ul>
+                <template is="x-repeat" id="list" items="{{ipcInfos}}">
+                    <li>
+                        <div class="flex-1"><span>{{item.level}}</span></div>
+                        <div class="flex-2"><span>{{item.name}}</span></div>
+                        <div class="count">{{item.count}}</div>
+                        <i class="fa fa-eye btn" on-click="_onInspect"></i>
+                    </li>
+                </template>
+            </ul>
+        </div>
     </template>
 </dom-module>
 
