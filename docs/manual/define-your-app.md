@@ -17,10 +17,8 @@ The `package.json` like this:
   "name": "your app name",
   "version": "0.0.1",
   "description": "A simple app based on editor-framework.",
-  "dependencies": {
-    ...
-  },
-  "main": "app.js" // <== Important!!!
+  "dependencies": {},
+  "main": "app.js" <== Important!!! Must have.
 }
 ```
 
