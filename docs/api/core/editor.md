@@ -14,4 +14,4 @@
 
 ## Editor.App
 
-The Editor.App is your app.js module. Read more in [Define your application](../manual/define-your-app.md).
+The Editor.App is your app.js module. Read more in [Define your application](../../manual/define-your-app.md).
