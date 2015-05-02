@@ -192,9 +192,13 @@ Ipc.on( 'editor:reset-layout', function ( layoutInfo ) {
 Ipc.on( 'ipc-debugger:query', function ( reply ) {
     var ipcInfos = [];
     for ( var p in Ipc._events ) {
+        var listeners = Ipc._events[p];
+        var count = Array.isArray(listeners) ? listeners.length+1 : 1;
         ipcInfos.push({
             name: p,
             level: 'page',
+            count: count,
+            inspect: false,
         });
     }
     reply(ipcInfos);

@@ -21,6 +21,10 @@ li[builtin] {
     color: #888;
 }
 
+.count {
+    margin-right: 10px;
+}
+
 .btn {
     margin-right: 5px;
     cursor: pointer;

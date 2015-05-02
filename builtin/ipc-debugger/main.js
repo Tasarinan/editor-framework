@@ -21,9 +21,12 @@ module.exports = {
         var windows = Editor.Window.windows;
         var infoList = [];
         for ( var p in Ipc._events ) {
+            var listeners = Ipc._events[p];
+            var count = Array.isArray(listeners) ? listeners.length+1 : 1;
             infoList.push({
                 name: p,
                 level: 'core',
+                count: count,
                 inspect: false,
             });
         }

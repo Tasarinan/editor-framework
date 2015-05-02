@@ -171,6 +171,62 @@
         }
     };
 
+    //
+    var _loadingMask = null;
+    EditorUI.addLoadingMask = function ( options, onclick ) {
+        // add drag-ghost
+        if ( _loadingMask === null ) {
+            _loadingMask = document.createElement('div');
+            _loadingMask.classList.add('loading-mask');
+            _loadingMask.style.position = 'absolute';
+            _loadingMask.style.top = '0';
+            _loadingMask.style.right = '0';
+            _loadingMask.style.bottom = '0';
+            _loadingMask.style.left = '0';
+            _loadingMask.oncontextmenu = function() { return false; };
+
+            if ( options && typeof options.zindex === 'string' ) {
+                _loadingMask.style.zIndex = options.zindex;
+            }
+            else {
+                _loadingMask.style.zIndex = '999';
+            }
+
+            if ( options && typeof options.background === 'string' ) {
+                _loadingMask.style.backgroundColor = options.background;
+            }
+            else {
+                _loadingMask.style.backgroundColor = 'rgba(0,0,0,0.2)';
+            }
+
+            if ( options && typeof options.cursor === 'string' ) {
+                _loadingMask.style.cursor = options.cursor;
+            }
+            else {
+                _loadingMask.style.cursor = 'default';
+            }
+        }
+
+        _loadingMask.addEventListener('mousedown', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if ( onclick )
+                onclick();
+        });
+
+        document.body.appendChild(_loadingMask);
+    };
+
+    EditorUI.removeLoadingMask = function () {
+        if ( _loadingMask !== null ) {
+            _loadingMask.style.cursor = 'auto';
+            if ( _loadingMask.parentElement !== null ) {
+                _loadingMask.parentElement.removeChild(_loadingMask);
+                _loadingMask.removeEventListener('mousedown');
+            }
+        }
+    };
+
     function _createLayouts ( parentEL, infos, importList ) {
         for ( var i = 0; i < infos.length; ++i ) {
             var info = infos[i];
