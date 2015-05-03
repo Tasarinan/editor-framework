@@ -47,8 +47,11 @@ EditorUI.focusable = (function () {
         },
 
         listeners: {
+            'focusin': '_onFocusIn',
+            'focusout': '_onFocusOut',
             'focus': '_onFocus',
             'blur': '_onBlur',
+            'mousedown': '_onMouseDown',
         },
 
         _initFocusable: function ( focusEls ) {
@@ -120,12 +123,29 @@ EditorUI.focusable = (function () {
             }
         },
 
+        _onFocusIn: function ( event ) {
+            event.stopPropagation();
+            this.focused = true;
+        },
+
+        _onFocusOut: function ( event ) {
+            event.stopPropagation();
+            this.focused = false;
+        },
+
         _onFocus: function ( event ) {
             this.focused = true;
         },
 
         _onBlur: function ( event ) {
             this.focused = false;
+        },
+
+        _onMouseDown: function ( event ) {
+            if ( event.which === 1 ) {
+                event.stopPropagation();
+                this.focus();
+            }
         },
 
         focus: function () {

@@ -18,6 +18,20 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         this._initFocusable(this.$.content);
         this._initResizable();
         this._initTabs();
+
+        var mousetrap = new Mousetrap(this);
+        mousetrap.bind(['command+shift+]','ctrl+tab'], function () {
+            var next = this.activeIndex+1;
+            if ( next >= this.tabCount )
+                next = 0;
+            this.select(next);
+        }.bind(this));
+        mousetrap.bind(['command+shift+[','ctrl+shift+tab'], function () {
+            var prev = this.activeIndex-1;
+            if ( prev < 0 )
+                prev = this.tabCount-1;
+            this.select(prev);
+        }.bind(this));
     },
 
     _initTabs: function () {
@@ -321,11 +335,11 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         var detail = event.detail;
         if ( detail.old !== null ) {
             detail.old.viewEL.style.display = 'none';
-            detail.old.viewEL.dispatchEvent( new CustomEvent('hide') );
+            detail.old.viewEL.dispatchEvent( new CustomEvent('panel-hide') );
         }
         if ( detail.new !== null ) {
             detail.new.viewEL.style.display = '';
-            detail.new.viewEL.dispatchEvent( new CustomEvent('show') );
+            detail.new.viewEL.dispatchEvent( new CustomEvent('panel-show') );
         }
 
         event.stopPropagation();

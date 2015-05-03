@@ -53,6 +53,7 @@ Editor.url = function (url) {
 
 require( Editor.url('editor-framework://share/platform') );
 Editor.JS = require( Editor.url('editor-framework://share/js-utils') );
+Editor.Easing = require( Editor.url('editor-framework://share/easing') );
 require( Editor.url('editor-framework://page/ipc-init') );
 
 // ==========================

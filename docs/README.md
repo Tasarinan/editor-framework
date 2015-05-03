@@ -16,6 +16,8 @@ Modules for the main process (core):
 Modules for the renderer process (page):
 
   * [Editor](api/page/editor.md)
+  * UI
+    * [EditorUI.Panel](api/page/ui/panel.md)
 
 Modules for both process (share):
 

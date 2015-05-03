@@ -15,6 +15,7 @@ if ( Editor.argv.panelID ) {
             var panel = new EditorUI.Panel();
             panel.add(viewEL);
             panel.select(0);
+            panel.focus();
 
             Polymer.dom(dock).appendChild(panel);
             document.body.appendChild(dock);

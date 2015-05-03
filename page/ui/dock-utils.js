@@ -135,6 +135,7 @@ EditorUI.DockUtils = (function () {
             //
             var idx = targetPanelEL.insert( currentTabEL, viewEL, insertBeforeTabEL );
             targetPanelEL.select(idx);
+            targetPanelEL.focus();
 
             if ( needCollapse ) {
                 panelEL.collapse();
@@ -160,6 +161,7 @@ EditorUI.DockUtils = (function () {
                     var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
                     var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
                     targetPanelEL.select(idx);
+                    targetPanelEL.focus();
 
                     // reset internal states
                     _reset();
@@ -443,6 +445,7 @@ EditorUI.DockUtils = (function () {
 
                     newPanel.add(viewEL);
                     newPanel.select(0);
+                    newPanel.focus();
 
                     //
                     targetDockEL.addDock( dockPosition, newPanel );
@@ -505,6 +508,7 @@ EditorUI.DockUtils = (function () {
 
         newPanel.add(viewEL);
         newPanel.select(0);
+        newPanel.focus();
 
         //
         targetDockEL.addDock( dockPosition, newPanel );

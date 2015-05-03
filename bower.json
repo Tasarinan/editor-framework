@@ -12,10 +12,11 @@
   "dependencies": {
     "fontawesome": "",
     "pace": "",
+    "mousetrap": "ccampbell/mousetrap#1.5.2",
     "pixi": "3.0.2",
-    "polymer": "Polymer/polymer#0.8.0-rc.7",
+    "web-animations-js": "web-animations/web-animations-js#master",
     "layout": "Polymer/layout",
-    "web-animations-js": "web-animations/web-animations-js#master"
+    "polymer": "Polymer/polymer#0.8.0-rc.7"
   },
   "devDependencies": {}
 }

@@ -4,7 +4,6 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     is: 'editor-tabs',
 
     activeTab: null,
-    panel: null,
 
     hostAttributes: {
         'droppable': 'tab',
@@ -121,8 +120,6 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
                 this.activeTab = tabEL;
                 this.activeTab.classList.add('active');
 
-                tabEL.viewEL.fire('panel-active');
-
                 var panelID = tabEL.viewEL.getAttribute('id');
                 var panelInfo = Editor.Panel.getPanelInfo(panelID);
                 if ( panelInfo ) {
@@ -135,6 +132,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     _onTabClick: function ( event ) {
         event.stopPropagation();
         this.select(event.target);
+        this.panelEL.focus();
     },
 
     _onDropAreaEnter: function ( event ) {

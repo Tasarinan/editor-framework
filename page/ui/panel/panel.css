@@ -30,3 +30,15 @@
 .content:focus {
     outline: none;
 }
+
+/* :host([focused]) .content {                                      */
+/*     border: 1px solid #f90;                                      */
+/* }                                                                */
+/* :host([focused])::shadow editor-tabs editor-tab.active .border { */
+/*     border-left: 1px solid #f90;                                 */
+/*     border-right: 1px solid #f90;                                */
+/*     border-top: 1px solid #f90;                                  */
+/* }                                                                */
+:host([focused])::shadow editor-tabs editor-tab.active .border {
+    border-top: 1px solid #f90;
+}
