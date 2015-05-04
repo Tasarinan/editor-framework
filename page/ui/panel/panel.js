@@ -48,11 +48,15 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
     },
 
     focus: function () {
-        this.activeTab.viewEL.focus();
+        if ( this.activeTab ) {
+            this.activeTab.viewEL.focus();
+        }
     },
 
     blur: function () {
-        this.activeTab.viewEL.blur();
+        if ( this.activeTab ) {
+            this.activeTab.viewEL.blur();
+        }
     },
 
     _initTabs: function () {

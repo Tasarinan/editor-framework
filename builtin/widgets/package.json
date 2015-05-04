@@ -1,0 +1,9 @@
+{
+  "name": "grid-graph",
+  "version": "0.0.1",
+  "description": "Grid Graph",
+  "author": "Firebox Technology",
+  "widgets": {
+    "pixi-grid": "pixi-grid/pixi-grid.html"
+  }
+}

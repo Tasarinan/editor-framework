@@ -37,20 +37,8 @@ try {
         };
     };
 
-    window.onunload = function () {
-        if ( Editor && Editor.Panel ) {
-            // NOTE: do not use Editor.saveLayout() which will be invoked in requestAnimationFrame.
-            // It will not be called in window.onunload
-            Editor.sendToCore( 'window:save-layout',
-                               Editor.Panel.dumpLayout(),
-                               Editor.requireIpcEvent );
-        }
-        else {
-            Editor.sendToCore( 'window:save-layout',
-                               null,
-                               Editor.requireIpcEvent );
-        }
-    };
+    // window.onunload = function () {
+    // };
 
     window.onerror = function ( message, filename, lineno, colno, error ) {
         if ( Editor && Editor.sendToWindows ) {
