@@ -205,6 +205,19 @@ Ipc.on( 'ipc-debugger:query', function ( reply ) {
 });
 
 // ==========================
+// extends
+// ==========================
+
+Editor.registerPanel = function ( panelID, obj ) {
+    if ( window[panelID] !== undefined ) {
+        Editor.error('Failed to register panel %s, panelID has been registered.', panelID);
+        return;
+    }
+
+    window[panelID] = Polymer(obj);
+};
+
+// ==========================
 // load modules
 // ==========================
 

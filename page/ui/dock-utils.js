@@ -135,7 +135,6 @@ EditorUI.DockUtils = (function () {
             //
             var idx = targetPanelEL.insert( currentTabEL, viewEL, insertBeforeTabEL );
             targetPanelEL.select(idx);
-            targetPanelEL.focus();
 
             if ( needCollapse ) {
                 panelEL.collapse();
@@ -147,6 +146,10 @@ EditorUI.DockUtils = (function () {
             //
             DockUtils.flush();
             Editor.saveLayout();
+
+            // NOTE: you must focus after DockUtils flushed
+            // NOTE: do not use panelEL focus, the activeTab is still not assigned
+            viewEL.focus();
         }
         else {
             Editor.Panel.close(panelID);
@@ -161,7 +164,6 @@ EditorUI.DockUtils = (function () {
                     var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
                     var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
                     targetPanelEL.select(idx);
-                    targetPanelEL.focus();
 
                     // reset internal states
                     _reset();
@@ -169,6 +171,10 @@ EditorUI.DockUtils = (function () {
                     //
                     DockUtils.flush();
                     Editor.saveLayout();
+
+                    // NOTE: you must focus after DockUtils flushed
+                    // NOTE: do not use panelEL focus, the activeTab is still not assigned
+                    viewEL.focus();
                 });
             });
         }
@@ -445,7 +451,6 @@ EditorUI.DockUtils = (function () {
 
                     newPanel.add(viewEL);
                     newPanel.select(0);
-                    newPanel.focus();
 
                     //
                     targetDockEL.addDock( dockPosition, newPanel );
@@ -456,6 +461,10 @@ EditorUI.DockUtils = (function () {
                     //
                     DockUtils.flush();
                     Editor.saveLayout();
+
+                    // NOTE: you must focus after DockUtils flushed
+                    // NOTE: do not use panelEL focus, the activeTab is still not assigned
+                    viewEL.focus();
                 });
             });
 
@@ -508,7 +517,6 @@ EditorUI.DockUtils = (function () {
 
         newPanel.add(viewEL);
         newPanel.select(0);
-        newPanel.focus();
 
         //
         targetDockEL.addDock( dockPosition, newPanel );
@@ -560,6 +568,10 @@ EditorUI.DockUtils = (function () {
         //
         DockUtils.flush();
         Editor.saveLayout();
+
+        // NOTE: you must focus after DockUtils flushed
+        // NOTE: do not use panelEL focus, the activeTab is still not assigned
+        viewEL.focus();
     });
 
     return DockUtils;

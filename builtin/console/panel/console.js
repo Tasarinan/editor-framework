@@ -3,10 +3,8 @@
 var Ipc = require('ipc');
 var Util = require('util');
 
-var name = 'editor-console';
-window[name] = {};
-window[name].panel = Polymer( {
-    is: name,
+Editor.registerPanel( 'editor-console.panel', {
+    is: 'editor-console',
 
     properties: {
     },

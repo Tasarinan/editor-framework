@@ -16,13 +16,16 @@
       "title": "Editor Console",
       "height": 300,
       "min-height": 200,
+      "shortcuts": {
+        "command+k": "clear"
+      },
       "messages": [
-          "console:log",
-          "console:success",
-          "console:failed",
-          "console:info",
-          "console:warn",
-          "console:error"
+        "console:log",
+        "console:success",
+        "console:failed",
+        "console:info",
+        "console:warn",
+        "console:error"
       ]
     }
   }

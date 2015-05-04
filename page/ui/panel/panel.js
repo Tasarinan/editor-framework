@@ -14,8 +14,12 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         minHeight: { type: String, value: '200', },
     },
 
+    listeners: {
+        'mousedown': '_onMouseDown',
+    },
+
     ready: function () {
-        this._initFocusable(this.$.content);
+        this._initFocusable(null); // NOTE: panel's focus element is variable (a.k.a viewEL)
         this._initResizable();
         this._initTabs();
 
@@ -32,6 +36,21 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
                 prev = this.tabCount-1;
             this.select(prev);
         }.bind(this));
+    },
+
+    _onMouseDown: function ( event ) {
+        if ( event.which === 1 ) {
+            event.stopPropagation();
+            this.focus();
+        }
+    },
+
+    focus: function () {
+        this.activeTab.viewEL.focus();
+    },
+
+    blur: function () {
+        this.activeTab.viewEL.blur();
     },
 
     _initTabs: function () {

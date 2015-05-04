@@ -2,10 +2,8 @@
 
 var Ipc = require('ipc');
 
-var name = 'ipc-debugger';
-window[name] = {};
-window[name].panel = Polymer({
-    is: name,
+Editor.registerPanel( 'ipc-debugger.panel', {
+    is: 'ipc-debugger',
 
     properties: {
     },

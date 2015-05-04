@@ -20,6 +20,9 @@
       "min-height": 200,
       "messages": [
       ],
+      "shortcuts": {
+        "r": "refresh"
+      },
       "profiles": {
         "local": {
         }

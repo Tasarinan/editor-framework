@@ -3,6 +3,10 @@
     -webkit-user-select: none;
 }
 
+*:focus {
+    outline: none;
+}
+
 body {
     margin: 3px;
     padding: 0px;

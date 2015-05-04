@@ -110,23 +110,8 @@ Panel.load = function ( panelID, cb ) {
         viewPath = Path.join( panelInfo.path, panelInfo.view );
 
         Panel.import(viewPath, function () {
-            var ctorPath = panelID.split('.');
-
-            var i;
-            var ctorNotFound = false;
-            var viewCtor = window;
-            for ( i = 0; i < ctorPath.length; ++i ) {
-                viewCtor = viewCtor[ctorPath[i]];
-                if ( !viewCtor ) {
-                    ctorNotFound = true;
-                    break;
-                }
-            }
-            if ( viewCtor === window ) {
-                ctorNotFound = true;
-            }
-
-            if ( ctorNotFound ) {
+            var viewCtor = window[panelID];
+            if ( !viewCtor ) {
                 Editor.error('Panel import faield. Can not find constructor %s', panelInfo.ctor );
                 cb ( new Error( 'Constructor ' + panelInfo.ctor + ' not found' ) );
                 return;
@@ -138,6 +123,7 @@ Panel.load = function ( panelID, cb ) {
             viewEL.setAttribute('id', panelID);
             viewEL.setAttribute('name', panelInfo.title);
             viewEL.classList.add('fit');
+            viewEL.tabIndex = 1;
 
             // set size attribute
             if ( panelInfo.width )
@@ -166,7 +152,7 @@ Panel.load = function ( panelID, cb ) {
                 panelInfo.messages.push('panel:open');
             }
 
-            for ( i = 0; i < panelInfo.messages.length; ++i ) {
+            for ( var i = 0; i < panelInfo.messages.length; ++i ) {
                 _registerIpc( panelID, viewEL, ipcListener, panelInfo.messages[i] );
             }
 
@@ -178,11 +164,29 @@ Panel.load = function ( panelID, cb ) {
                 popable: panelInfo.popable,
             };
 
+            // register profiles
             viewEL.profiles = panelInfo.profiles;
             for ( var type in panelInfo.profiles ) {
                 _registerProfile ( panelID, type, panelInfo.profiles[type] );
             }
 
+            // register shortcuts
+            // TODO: load overwrited shortcuts from profile?
+            if ( panelInfo.shortcuts ) {
+                var mousetrap = new Mousetrap(viewEL);
+                for ( var shortcut in panelInfo.shortcuts ) {
+                    var methodName = panelInfo.shortcuts[shortcut];
+                    var fn = viewEL[methodName];
+                    if ( typeof fn === 'function' ) {
+                        mousetrap.bind(shortcut, fn.bind(viewEL) );
+                    }
+                    else {
+                        Editor.warn('Failed to register shortcut for method %s in panel %s, can not find it.', methodName, panelID );
+                    }
+                }
+            }
+
+            // done
             cb ( null, viewEL, panelInfo );
         });
     });

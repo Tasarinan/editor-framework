@@ -51,7 +51,6 @@ EditorUI.focusable = (function () {
             'focusout': '_onFocusOut',
             'focus': '_onFocus',
             'blur': '_onBlur',
-            'mousedown': '_onMouseDown',
         },
 
         _initFocusable: function ( focusEls ) {
@@ -139,13 +138,6 @@ EditorUI.focusable = (function () {
 
         _onBlur: function ( event ) {
             this.focused = false;
-        },
-
-        _onMouseDown: function ( event ) {
-            if ( event.which === 1 ) {
-                event.stopPropagation();
-                this.focus();
-            }
         },
 
         focus: function () {
