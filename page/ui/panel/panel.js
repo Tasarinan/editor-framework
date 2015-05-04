@@ -29,12 +29,14 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
             if ( next >= this.tabCount )
                 next = 0;
             this.select(next);
+            this.focus();
         }.bind(this));
         mousetrap.bind(['command+shift+[','ctrl+shift+tab'], function () {
             var prev = this.activeIndex-1;
             if ( prev < 0 )
                 prev = this.tabCount-1;
             this.select(prev);
+            this.focus();
         }.bind(this));
     },
 
