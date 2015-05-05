@@ -11,8 +11,8 @@
   },
   "panels": {
     "panel": {
-      "type": "dockable",
       "view": "panel/ipc-debugger.html",
+      "type": "dockable",
       "title": "Ipc Debugger",
       "width": 500,
       "height": 800,

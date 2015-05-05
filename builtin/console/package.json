@@ -11,8 +11,8 @@
   },
   "panels": {
     "panel": {
-      "type": "dockable",
       "view": "panel/console.html",
+      "type": "dockable",
       "title": "Editor Console",
       "height": 300,
       "min-height": 200,

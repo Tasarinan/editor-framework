@@ -76,8 +76,10 @@ Package.load = function ( path ) {
             // setup default properties
             var panelInfo = packageObj.panels[panelName];
             Editor.JS.addon(panelInfo, {
-                messages: [],
+                type: 'dockable',
+                title: panelID,
                 popable: true,
+                messages: [],
                 path: path,
             });
 

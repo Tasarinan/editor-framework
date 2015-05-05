@@ -83,6 +83,8 @@ LinearScale.prototype.spacing = function ( min, max ) {
 LinearScale.prototype.ticksAtLevel = function ( level, excludeHigherLevel ) {
     var results = [];
     var tick = this.ticks[level];
+    // NOTE: we use `Math.floor` and `<= end` for one more line
+    //       so that label draw will not cut off when at the edge of the viewport
     var start = Math.floor( this.minValue / tick );
     var end = Math.ceil( this.maxValue / tick );
     for ( var i = start; i <= end; ++i ) {

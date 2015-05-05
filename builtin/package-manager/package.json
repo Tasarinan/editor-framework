@@ -11,8 +11,8 @@
   },
   "panels": {
     "panel": {
-      "type": "dockable",
       "view": "panel/package-manager.html",
+      "type": "dockable",
       "title": "Package Manager",
       "width": 500,
       "height": 800,
