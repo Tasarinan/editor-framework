@@ -30,6 +30,11 @@ window['widgets.pixi-grid'] = Polymer({
                 yMaxLevel: 0,
             },
         },
+
+        showDebugInfo: {
+            type: Boolean,
+            value: false,
+        },
     },
 
     _computedScale: function ( scale ) {
@@ -104,14 +109,16 @@ window['widgets.pixi-grid'] = Polymer({
         if ( changeX ) {
             scale = this.xscale;
             scale = Math.pow( 2, event.wheelDelta * 0.002) * scale;
-            scale = Math.clamp( scale, 0.001, 1000 );
+            // NOTE: we need to leave two more level for zoom out, so maxScale/100 here
+            scale = Math.clamp( scale, this.hscale.minScale, this.hscale.maxScale/100 );
             this.xscale = scale;
         }
 
         if ( changeY ) {
             scale = this.yscale;
             scale = Math.pow( 2, event.wheelDelta * 0.002) * scale;
-            scale = Math.clamp( scale, 0.001, 1000 );
+            // NOTE: we need to leave two more level for zoom out, so maxScale/100 here
+            scale = Math.clamp( scale, this.vscale.minScale, this.vscale.maxScale/100 );
             this.yscale = scale;
         }
 
@@ -191,6 +198,7 @@ window['widgets.pixi-grid'] = Polymer({
         // draw label
         this.resetLabelPool();
         var labelLevel, labelEL;
+        var numberFormat = Intl.NumberFormat();
 
         // draw hlabel
         labelLevel = this.hscale.levelForStep(50);
@@ -198,7 +206,7 @@ window['widgets.pixi-grid'] = Polymer({
         for ( j = 0; j < ticks.length; ++j ) {
             trans = this.worldToScreen( ticks[j], 0.0 );
             labelEL = this.getLabel();
-            labelEL.innerText = Intl.NumberFormat().format(ticks[j]);
+            labelEL.innerText = numberFormat.format(ticks[j]);
             labelEL.style.left = trans.x + 'px';
             labelEL.style.bottom = '0px';
             labelEL.style.right = '';
@@ -212,7 +220,7 @@ window['widgets.pixi-grid'] = Polymer({
         for ( j = 0; j < ticks.length; ++j ) {
             trans = this.worldToScreen( 0.0, ticks[j] );
             labelEL = this.getLabel();
-            labelEL.innerText = Intl.NumberFormat().format(ticks[j]);
+            labelEL.innerText = numberFormat.format(ticks[j]);
             labelEL.style.left = '0px';
             labelEL.style.top = trans.y + 'px';
             labelEL.style.bottom = '';
@@ -221,13 +229,15 @@ window['widgets.pixi-grid'] = Polymer({
         }
 
         //
-        this.clearUnused();
+        this.clearUnusedLabels();
 
         // DEBUG
-        this.setPathValue('debugInfo.xMinLevel', this.hscale.minTickLevel);
-        this.setPathValue('debugInfo.xMaxLevel', this.hscale.maxTickLevel);
-        this.setPathValue('debugInfo.yMinLevel', this.vscale.minTickLevel);
-        this.setPathValue('debugInfo.yMaxLevel', this.vscale.maxTickLevel);
+        if ( this.showDebugInfo ) {
+            this.setPathValue('debugInfo.xMinLevel', this.hscale.minTickLevel);
+            this.setPathValue('debugInfo.xMaxLevel', this.hscale.maxTickLevel);
+            this.setPathValue('debugInfo.yMinLevel', this.vscale.minTickLevel);
+            this.setPathValue('debugInfo.yMaxLevel', this.vscale.maxTickLevel);
+        }
     },
 
     resetLabelPool: function () {
@@ -249,7 +259,7 @@ window['widgets.pixi-grid'] = Polymer({
         return el;
     },
 
-    clearUnused: function () {
+    clearUnusedLabels: function () {
         for ( var i = this.labelIdx; i < this.labels.length; ++i ) {
             var el = this.labels[i];
             Polymer.dom(Polymer.dom(el).parentNode).removeChild(el);

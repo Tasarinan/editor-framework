@@ -30,7 +30,8 @@ function EditorWindow ( name, options ) {
     this.nativeWin.on ( 'closed', function () {
         Editor.Panel._onWindowClosed(this);
         if ( this.isMainWindow ) {
-            EditorWindow.saveLayout();
+            EditorWindow.commitWindowStates();
+            EditorWindow.saveWindowStates();
             EditorWindow.removeWindow(this);
             Editor.mainWindow = null;
             Editor.quit();
@@ -154,6 +155,26 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
     }
 };
 
+EditorWindow.prototype.commitWindowState = function ( layoutInfo ) {
+    var nativeWin = this.nativeWin;
+    var winSize = nativeWin.getSize();
+    var winPos = nativeWin.getPosition();
+
+    // store windows layout
+    var winInfo = _windowLayouts[this.name];
+    winInfo = Editor.JS.mixin( winInfo || {}, {
+        x: winPos[0],
+        y: winPos[1],
+        width: winSize[0],
+        height: winSize[1],
+    });
+    if ( layoutInfo ) {
+        winInfo.layout = layoutInfo;
+    }
+
+    _windowLayouts[this.name] = winInfo;
+};
+
 EditorWindow.prototype.restorePositionAndSize = function () {
     // restore window size and position
     var size = this.nativeWin.getSize();
@@ -233,7 +254,14 @@ EditorWindow.removeWindow = function ( win ) {
     win.dispose();
 };
 
-EditorWindow.saveLayout = function () {
+EditorWindow.commitWindowStates = function () {
+    for ( var i = 0; i < _windows.length; ++i ) {
+        var editorWin = _windows[i];
+        editorWin.commitWindowState();
+    }
+};
+
+EditorWindow.saveWindowStates = function () {
     // we've quit the app, do not save layout after that.
     if ( !Editor.mainWindow )
         return;
@@ -241,8 +269,8 @@ EditorWindow.saveLayout = function () {
     var profile = Editor.loadProfile( 'layout.windows', 'local' );
     profile.windows = {};
     for ( var i = 0; i < _windows.length; ++i ) {
-        var win = _windows[i];
-        profile.windows[win.name] = _windowLayouts[win.name];
+        var editorWin = _windows[i];
+        profile.windows[editorWin.name] = _windowLayouts[editorWin.name];
     }
     profile.save();
 };
@@ -356,20 +384,10 @@ Ipc.on('window:save-layout', function ( event, layoutInfo ) {
         Editor.warn('Failed to save layout, can not find the window.');
         return;
     }
-
-    var winSize = win.getSize();
-    var winPos = win.getPosition();
-    var winInfo = {
-        x: winPos[0],
-        y: winPos[1],
-        width: winSize[0],
-        height: winSize[1],
-        layout: layoutInfo
-    };
+    editorWin.commitWindowState(layoutInfo);
 
     // save windows layout
-    _windowLayouts[editorWin.name] = winInfo;
-    EditorWindow.saveLayout();
+    EditorWindow.saveWindowStates();
 });
 
 Ipc.on('window:focus', function ( event ) {

@@ -37,7 +37,22 @@ try {
         };
     };
 
+    // DISABLE: I disable this because developer may debug during initialize,
+    //          and when he refresh at that time, the layout will be saved and
+    //          reloaded layout will not be the expected one
     // window.onunload = function () {
+    //     if ( Editor && Editor.Panel ) {
+    //         // NOTE: do not use Editor.saveLayout() which will be invoked in requestAnimationFrame.
+    //         // It will not be called in window.onunload
+    //         Editor.sendToCore( 'window:save-layout',
+    //                            Editor.Panel.dumpLayout(),
+    //                            Editor.requireIpcEvent );
+    //     }
+    //     else {
+    //         Editor.sendToCore( 'window:save-layout',
+    //                            null,
+    //                            Editor.requireIpcEvent );
+    //     }
     // };
 
     window.onerror = function ( message, filename, lineno, colno, error ) {

@@ -37,7 +37,7 @@ function getDefaultMainMenu () {
                     label: 'Quit',
                     accelerator: 'CmdOrCtrl+Q',
                     click: function () {
-                        Editor.Window.saveLayout();
+                        Editor.Window.saveWindowStates();
                         Editor.quit();
                     }
                 },
@@ -117,7 +117,7 @@ function getDefaultMainMenu () {
                     label: "Close",
                     accelerator: 'Command+W',
                     click: function () {
-                        Editor.Window.saveLayout();
+                        Editor.Window.saveWindowStates();
                         Editor.quit();
                     },
                 }
