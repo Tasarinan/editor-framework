@@ -16,19 +16,21 @@
 
 #hlabels .label {
     position: absolute;
-    transform: translateX(-50%);
+    /* transform: translateX(-50%); */
+    transform: translateX(5px);
 }
 
 #vlabels {
     top: 0px;
     left: 5px;
-    -webkit-writing-mode: vertical-rl;
-    /*-webkit-text-orientation: upright;*/
+    /* -webkit-writing-mode: vertical-rl; */
+    /* -webkit-text-orientation: upright; */
 }
 
 #vlabels .label {
     position: absolute;
-    transform: translateY(-50%);
+    /* transform: translateY(-50%); */
+    transform: translateY(-100%) translateY(-2px);
 }
 
 .debug-info {

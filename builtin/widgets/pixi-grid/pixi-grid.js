@@ -2,6 +2,15 @@ function _snapPixel (p) {
     return Math.floor(p);
 }
 
+function _uninterpolate(a, b) {
+    b = (b -= a) || 1 / b;
+    return function(x) { return (x - a) / b; };
+}
+
+function _interpolate(a, b) {
+    return function(t) { return a * (1 - t) + b * t; };
+}
+
 // pixi config
 PIXI.utils._saidHello = true;
 
@@ -46,9 +55,11 @@ window['widgets.pixi-grid'] = Polymer({
 
         this.hticks = null;
         this.xAxisScale = 1.0;
+        this.xAxisOffset = 0.0;
 
         this.vticks = null;
         this.yAxisScale = 1.0;
+        this.yAxisOffset = 0.0;
     },
 
     ready: function () {
@@ -67,31 +78,93 @@ window['widgets.pixi-grid'] = Polymer({
     },
 
     // recommended: [5,2], 0.001, 1000
-    setScaleH ( lods, rangeMin, rangeMax, type ) {
+    setScaleH: function ( lods, minScale, maxScale, type ) {
         this.hticks = new LinearTicks()
-        .initTicks( lods, rangeMin, rangeMax )
+        .initTicks( lods, minScale, maxScale )
         .spacing ( 10, 80 )
         ;
-        this.xAxisScale = Math.clamp( this.xAxisScale, this.hticks.minValueScale, this.hticks.maxValueScale );
+        this.xAxisScale = Math.clamp(this.xAxisScale,
+                                     this.hticks.minValueScale,
+                                     this.hticks.maxValueScale);
+
         if ( type === 'frame' ) {
             this.hformat = function ( frame ) {
                 return Editor.Utils.formatFrame( frame, 60.0 );
             };
         }
+
+        this.pixelToValueH = function (x) {
+            // return (x - this.canvasWidth * 0.5) / this.xAxisScale;
+            return (x - this.xAxisOffset) / this.xAxisScale;
+        }.bind(this);
+
+        this.valueToPixelH = function (x) {
+            // return x * this.xAxisScale + this.canvasWidth * 0.5;
+            return x * this.xAxisScale + this.xAxisOffset;
+        }.bind(this);
     },
 
-    setScaleV ( lods, rangeMin, rangeMax, type ) {
+    setMappingH: function ( minValue, maxValue, pixelRange ) {
+        this.pixelToValueH = function (x) {
+            var ratio = this.canvasWidth / pixelRange;
+            var u = _uninterpolate( 0.0, this.canvasWidth );
+            var i = _interpolate( minValue * ratio, maxValue * ratio );
+            return i(u(x - this.xAxisOffset)) / this.xAxisScale;
+        }.bind(this);
+
+        this.valueToPixelH = function (x) {
+            var ratio = this.canvasWidth / pixelRange;
+            var u = _uninterpolate( minValue * ratio, maxValue * ratio );
+            var i = _interpolate( 0.0, this.canvasWidth );
+            return i(u(x * this.xAxisScale)) + this.xAxisOffset;
+        }.bind(this);
+    },
+
+    setScaleV: function ( lods, minScale, maxScale, type ) {
         this.vticks = new LinearTicks()
-        .initTicks( lods, rangeMin, rangeMax )
+        .initTicks( lods, minScale, maxScale )
         .spacing ( 10, 80 )
         ;
-        this.yAxisScale = Math.clamp( this.yAxisScale, this.vticks.minValueScale, this.vticks.maxValueScale );
+        this.yAxisScale = Math.clamp(this.yAxisScale,
+                                     this.vticks.minValueScale,
+                                     this.vticks.maxValueScale);
 
         if ( type === 'frame' ) {
             this.vformat = function ( frame ) {
                 return Editor.Utils.formatFrame( frame, 60.0 );
             };
         }
+
+        this.pixelToValueV = function (y) {
+            // return (this.canvasHeight*0.5 - y) / this.yAxisScale;
+            return (this.canvasHeight - y + this.yAxisOffset) / this.yAxisScale;
+        }.bind(this);
+
+        this.valueToPixelV = function (y) {
+            // return -y * this.yAxisScale + this.canvasHeight*0.5;
+            return -y * this.yAxisScale + this.canvasHeight + this.yAxisOffset;
+        }.bind(this);
+    },
+
+    setMappingV: function ( minValue, maxValue, pixelRange ) {
+        this.pixelToValueV = function (y) {
+            var ratio = this.canvasHeight / pixelRange;
+            var u = _uninterpolate( 0.0, this.canvasHeight );
+            var i = _interpolate( minValue * ratio, maxValue * ratio );
+            return i(u(y - this.yAxisOffset)) / this.yAxisScale;
+        }.bind(this);
+
+        this.valueToPixelV = function (y) {
+            var ratio = this.canvasHeight / pixelRange;
+            var u = _uninterpolate( minValue * ratio, maxValue * ratio );
+            var i = _interpolate( 0.0, this.canvasHeight );
+            return i(u(y * this.yAxisScale)) + this.yAxisOffset;
+        }.bind(this);
+    },
+
+    pan: function ( deltaX, deltaY ) {
+        this.xAxisOffset += deltaX;
+        this.yAxisOffset += deltaY;
     },
 
     _onMouseWheel: function ( event ) {
@@ -155,8 +228,8 @@ window['widgets.pixi-grid'] = Polymer({
     resize: function ( w, h ) {
         this.canvasWidth = w;
         this.canvasHeight = h;
-        this.renderer.resize( this.canvasWidth, this.canvasHeight );
 
+        this.renderer.resize( this.canvasWidth, this.canvasHeight );
         this.repaint();
     },
 
@@ -167,35 +240,29 @@ window['widgets.pixi-grid'] = Polymer({
         }.bind(this));
     },
 
-    worldToScreen: function ( x, y ) {
-        return { x: (x * this.xAxisScale + this.canvasWidth/2), y: (-y * this.yAxisScale + this.canvasHeight/2) };
-    },
-
-    screenToWorld: function ( x, y ) {
-        return { x: (x - this.canvasWidth/2) / this.xAxisScale, y: (this.canvasHeight/2 - y) / this.yAxisScale };
-    },
-
     _updateGrids: function () {
         var lineColor = 0x555555;
-        var tl = this.screenToWorld( 0.0, 0.0 );
-        var br = this.screenToWorld( this.canvasWidth, this.canvasHeight );
-        var i, j, ticks, ratio, trans;
+        var i, j, ticks, ratio;
+        var screen_x, screen_y;
 
         this.graphics.clear();
         this.graphics.beginFill(lineColor);
 
         // draw h ticks
         if ( this.hticks ) {
-            this.hticks.range( tl.x, br.x, this.canvasWidth );
+            var left = this.pixelToValueH(0);
+            var right = this.pixelToValueH(this.canvasWidth);
+            this.hticks.range( left, right, this.canvasWidth );
+
             for ( i = this.hticks.minTickLevel; i <= this.hticks.maxTickLevel; ++i ) {
                 ratio = this.hticks.tickRatios[i];
                 if ( ratio > 0 ) {
                     this.graphics.lineStyle(1, lineColor, ratio * 0.5);
                     ticks = this.hticks.ticksAtLevel(i,true);
                     for ( j = 0; j < ticks.length; ++j ) {
-                        trans = this.worldToScreen( ticks[j], 0.0 );
-                        this.graphics.moveTo( _snapPixel(trans.x), 0.0 );
-                        this.graphics.lineTo( _snapPixel(trans.x), this.canvasHeight );
+                        screen_x = this.valueToPixelH(ticks[j]);
+                        this.graphics.moveTo( _snapPixel(screen_x), 0.0 );
+                        this.graphics.lineTo( _snapPixel(screen_x), this.canvasHeight );
                     }
                 }
             }
@@ -203,16 +270,19 @@ window['widgets.pixi-grid'] = Polymer({
 
         // draw v ticks
         if ( this.vticks ) {
-            this.vticks.range( br.y, tl.y, this.canvasHeight );
+            var top = this.pixelToValueV(0);
+            var bottom = this.pixelToValueV(this.canvasHeight);
+            this.vticks.range( top, bottom, this.canvasHeight );
+
             for ( i = this.vticks.minTickLevel; i <= this.vticks.maxTickLevel; ++i ) {
                 ratio = this.vticks.tickRatios[i];
                 if ( ratio > 0 ) {
                     this.graphics.lineStyle(1, lineColor, ratio * 0.5);
                     ticks = this.vticks.ticksAtLevel(i,true);
                     for ( j = 0; j < ticks.length; ++j ) {
-                        trans = this.worldToScreen( 0.0, ticks[j] );
-                        this.graphics.moveTo( 0.0, _snapPixel(trans.y) );
-                        this.graphics.lineTo( this.canvasWidth, _snapPixel(trans.y) );
+                        screen_y = this.valueToPixelV( ticks[j] );
+                        this.graphics.moveTo( 0.0, _snapPixel(screen_y) );
+                        this.graphics.lineTo( this.canvasWidth, _snapPixel(screen_y) );
                     }
                 }
             }
@@ -237,7 +307,7 @@ window['widgets.pixi-grid'] = Polymer({
                 fmt = '0,' + Number(0).toFixed(decimals);
 
                 for ( j = 0; j < ticks.length; ++j ) {
-                    trans = this.worldToScreen( ticks[j], 0.0 );
+                    screen_x = this.valueToPixelH(ticks[j]);
                     labelEL = this._requestLabel();
                     if ( this.hformat ) {
                         labelEL.innerText = this.hformat(ticks[j]);
@@ -245,7 +315,7 @@ window['widgets.pixi-grid'] = Polymer({
                     else {
                         labelEL.innerText = numeral(ticks[j]).format(fmt);
                     }
-                    labelEL.style.left = trans.x + 'px';
+                    labelEL.style.left = screen_x + 'px';
                     labelEL.style.bottom = '0px';
                     labelEL.style.right = '';
                     labelEL.style.top = '';
@@ -263,7 +333,7 @@ window['widgets.pixi-grid'] = Polymer({
                 fmt = '0,' + Number(0).toFixed(decimals);
 
                 for ( j = 0; j < ticks.length; ++j ) {
-                    trans = this.worldToScreen( 0.0, ticks[j] );
+                    screen_y = this.valueToPixelV(ticks[j]);
                     labelEL = this._requestLabel();
                     if ( this.vformat ) {
                         labelEL.innerText = this.vformat(ticks[j]);
@@ -272,7 +342,7 @@ window['widgets.pixi-grid'] = Polymer({
                         labelEL.innerText = numeral(ticks[j]).format(fmt);
                     }
                     labelEL.style.left = '0px';
-                    labelEL.style.top = trans.y + 'px';
+                    labelEL.style.top = screen_y + 'px';
                     labelEL.style.bottom = '';
                     labelEL.style.right = '';
                     Polymer.dom(this.$.vlabels).appendChild(labelEL);
@@ -286,11 +356,13 @@ window['widgets.pixi-grid'] = Polymer({
         // DEBUG
         if ( this.showDebugInfo ) {
             this.setPathValue('debugInfo.xAxisScale', this.xAxisScale.toFixed(3));
+            this.setPathValue('debugInfo.xAxisOffset', this.xAxisOffset.toFixed(3));
             if ( this.hticks ) {
                 this.setPathValue('debugInfo.xMinLevel', this.hticks.minTickLevel);
                 this.setPathValue('debugInfo.xMaxLevel', this.hticks.maxTickLevel);
             }
             this.setPathValue('debugInfo.yAxisScale', this.yAxisScale.toFixed(3));
+            this.setPathValue('debugInfo.yAxisOffset', this.yAxisOffset.toFixed(3));
             if ( this.vticks ) {
                 this.setPathValue('debugInfo.yMinLevel', this.vticks.minTickLevel);
                 this.setPathValue('debugInfo.yMaxLevel', this.vticks.maxTickLevel);

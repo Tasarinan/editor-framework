@@ -78,8 +78,8 @@ LinearTicks.prototype.spacing = function ( min, max ) {
 };
 
 LinearTicks.prototype.range = function ( minValue, maxValue, pixelRange ) {
-    this.minValue = minValue;
-    this.maxValue = maxValue;
+    this.minValue = Math.fround(Math.min(minValue,maxValue));
+    this.maxValue = Math.fround(Math.max(minValue,maxValue));
 
     this.pixelRange = pixelRange;
 
