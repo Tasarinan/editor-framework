@@ -303,6 +303,9 @@ EditorUI.DockResizer = Polymer({
 
                 el._notifyResize();
             }
+
+            //
+            Editor.saveLayout();
         }.bind(this);
 
         // add drag-ghost

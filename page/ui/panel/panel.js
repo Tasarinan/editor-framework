@@ -357,6 +357,8 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
     },
 
     _onTabChanged: function ( event ) {
+        event.stopPropagation();
+
         var detail = event.detail;
         if ( detail.old !== null ) {
             detail.old.viewEL.style.display = 'none';
@@ -367,7 +369,7 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
             detail.new.viewEL.dispatchEvent( new CustomEvent('panel-show') );
         }
 
-        event.stopPropagation();
+        Editor.saveLayout();
     },
 }, EditorUI.resizable, EditorUI.focusable, EditorUI.dockable));
 

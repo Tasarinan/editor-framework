@@ -233,6 +233,7 @@ Panel.undock = function ( panelID ) {
         }
 
         EditorUI.DockUtils.flush();
+        Editor.saveLayout();
     }
 
     // remove panelInfo
