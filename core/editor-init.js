@@ -7,6 +7,7 @@ var Globby = require('globby');
 
 require('../share/platform') ;
 Editor.JS = require('../share/js-utils') ;
+Editor.Utils = require('../share/editor-utils');
 require('../share/math');
 require('./ipc-init');
 

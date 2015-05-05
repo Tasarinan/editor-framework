@@ -67,18 +67,31 @@ window['widgets.pixi-grid'] = Polymer({
     },
 
     // recommended: [5,2], 0.001, 1000
-    setScaleH ( lods, rangeMin, rangeMax ) {
+    setScaleH ( lods, rangeMin, rangeMax, type ) {
         this.hticks = new LinearTicks()
         .initTicks( lods, rangeMin, rangeMax )
         .spacing ( 10, 80 )
         ;
+        this.xAxisScale = Math.clamp( this.xAxisScale, this.hticks.minValueScale, this.hticks.maxValueScale );
+        if ( type === 'frame' ) {
+            this.hformat = function ( frame ) {
+                return Editor.Utils.formatFrame( frame, 60.0 );
+            };
+        }
     },
 
-    setScaleV ( lods, rangeMin, rangeMax ) {
+    setScaleV ( lods, rangeMin, rangeMax, type ) {
         this.vticks = new LinearTicks()
         .initTicks( lods, rangeMin, rangeMax )
         .spacing ( 10, 80 )
         ;
+        this.yAxisScale = Math.clamp( this.yAxisScale, this.vticks.minValueScale, this.vticks.maxValueScale );
+
+        if ( type === 'frame' ) {
+            this.vformat = function ( frame ) {
+                return Editor.Utils.formatFrame( frame, 60.0 );
+            };
+        }
     },
 
     _onMouseWheel: function ( event ) {
@@ -209,7 +222,8 @@ window['widgets.pixi-grid'] = Polymer({
 
         // draw label
         if ( this.showLabel ) {
-            var minStep = 50, labelLevel, labelEL;
+            var minStep = 50, labelLevel, labelEL, tickValue;
+            var decimals, fmt;
 
             this._resetLabelPool();
 
@@ -217,10 +231,20 @@ window['widgets.pixi-grid'] = Polymer({
             if ( this.hticks ) {
                 labelLevel = this.hticks.levelForStep(minStep);
                 ticks = this.hticks.ticksAtLevel(labelLevel,false);
+
+                tickValue = this.hticks.ticks[labelLevel];
+                decimals = Math.max( 0, -Math.floor(Math.log10(tickValue)) );
+                fmt = '0,' + Number(0).toFixed(decimals);
+
                 for ( j = 0; j < ticks.length; ++j ) {
                     trans = this.worldToScreen( ticks[j], 0.0 );
                     labelEL = this._requestLabel();
-                    labelEL.innerText = numeral(ticks[j]).format('0,0.00');
+                    if ( this.hformat ) {
+                        labelEL.innerText = this.hformat(ticks[j]);
+                    }
+                    else {
+                        labelEL.innerText = numeral(ticks[j]).format(fmt);
+                    }
                     labelEL.style.left = trans.x + 'px';
                     labelEL.style.bottom = '0px';
                     labelEL.style.right = '';
@@ -233,10 +257,20 @@ window['widgets.pixi-grid'] = Polymer({
             if ( this.vticks ) {
                 labelLevel = this.vticks.levelForStep(minStep);
                 ticks = this.vticks.ticksAtLevel(labelLevel,false);
+
+                tickValue = this.vticks.ticks[labelLevel];
+                decimals = Math.max( 0, -Math.floor(Math.log10(tickValue)) );
+                fmt = '0,' + Number(0).toFixed(decimals);
+
                 for ( j = 0; j < ticks.length; ++j ) {
                     trans = this.worldToScreen( 0.0, ticks[j] );
                     labelEL = this._requestLabel();
-                    labelEL.innerText = numeral(ticks[j]).format('0,0.00');
+                    if ( this.vformat ) {
+                        labelEL.innerText = this.vformat(ticks[j]);
+                    }
+                    else {
+                        labelEL.innerText = numeral(ticks[j]).format(fmt);
+                    }
                     labelEL.style.left = '0px';
                     labelEL.style.top = trans.y + 'px';
                     labelEL.style.bottom = '';
