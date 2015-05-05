@@ -9,23 +9,13 @@ window['widgets.pixi-grid'] = Polymer({
     is: 'pixi-grid',
 
     properties: {
-        xscale: {
-            type: Number,
-            value: 1.0,
-            observer: '_scaleChanged',
-        },
-
-        yscale: {
-            type: Number,
-            value: 1.0,
-            observer: '_scaleChanged',
-        },
-
         debugInfo: {
             type: Object,
             value: {
+                xAxisScale: 0,
                 xMinLevel: 0,
                 xMaxLevel: 0,
+                yAxisScale: 0,
                 yMinLevel: 0,
                 yMaxLevel: 0,
             },
@@ -33,12 +23,13 @@ window['widgets.pixi-grid'] = Polymer({
 
         showDebugInfo: {
             type: Boolean,
-            value: false,
+            value: true,
         },
-    },
 
-    _computedScale: function ( scale ) {
-        return scale.toFixed(3);
+        showLabel: {
+            type: Boolean,
+            value: true,
+        },
     },
 
     listeners: {
@@ -53,19 +44,11 @@ window['widgets.pixi-grid'] = Polymer({
         this.labels = [];
         this.labelIdx = 0;
 
-        var hscale = new LinearScale();
-        hscale
-        .initTicks( [5,2], 0.001, 100000 )
-        .spacing ( 10, 80 )
-        ;
-        this.hscale = hscale;
+        this.hticks = null;
+        this.xAxisScale = 1.0;
 
-        var vscale = new LinearScale();
-        vscale
-        .initTicks( [5,2], 0.001, 100000 )
-        .spacing ( 10, 80 )
-        ;
-        this.vscale = vscale;
+        this.vticks = null;
+        this.yAxisScale = 1.0;
     },
 
     ready: function () {
@@ -83,11 +66,19 @@ window['widgets.pixi-grid'] = Polymer({
         background.addChild(this.graphics);
     },
 
-    _scaleChanged: function () {
-        if ( !this.renderer )
-            return;
+    // recommended: [5,2], 0.001, 1000
+    setScaleH ( lods, rangeMin, rangeMax ) {
+        this.hticks = new LinearTicks()
+        .initTicks( lods, rangeMin, rangeMax )
+        .spacing ( 10, 80 )
+        ;
+    },
 
-        this.repaint();
+    setScaleV ( lods, rangeMin, rangeMax ) {
+        this.vticks = new LinearTicks()
+        .initTicks( lods, rangeMin, rangeMax )
+        .spacing ( 10, 80 )
+        ;
     },
 
     _onMouseWheel: function ( event ) {
@@ -106,20 +97,38 @@ window['widgets.pixi-grid'] = Polymer({
             changeY = true;
         }
 
-        if ( changeX ) {
-            scale = this.xscale;
+        if ( changeX && this.hticks ) {
+            scale = this.xAxisScale;
             scale = Math.pow( 2, event.wheelDelta * 0.002) * scale;
-            // NOTE: we need to leave two more level for zoom out, so maxScale/100 here
-            scale = Math.clamp( scale, this.hscale.minScale, this.hscale.maxScale/100 );
-            this.xscale = scale;
+            scale = Math.clamp( scale, this.hticks.minValueScale, this.hticks.maxValueScale );
+            this.xAxisScale = scale;
+
+            // TODO
+            // var curScale = this.xAxisScale;
+            // var nextScale = scale;
+            // var start = window.performance.now();
+            // var duration = 300;
+            // function animateScale ( time ) {
+            //     var requestId = requestAnimationFrame ( animateScale.bind(this) );
+            //     var cur = time - start;
+            //     var ratio = cur/duration;
+            //     if ( ratio >= 1.0 ) {
+            //         this.xAxisScale = nextScale;
+            //         cancelAnimationFrame(requestId);
+            //     }
+            //     else {
+            //         this.xAxisScale = Math.lerp( curScale, nextScale, ratio );
+            //     }
+            //     this.repaint();
+            // };
+            // animateScale.call(this,start);
         }
 
-        if ( changeY ) {
-            scale = this.yscale;
+        if ( changeY && this.vticks ) {
+            scale = this.yAxisScale;
             scale = Math.pow( 2, event.wheelDelta * 0.002) * scale;
-            // NOTE: we need to leave two more level for zoom out, so maxScale/100 here
-            scale = Math.clamp( scale, this.vscale.minScale, this.vscale.maxScale/100 );
-            this.yscale = scale;
+            scale = Math.clamp( scale, this.vticks.minValueScale, this.vticks.maxValueScale );
+            this.yAxisScale = scale;
         }
 
         this.repaint();
@@ -139,56 +148,59 @@ window['widgets.pixi-grid'] = Polymer({
     },
 
     repaint: function () {
-        this.updateGrids();
+        this._updateGrids();
         requestAnimationFrame( function () {
             this.renderer.render(this.stage);
         }.bind(this));
     },
 
     worldToScreen: function ( x, y ) {
-        return { x: (x * this.xscale + this.canvasWidth/2), y: (-y * this.yscale + this.canvasHeight/2) };
+        return { x: (x * this.xAxisScale + this.canvasWidth/2), y: (-y * this.yAxisScale + this.canvasHeight/2) };
     },
 
     screenToWorld: function ( x, y ) {
-        return { x: (x - this.canvasWidth/2) / this.xscale, y: (this.canvasHeight/2 - y) / this.yscale };
+        return { x: (x - this.canvasWidth/2) / this.xAxisScale, y: (this.canvasHeight/2 - y) / this.yAxisScale };
     },
 
-    updateGrids: function () {
+    _updateGrids: function () {
         var lineColor = 0x555555;
         var tl = this.screenToWorld( 0.0, 0.0 );
         var br = this.screenToWorld( this.canvasWidth, this.canvasHeight );
-
-        this.hscale.range( tl.x, br.x, this.canvasWidth );
-        this.vscale.range( br.y, tl.y, this.canvasHeight );
+        var i, j, ticks, ratio, trans;
 
         this.graphics.clear();
         this.graphics.beginFill(lineColor);
 
-        var i, j, ticks, ratio, trans;
-
-        // draw grids
-        for ( i = this.hscale.minTickLevel; i <= this.hscale.maxTickLevel; ++i ) {
-            ratio = this.hscale.tickRatios[i];
-            if ( ratio > 0 ) {
-                this.graphics.lineStyle(1, lineColor, ratio * 0.5);
-                ticks = this.hscale.ticksAtLevel(i,true);
-                for ( j = 0; j < ticks.length; ++j ) {
-                    trans = this.worldToScreen( ticks[j], 0.0 );
-                    this.graphics.moveTo( _snapPixel(trans.x), 0.0 );
-                    this.graphics.lineTo( _snapPixel(trans.x), this.canvasHeight );
+        // draw h ticks
+        if ( this.hticks ) {
+            this.hticks.range( tl.x, br.x, this.canvasWidth );
+            for ( i = this.hticks.minTickLevel; i <= this.hticks.maxTickLevel; ++i ) {
+                ratio = this.hticks.tickRatios[i];
+                if ( ratio > 0 ) {
+                    this.graphics.lineStyle(1, lineColor, ratio * 0.5);
+                    ticks = this.hticks.ticksAtLevel(i,true);
+                    for ( j = 0; j < ticks.length; ++j ) {
+                        trans = this.worldToScreen( ticks[j], 0.0 );
+                        this.graphics.moveTo( _snapPixel(trans.x), 0.0 );
+                        this.graphics.lineTo( _snapPixel(trans.x), this.canvasHeight );
+                    }
                 }
             }
         }
 
-        for ( i = this.vscale.minTickLevel; i <= this.vscale.maxTickLevel; ++i ) {
-            ratio = this.vscale.tickRatios[i];
-            if ( ratio > 0 ) {
-                this.graphics.lineStyle(1, lineColor, ratio * 0.5);
-                ticks = this.vscale.ticksAtLevel(i,true);
-                for ( j = 0; j < ticks.length; ++j ) {
-                    trans = this.worldToScreen( 0.0, ticks[j] );
-                    this.graphics.moveTo( 0.0, _snapPixel(trans.y) );
-                    this.graphics.lineTo( this.canvasWidth, _snapPixel(trans.y) );
+        // draw v ticks
+        if ( this.vticks ) {
+            this.vticks.range( br.y, tl.y, this.canvasHeight );
+            for ( i = this.vticks.minTickLevel; i <= this.vticks.maxTickLevel; ++i ) {
+                ratio = this.vticks.tickRatios[i];
+                if ( ratio > 0 ) {
+                    this.graphics.lineStyle(1, lineColor, ratio * 0.5);
+                    ticks = this.vticks.ticksAtLevel(i,true);
+                    for ( j = 0; j < ticks.length; ++j ) {
+                        trans = this.worldToScreen( 0.0, ticks[j] );
+                        this.graphics.moveTo( 0.0, _snapPixel(trans.y) );
+                        this.graphics.lineTo( this.canvasWidth, _snapPixel(trans.y) );
+                    }
                 }
             }
         }
@@ -196,55 +208,67 @@ window['widgets.pixi-grid'] = Polymer({
         this.graphics.endFill();
 
         // draw label
-        this.resetLabelPool();
-        var labelLevel, labelEL;
-        var numberFormat = Intl.NumberFormat();
+        if ( this.showLabel ) {
+            var minStep = 50, labelLevel, labelEL;
 
-        // draw hlabel
-        labelLevel = this.hscale.levelForStep(50);
-        ticks = this.hscale.ticksAtLevel(labelLevel,false);
-        for ( j = 0; j < ticks.length; ++j ) {
-            trans = this.worldToScreen( ticks[j], 0.0 );
-            labelEL = this.getLabel();
-            labelEL.innerText = numeral(ticks[j]).format('0,0.00');
-            labelEL.style.left = trans.x + 'px';
-            labelEL.style.bottom = '0px';
-            labelEL.style.right = '';
-            labelEL.style.top = '';
-            Polymer.dom(this.$.hlabels).appendChild(labelEL);
+            this._resetLabelPool();
+
+            // draw hlabel
+            if ( this.hticks ) {
+                labelLevel = this.hticks.levelForStep(minStep);
+                ticks = this.hticks.ticksAtLevel(labelLevel,false);
+                for ( j = 0; j < ticks.length; ++j ) {
+                    trans = this.worldToScreen( ticks[j], 0.0 );
+                    labelEL = this._requestLabel();
+                    labelEL.innerText = numeral(ticks[j]).format('0,0.00');
+                    labelEL.style.left = trans.x + 'px';
+                    labelEL.style.bottom = '0px';
+                    labelEL.style.right = '';
+                    labelEL.style.top = '';
+                    Polymer.dom(this.$.hlabels).appendChild(labelEL);
+                }
+            }
+
+            // draw vlabel
+            if ( this.vticks ) {
+                labelLevel = this.vticks.levelForStep(minStep);
+                ticks = this.vticks.ticksAtLevel(labelLevel,false);
+                for ( j = 0; j < ticks.length; ++j ) {
+                    trans = this.worldToScreen( 0.0, ticks[j] );
+                    labelEL = this._requestLabel();
+                    labelEL.innerText = numeral(ticks[j]).format('0,0.00');
+                    labelEL.style.left = '0px';
+                    labelEL.style.top = trans.y + 'px';
+                    labelEL.style.bottom = '';
+                    labelEL.style.right = '';
+                    Polymer.dom(this.$.vlabels).appendChild(labelEL);
+                }
+            }
+
+            //
+            this._clearUnusedLabels();
         }
-
-        // draw vlabel
-        labelLevel = this.vscale.levelForStep(50);
-        ticks = this.vscale.ticksAtLevel(labelLevel,false);
-        for ( j = 0; j < ticks.length; ++j ) {
-            trans = this.worldToScreen( 0.0, ticks[j] );
-            labelEL = this.getLabel();
-            labelEL.innerText = numeral(ticks[j]).format('0,0.00');
-            labelEL.style.left = '0px';
-            labelEL.style.top = trans.y + 'px';
-            labelEL.style.bottom = '';
-            labelEL.style.right = '';
-            Polymer.dom(this.$.vlabels).appendChild(labelEL);
-        }
-
-        //
-        this.clearUnusedLabels();
 
         // DEBUG
         if ( this.showDebugInfo ) {
-            this.setPathValue('debugInfo.xMinLevel', this.hscale.minTickLevel);
-            this.setPathValue('debugInfo.xMaxLevel', this.hscale.maxTickLevel);
-            this.setPathValue('debugInfo.yMinLevel', this.vscale.minTickLevel);
-            this.setPathValue('debugInfo.yMaxLevel', this.vscale.maxTickLevel);
+            this.setPathValue('debugInfo.xAxisScale', this.xAxisScale.toFixed(3));
+            if ( this.hticks ) {
+                this.setPathValue('debugInfo.xMinLevel', this.hticks.minTickLevel);
+                this.setPathValue('debugInfo.xMaxLevel', this.hticks.maxTickLevel);
+            }
+            this.setPathValue('debugInfo.yAxisScale', this.yAxisScale.toFixed(3));
+            if ( this.vticks ) {
+                this.setPathValue('debugInfo.yMinLevel', this.vticks.minTickLevel);
+                this.setPathValue('debugInfo.yMaxLevel', this.vticks.maxTickLevel);
+            }
         }
     },
 
-    resetLabelPool: function () {
+    _resetLabelPool: function () {
         this.labelIdx = 0;
     },
 
-    getLabel: function () {
+    _requestLabel: function () {
         var el;
         if ( this.labelIdx < this.labels.length ) {
             el = this.labels[this.labelIdx];
@@ -259,7 +283,7 @@ window['widgets.pixi-grid'] = Polymer({
         return el;
     },
 
-    clearUnusedLabels: function () {
+    _clearUnusedLabels: function () {
         for ( var i = this.labelIdx; i < this.labels.length; ++i ) {
             var el = this.labels[i];
             Polymer.dom(Polymer.dom(el).parentNode).removeChild(el);

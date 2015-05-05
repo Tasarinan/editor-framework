@@ -1,10 +1,13 @@
-function LinearScale () {
+function LinearTicks () {
     this.ticks = [];
     this.tickLods = [];
     this.tickRatios = [];
 
     this.minScale = 0.1;
     this.maxScale = 1000.0;
+
+    this.minValueScale = 1.0;
+    this.maxValueScale = 1.0;
 
     this.minValue = -500;
     this.maxValue = 500;
@@ -15,7 +18,14 @@ function LinearScale () {
     this.maxSpacing = 80;
 }
 
-LinearScale.prototype.initTicks = function ( lods, min, max ) {
+LinearTicks.prototype.initTicks = function ( lods, min, max ) {
+    if ( min <= 0 )
+        min = 1;
+    if ( max <= 0 )
+        max = 1;
+    if ( max < min )
+        max = min;
+
     this.tickLods = lods;
     this.minScale = min;
     this.maxScale = max;
@@ -23,29 +33,51 @@ LinearScale.prototype.initTicks = function ( lods, min, max ) {
     // generate ticks
     this.ticks = [];
 
-    var curScale = 1.0;
+    var curTick = 1.0;
     var curIdx = 0;
 
-    this.ticks.push(curScale);
+    this.ticks.push(curTick);
 
-    while ( curScale * this.tickLods[curIdx] <= this.maxScale ) {
-        curScale = curScale *  this.tickLods[curIdx];
+    var minScale = min;
+    var maxScale = max;
+    var maxTickValue = 1;
+    var minTickValue = 1;
+
+    while ( curTick * this.tickLods[curIdx] <= maxScale ) {
+        curTick = curTick *  this.tickLods[curIdx];
         curIdx = curIdx + 1 > this.tickLods.length-1 ? 0 : curIdx + 1;
-        this.ticks.push(curScale);
+        this.ticks.push(curTick);
+
+        maxTickValue = curTick;
     }
+
+    // NOTE: we need to leave two more level for both zoom-in, so enlarge 100 times here.
+    this.minValueScale = 1.0/maxTickValue * 100;
 
     curIdx = this.tickLods.length-1;
-    curScale = 1.0;
-    while ( curScale / this.tickLods[curIdx] >= this.minScale ) {
-        curScale = curScale / this.tickLods[curIdx];
+    curTick = 1.0;
+    while ( curTick / this.tickLods[curIdx] >= minScale ) {
+        curTick = curTick / this.tickLods[curIdx];
         curIdx = curIdx - 1 < 0 ? this.tickLods.length-1 : curIdx - 1;
-        this.ticks.unshift(curScale);
+        this.ticks.unshift(curTick);
+
+        minTickValue = curTick;
     }
+
+    // NOTE: we need to leave two more level for both zoom-out, so enlarge 100 times here.
+    this.maxValueScale = 1.0/minTickValue * 100;
 
     return this;
 };
 
-LinearScale.prototype.range = function ( minValue, maxValue, pixelRange ) {
+LinearTicks.prototype.spacing = function ( min, max ) {
+    this.minSpacing = min;
+    this.maxSpacing = max;
+
+    return this;
+};
+
+LinearTicks.prototype.range = function ( minValue, maxValue, pixelRange ) {
     this.minValue = minValue;
     this.maxValue = maxValue;
 
@@ -73,14 +105,7 @@ LinearScale.prototype.range = function ( minValue, maxValue, pixelRange ) {
     return this;
 };
 
-LinearScale.prototype.spacing = function ( min, max ) {
-    this.minSpacing = min;
-    this.maxSpacing = max;
-
-    return this;
-};
-
-LinearScale.prototype.ticksAtLevel = function ( level, excludeHigherLevel ) {
+LinearTicks.prototype.ticksAtLevel = function ( level, excludeHigherLevel ) {
     var results = [];
     var tick = this.ticks[level];
     // NOTE: we use `Math.floor` and `<= end` for one more line
@@ -99,7 +124,7 @@ LinearScale.prototype.ticksAtLevel = function ( level, excludeHigherLevel ) {
     return results;
 };
 
-LinearScale.prototype.levelForStep = function ( step ) {
+LinearTicks.prototype.levelForStep = function ( step ) {
     for ( var i = 0; i < this.ticks.length; ++i ) {
         var ratio = this.ticks[i] * this.pixelRange / (this.maxValue - this.minValue);
         if ( ratio >= step ) {

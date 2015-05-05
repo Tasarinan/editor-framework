@@ -144,15 +144,15 @@
          */
         clamp: function ( val, min, max ) {
             if (typeof min !== 'number') {
-                Fire.error('[clamp] min value must be type number');
+                Editor.error('[clamp] min value must be type number');
                 return;
             }
             if (typeof max !== 'number') {
-                Fire.error('[clamp] max value must be type number');
+                Editor.error('[clamp] max value must be type number');
                 return;
             }
             if (min > max) {
-                Fire.error('[clamp] max value must not less than min value');
+                Editor.error('[clamp] max value must not less than min value');
                 return;
             }
             return Math.min( Math.max( val, min ), max );

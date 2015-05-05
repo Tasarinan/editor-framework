@@ -1,0 +1,42 @@
+:host {
+    margin: 1px;
+    overflow: hidden;
+}
+
+.labels {
+    color: #999;
+    font-size: 12px;
+    position: absolute;
+}
+
+#hlabels {
+    bottom: 5px;
+    left: 0px;
+}
+
+#hlabels .label {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+#vlabels {
+    top: 0px;
+    left: 5px;
+    -webkit-writing-mode: vertical-rl;
+    /*-webkit-text-orientation: upright;*/
+}
+
+#vlabels .label {
+    position: absolute;
+    transform: translateY(-50%);
+}
+
+.debug-info {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 15px;
+
+    border: 1px solid #999;
+    background: rgba( 0, 0, 0, 0.2 );
+}

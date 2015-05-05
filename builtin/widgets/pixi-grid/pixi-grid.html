@@ -1,63 +1,26 @@
 <dom-module id="pixi-grid">
-  <style>
-    :host {
-        margin: 1px;
-        overflow: hidden;
-    }
-    #hlabels {
-        color: #999;
-        font-size: 12px;
-        position: absolute;
-        bottom: 5px;
-        left: 0px;
-    }
-    #hlabels .label {
-        position: absolute;
-        transform: translateX(-50%);
-    }
-    #vlabels {
-        color: #999;
-        font-size: 12px;
-        position: absolute;
-        top: 0px;
-        left: 5px;
-    }
-    #vlabels .label {
-        position: absolute;
-        transform: translateY(-50%);
-    }
-    .debug-info {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 5px 15px;
+    <link rel="import" type="css" href="pixi-grid.css">
 
-        border: 1px solid #999;
-        background: rgba( 0, 0, 0, 0.2 );
-    }
-    .debug-info[hidden] {
-        display: none;
-    }
-  </style>
-
-  <template>
-      <div id="view" class="fit">
-          <canvas id="canvas"></canvas>
-          <div id="hlabels"></div>
-          <div id="vlabels"></div>
-          <div class="debug-info" hidden$="{{!showDebugInfo}}">
-              <div>X Scale: <span>{{_computedScale(xscale)}}</span></div>
-              <div>X Min Level: <span>{{debugInfo.xMinLevel}}</span></div>
-              <div>X Max Level: <span>{{debugInfo.xMaxLevel}}</span></div>
-              <div>Y Scale: <span>{{_computedScale(yscale)}}</span></div>
-              <div>Y Min Level: <span>{{debugInfo.yMinLevel}}</span></div>
-              <div>Y Max Level: <span>{{debugInfo.yMaxLevel}}</span></div>
-          </div>
-      </div>
-  </template>
+    <template>
+        <div id="view" class="fit">
+            <canvas id="canvas"></canvas>
+            <div id="hlabels" class="labels"></div>
+            <div id="vlabels" class="labels"></div>
+            <template is="x-if" if="{{showDebugInfo}}">
+                <div class="debug-info">
+                    <div>X Scale: <span>{{parent.debugInfo.xAxisScale}}</span></div>
+                    <div>X Min Level: <span>{{parent.debugInfo.xMinLevel}}</span></div>
+                    <div>X Max Level: <span>{{parent.debugInfo.xMaxLevel}}</span></div>
+                    <div>Y Scale: <span>{{parent.debugInfo.yAxisScale}}</span></div>
+                    <div>Y Min Level: <span>{{parent.debugInfo.yMinLevel}}</span></div>
+                    <div>Y Max Level: <span>{{parent.debugInfo.yMaxLevel}}</span></div>
+                </div>
+            </template>
+        </div>
+    </template>
 </dom-module>
 
 <script type="text/javascript" src="app://bower_components/pixi/bin/pixi.min.js"></script>
 <script type="text/javascript" src="app://bower_components/numeral/min/numeral.min.js"></script>
-<script type="text/javascript" src="linear-scale.js"></script>
+<script type="text/javascript" src="linear-ticks.js"></script>
 <script type="text/javascript" src="pixi-grid.js"></script>
