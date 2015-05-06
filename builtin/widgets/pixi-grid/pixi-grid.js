@@ -43,10 +43,6 @@ window['widgets.pixi-grid'] = Polymer({
         },
     },
 
-    listeners: {
-        'mousewheel': '_onMouseWheel',
-    },
-
     created: function () {
         this.canvasWidth = 0;
         this.canvasHeight = 0;
@@ -208,57 +204,6 @@ window['widgets.pixi-grid'] = Polymer({
         this.pan( 0, pixelY - newScreenY );
     },
 
-    _onMouseWheel: function ( event ) {
-        event.stopPropagation();
-
-        var scale;
-        var changeX = true;
-        var changeY = true;
-
-        if ( event.metaKey ) {
-            changeX = true;
-            changeY = false;
-        }
-        else if ( event.shiftKey ) {
-            changeX = false;
-            changeY = true;
-        }
-
-        var newScale;
-
-        if ( changeX && this.hticks ) {
-            newScale = Editor.Utils.smoothScale(this.xAxisScale, event.wheelDelta);
-            this.xAxisScaleAt ( event.offsetX, newScale );
-
-            // TODO
-            // var curScale = this.xAxisScale;
-            // var nextScale = scale;
-            // var start = window.performance.now();
-            // var duration = 300;
-            // function animateScale ( time ) {
-            //     var requestId = requestAnimationFrame ( animateScale.bind(this) );
-            //     var cur = time - start;
-            //     var ratio = cur/duration;
-            //     if ( ratio >= 1.0 ) {
-            //         this.xAxisScale = nextScale;
-            //         cancelAnimationFrame(requestId);
-            //     }
-            //     else {
-            //         this.xAxisScale = Math.lerp( curScale, nextScale, ratio );
-            //     }
-            //     this.repaint();
-            // };
-            // animateScale.call(this,start);
-        }
-
-        if ( changeY && this.vticks ) {
-            newScale = Editor.Utils.smoothScale(this.yAxisScale, event.wheelDelta);
-            this.yAxisScaleAt ( event.offsetY, newScale );
-        }
-
-        this.repaint();
-    },
-
     resize: function ( w, h ) {
         if ( !w || !h ) {
             var rect = this.$.view.getBoundingClientRect();
@@ -287,6 +232,98 @@ window['widgets.pixi-grid'] = Polymer({
         requestAnimationFrame( function () {
             this.renderer.render(this.stage);
         }.bind(this));
+    },
+
+    scaleAction: function ( event ) {
+        event.stopPropagation();
+
+        var scale;
+        var changeX = true;
+        var changeY = true;
+
+        if ( event.metaKey ) {
+            changeX = true;
+            changeY = false;
+        }
+        else if ( event.shiftKey ) {
+            changeX = false;
+            changeY = true;
+        }
+
+        var newScale;
+
+        if ( changeX && this.hticks ) {
+            newScale = Editor.Utils.smoothScale(this.xAxisScale, event.wheelDelta);
+            this.xAxisScaleAt ( event.offsetX, newScale );
+        }
+
+        if ( changeY && this.vticks ) {
+            newScale = Editor.Utils.smoothScale(this.yAxisScale, event.wheelDelta);
+            this.yAxisScaleAt ( event.offsetY, newScale );
+        }
+
+        // TODO: smooth animate
+        // var curScale = this.xAxisScale;
+        // var nextScale = scale;
+        // var start = window.performance.now();
+        // var duration = 300;
+        // function animateScale ( time ) {
+        //     var requestId = requestAnimationFrame ( animateScale.bind(this) );
+        //     var cur = time - start;
+        //     var ratio = cur/duration;
+        //     if ( ratio >= 1.0 ) {
+        //         this.xAxisScale = nextScale;
+        //         cancelAnimationFrame(requestId);
+        //     }
+        //     else {
+        //         this.xAxisScale = Math.lerp( curScale, nextScale, ratio );
+        //     }
+        //     this.repaint();
+        // };
+        // animateScale.call(this,start);
+
+        this.repaint();
+    },
+
+    panAction: function ( event ) {
+        if ( event.which === 1 ) {
+            event.stopPropagation();
+
+            var mousemoveHandle = function(event) {
+                event.stopPropagation();
+
+                var dx = event.clientX - this._lastClientX;
+                var dy = event.clientY - this._lastClientY;
+
+                this._lastClientX = event.clientX;
+                this._lastClientY = event.clientY;
+
+                this.pan( dx, dy );
+                this.repaint();
+            }.bind(this);
+
+            var mouseupHandle = function(event) {
+                event.stopPropagation();
+
+                document.removeEventListener('mousemove', mousemoveHandle);
+                document.removeEventListener('mouseup', mouseupHandle);
+
+                EditorUI.removeDragGhost();
+                this.style.cursor = '';
+            }.bind(this);
+
+            //
+            this._lastClientX = event.clientX;
+            this._lastClientY = event.clientY;
+
+            //
+            EditorUI.addDragGhost('-webkit-grabbing');
+            this.style.cursor = '-webkit-grabbing';
+            document.addEventListener ( 'mousemove', mousemoveHandle );
+            document.addEventListener ( 'mouseup', mouseupHandle );
+
+            return;
+        }
     },
 
     _updateGrids: function () {
