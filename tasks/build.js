@@ -1,11 +1,20 @@
+// general
 var gulp = require('gulp');
 var changed = require('gulp-changed');
 var sequence = require('gulp-sequence');
 var watch = require('gulp-watch');
 var del = require('del');
 
+// special tasks
+var stylus = require('gulp-stylus');
+
+// modules
 var Path = require('path');
 var Chalk = require('chalk');
+
+// ==============================
+// pathas
+// ==============================
 
 var dest = 'bin/dev';
 var ignores = [
@@ -15,14 +24,22 @@ var ignores = [
     '!docs/**',
 ];
 var gulpfiles = ['**/gulpfile.js', '**/tasks/*.js'].concat(ignores);
-
 var paths = {
     js: ['**/*.js','!**/gulpfile.js', '!**/tasks/*.js'].concat(ignores),
     html: ['**/*.html'].concat(ignores),
     css: ['**/*.css'].concat(ignores),
+    styl: ['**/*.styl'].concat(ignores),
     json: ['**/*.json'].concat(ignores),
     image: ['**/*.{png,jpg}'].concat(ignores),
 };
+
+var extTable = {
+    '.styl': '.css',
+};
+
+// ==============================
+// tasks
+// ==============================
 
 // js
 gulp.task('js', function () {
@@ -45,6 +62,17 @@ gulp.task('css', function () {
         .pipe(gulp.dest(dest));
 });
 
+// styl
+gulp.task('styl', function() {
+    return gulp.src(paths.styl)
+    .pipe(changed(dest))
+    .pipe(stylus({
+        compress: false,
+        include: 'src'
+    }))
+    .pipe(gulp.dest(dest));
+});
+
 // json
 gulp.task('json', function () {
     return gulp.src(paths.json)
@@ -59,7 +87,20 @@ gulp.task('image', function () {
         .pipe(gulp.dest(dest));
 });
 
+//
+gulp.task('build', sequence('clean', [
+    'js',
+    'html',
+    'css',
+    'styl',
+    'json',
+    'image',
+]));
+
+// ==============================
 // watch
+// ==============================
+
 function dowatch ( taskName ) {
     watch( paths[taskName], function ( file ) {
         if ( file.event !== 'unlink' ) {
@@ -90,10 +131,19 @@ gulp.task('deep-watch', function() {
     }
 
     watch( ['**/*'].concat(ignores), {
-        events: ['add', 'change', 'unlink', 'addDir', 'unlinkDir', 'error']
+        events: ['unlink', 'unlinkDir', 'error']
     }, function ( file ) {
         if ( file.event === 'unlink' || file.event === 'unlinkDir' ) {
-            var destFile = Path.join( dest, file.relative );
+            var extname = Path.extname(file.relative);
+            var destExtname = extTable[extname];
+
+            var relative = file.relative;
+            if ( destExtname ) {
+                var basename = Path.basename(file.relative,extname);
+                relative = Path.join( Path.dirname(file.relative), basename + destExtname );
+            }
+
+            var destFile = Path.join( dest, relative );
             del(destFile, function (err) {
                 if ( err ) {
                     console.log( Chalk.yellow(err.message) );
@@ -133,17 +183,11 @@ gulp.task('watch', function() {
     restart();
 });
 
+// ==============================
 // clean
+// ==============================
+
 gulp.task('clean', function(cb) {
     del(dest, cb);
 });
 
-
-//
-gulp.task('build', sequence('clean', [
-    'js',
-    'html',
-    'css',
-    'json',
-    'image',
-]));
