@@ -27,7 +27,12 @@
   "devDependencies": {
     "gulp": "",
     "gulp-shell": "0.2.11",
-    "gulp-download-fire-shell": ""
+    "gulp-download-fire-shell": "",
+    "gulp-changed": "1.2.1",
+    "gulp-sequence": "0.3.2",
+    "gulp-watch": "4.2.4",
+    "del": "1.1.1",
+    "chalk": "1.0.0"
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.25.2",
