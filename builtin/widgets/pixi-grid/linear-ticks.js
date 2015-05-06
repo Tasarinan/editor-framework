@@ -78,6 +78,7 @@ LinearTicks.prototype.spacing = function ( min, max ) {
 };
 
 LinearTicks.prototype.range = function ( minValue, maxValue, pixelRange ) {
+    // NOTE: Math.fround here to prevent label blinking
     this.minValue = Math.fround(Math.min(minValue,maxValue));
     this.maxValue = Math.fround(Math.max(minValue,maxValue));
 

@@ -36,7 +36,13 @@ window['widgets.pixi-grid'] = Polymer({
             reflectToAttribute: true
         },
 
-        showLabel: {
+        showLabelH: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        showLabelV: {
             type: Boolean,
             value: false,
             reflectToAttribute: true
@@ -209,6 +215,9 @@ window['widgets.pixi-grid'] = Polymer({
             var rect = this.$.view.getBoundingClientRect();
             w = w || rect.width;
             h = h || rect.height;
+
+            w = Math.round(w);
+            h = Math.round(h);
         }
 
         // adjust xAxisOffset by anchor x
@@ -237,7 +246,6 @@ window['widgets.pixi-grid'] = Polymer({
     scaleAction: function ( event ) {
         event.stopPropagation();
 
-        var scale;
         var changeX = true;
         var changeY = true;
 
@@ -347,7 +355,7 @@ window['widgets.pixi-grid'] = Polymer({
                     ticks = this.hticks.ticksAtLevel(i,true);
                     for ( j = 0; j < ticks.length; ++j ) {
                         screen_x = this.valueToPixelH(ticks[j]);
-                        this.graphics.moveTo( _snapPixel(screen_x), 0.0 );
+                        this.graphics.moveTo( _snapPixel(screen_x), -1.0 );
                         this.graphics.lineTo( _snapPixel(screen_x), this.canvasHeight );
                     }
                 }
@@ -377,14 +385,14 @@ window['widgets.pixi-grid'] = Polymer({
         this.graphics.endFill();
 
         // draw label
-        if ( this.showLabel ) {
+        if ( this.showLabelH || this.showLabelV ) {
             var minStep = 50, labelLevel, labelEL, tickValue;
             var decimals, fmt;
 
             this._resetLabelPool();
 
             // draw hlabel
-            if ( this.hticks ) {
+            if ( this.showLabelH && this.hticks ) {
                 labelLevel = this.hticks.levelForStep(minStep);
                 ticks = this.hticks.ticksAtLevel(labelLevel,false);
 
@@ -410,7 +418,7 @@ window['widgets.pixi-grid'] = Polymer({
             }
 
             // draw vlabel
-            if ( this.vticks ) {
+            if ( this.showLabelV && this.vticks ) {
                 labelLevel = this.vticks.levelForStep(minStep);
                 ticks = this.vticks.ticksAtLevel(labelLevel,false);
 
