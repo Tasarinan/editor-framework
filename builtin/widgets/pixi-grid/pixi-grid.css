@@ -1,6 +1,7 @@
 :host {
     margin: 1px;
     overflow: hidden;
+    position: relative;
 }
 
 .labels {

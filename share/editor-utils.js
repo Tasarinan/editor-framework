@@ -24,7 +24,7 @@ Utils.formatFrame = function ( frame, frameRate ) {
         frame = -frame;
     }
     return text +
-        (frame/frameRate).toFixed(0) + ':' +
+        Math.floor(frame/frameRate) + ':' +
         Utils.padLeft(frame % frameRate, decimals, '0');
 };
 
