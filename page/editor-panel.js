@@ -312,6 +312,7 @@ Panel.focus = function ( panelID ) {
     var parentEL = Polymer.dom(viewEL).parentNode;
     if ( parentEL instanceof EditorUI.Panel ) {
         parentEL.select(viewEL);
+        parentEL.focus();
     }
 };
 

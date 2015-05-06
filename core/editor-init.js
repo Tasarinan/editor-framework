@@ -41,23 +41,34 @@ Editor.info = function () {
 
 Editor.warn = function () {
     var text = Util.format.apply(Util, arguments);
+
+    var e = new Error('dummy');
+    var lines = e.stack.split('\n');
+    text = text + '\n' + lines.splice(2).join('\n');
+
     Winston.warn(text);
-    console.trace();
     Editor.sendToWindows('console:warn',text);
 };
 
 Editor.error = function () {
     var text = Util.format.apply(Util, arguments);
+
+    var e = new Error('dummy');
+    var lines = e.stack.split('\n');
+    text = text + '\n' + lines.splice(2).join('\n');
+
     Winston.error(text);
-    console.trace();
     Editor.sendToWindows('console:error',text);
 };
 
 Editor.fatal = function () {
     var text = Util.format.apply(Util, arguments);
-    Winston.fatal(text);
-    console.trace();
 
+    var e = new Error('dummy');
+    var lines = e.stack.split('\n');
+    text = text + '\n' + lines.splice(2).join('\n');
+
+    Winston.fatal(text);
     // NOTE: fatal error will close app immediately, no need for ipc.
 };
 

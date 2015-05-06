@@ -40,6 +40,8 @@ Editor.registerPanel( 'ipc-debugger.panel', {
                 this.uninspect(item.name);
             }
         }
+
+        this.refresh();
     },
 
     inspect: function ( name ) {
