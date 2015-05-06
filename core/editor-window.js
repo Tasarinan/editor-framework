@@ -112,18 +112,6 @@ EditorWindow.prototype.focus = function () {
     this.nativeWin.focus();
 };
 
-EditorWindow.prototype.minimize = function () {
-    this.nativeWin.minimize();
-};
-
-EditorWindow.prototype.restore = function () {
-    this.nativeWin.restore();
-};
-
-EditorWindow.prototype.openDevTools = function () {
-    this.nativeWin.openDevTools();
-};
-
 EditorWindow.prototype.adjust = function ( x, y, w, h ) {
     var adjustToCenter = false;
     if ( typeof x !== 'number' ) {

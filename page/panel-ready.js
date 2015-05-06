@@ -12,12 +12,11 @@ if ( Editor.argv.panelID ) {
             dock.setAttribute('no-collapse', '');
             dock.classList.add('fit');
 
-            var panel = new EditorUI.Panel();
-            panel.add(viewEL);
-            panel.select(0);
-            panel.focus();
+            var panelEL = new EditorUI.Panel();
+            panelEL.add(viewEL);
+            panelEL.select(0);
 
-            Polymer.dom(dock).appendChild(panel);
+            Polymer.dom(dock).appendChild(panelEL);
             document.body.appendChild(dock);
 
             EditorUI.DockUtils.root = dock;

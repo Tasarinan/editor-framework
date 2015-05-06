@@ -68,7 +68,9 @@ global.__app = {
 
         // open dev tools if needed
         if ( Editor.showDevtools ) {
-            mainWin.openDevTools();
+            mainWin.openDevTools({
+                detach: true
+            });
         }
         mainWin.focus();
     },

@@ -174,7 +174,7 @@ Panel.findWindows = function (packageName) {
     var wins = [];
 
     for ( var p in _panel2windows ) {
-        var pair = p.split('@');
+        var pair = p.split('.');
         if ( pair.length !== 2 ) {
             continue;
         }
@@ -191,32 +191,27 @@ Panel.findWindows = function (packageName) {
 };
 
 Panel.findPanels = function ( packageName ) {
-    var panels = [];
+    var panelIDs = [];
     for ( var p in _panel2windows ) {
-        var pair = p.split('@');
+        var pair = p.split('.');
         if ( pair.length !== 2 ) {
             continue;
         }
 
-        var name = pair[1];
+        var name = pair[0];
         if ( name === packageName ) {
-            panels.push(pair[0]);
+            panelIDs.push(pair);
         }
     }
 
-    return panels;
+    return panelIDs;
 };
 
-// TODO: we need to check if the windows panel only have that panel so that we can close the window
 Panel.closeAll = function (packageName) {
-    Editor.warn('TODO: @Johnny please implement Panel.closeAll');
-
-    // var wins = Panel.findWindows(packageName);
-    // for (var i = 0; i < wins.length; i++) {
-    //     var win = wins[i];
-    //     win.close();
-    // }
-    // delete _panel2windows[...];
+    var panelIDs = Panel.findPanels(packageName);
+    for (var i = 0; i < panelIDs.length; ++i) {
+        Panel.close( panelIDs[i] );
+    }
 };
 
 // NOTE: this only invoked in fire-window on-closed event
