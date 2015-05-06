@@ -14,10 +14,6 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
         minHeight: { type: String, value: '200', },
     },
 
-    listeners: {
-        'mousedown': '_onMouseDown',
-    },
-
     ready: function () {
         this._initFocusable(null); // NOTE: panel's focus element is variable (a.k.a viewEL)
         this._initResizable();
@@ -38,6 +34,13 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
             this.select(prev);
             this.focus();
         }.bind(this));
+
+        // grab mousedown in capture phase to make sure we focus on it
+        this.addEventListener('mousedown', function (event) {
+            if ( event.which === 1 ) {
+                this.focus();
+            }
+        }, true);
     },
 
     _onMouseDown: function ( event ) {

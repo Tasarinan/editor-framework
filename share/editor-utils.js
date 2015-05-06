@@ -28,4 +28,10 @@ Utils.formatFrame = function ( frame, frameRate ) {
         Utils.padLeft(frame % frameRate, decimals, '0');
 };
 
+Utils.smoothScale = function ( curScale, delta ) {
+    var scale = curScale;
+    scale = Math.pow( 2, delta * 0.002) * scale;
+    return scale;
+};
+
 module.exports = Utils;
