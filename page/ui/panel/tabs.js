@@ -1,9 +1,9 @@
 (function () {
 
-EditorUI.Tabs = Polymer(EditorUI.mixin({
+EditorUI.Tabs = Polymer({
     is: 'editor-tabs',
 
-    activeTab: null,
+    behaviors: [ EditorUI.droppable ],
 
     hostAttributes: {
         'droppable': 'tab',
@@ -20,6 +20,7 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
     },
 
     ready: function () {
+        this.activeTab = null;
         this._initDroppable(this);
 
         var thisDOM = Polymer.dom(this);
@@ -218,7 +219,6 @@ EditorUI.Tabs = Polymer(EditorUI.mixin({
             ] },
         ]);
     },
-
-}, EditorUI.droppable));
+});
 
 })();

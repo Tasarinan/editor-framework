@@ -1,11 +1,9 @@
 (function () {
 
-EditorUI.Panel = Polymer(EditorUI.mixin({
+EditorUI.Panel = Polymer({
     is: 'editor-panel',
 
-    // TODO: we have to use EditorUI.mixin polyfill until polymer support
-    //       mixin properties, observers and so on.
-    // mixins: [EditorUI.resizable, EditorUI.focusable, EditorUI.dockable],
+    behaviors: [ EditorUI.resizable, EditorUI.focusable, EditorUI.dockable ],
 
     properties: {
         width: { type: String, value: '200', },
@@ -374,6 +372,6 @@ EditorUI.Panel = Polymer(EditorUI.mixin({
 
         Editor.saveLayout();
     },
-}, EditorUI.resizable, EditorUI.focusable, EditorUI.dockable));
+});
 
 })();

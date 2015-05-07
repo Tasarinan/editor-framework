@@ -1,11 +1,9 @@
 (function () {
 
-EditorUI.Dock = Polymer( EditorUI.mixin({
+EditorUI.Dock = Polymer({
     is: 'editor-dock',
 
-    // TODO: we have to use EditorUI.mixin polyfill until polymer support
-    //       mixin properties, observers and so on.
-    // mixins: [EditorUI.resizable, EditorUI.dockable],
+    behaviors: [EditorUI.resizable, EditorUI.dockable],
 
     properties: {
         row: {
@@ -218,6 +216,6 @@ EditorUI.Dock = Polymer( EditorUI.mixin({
         }
     },
 
-}, EditorUI.resizable, EditorUI.dockable));
+});
 
 })();

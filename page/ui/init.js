@@ -291,27 +291,27 @@
         return importList;
     };
 
-    //
-    EditorUI.mixin = function ( obj ) {
-        'use strict';
-        for ( var i = 1, length = arguments.length; i < length; ++i ) {
-            var source = arguments[i];
-            for ( var name in source) {
-                if ( name === 'properties' ||
-                     name === 'observers' ||
-                     name === 'listeners' )
-                {
-                    obj[name] = Editor.JS.addon( obj[name], source[name] );
-                }
-                else {
-                    if ( obj[name] === undefined ) {
-                        Editor.JS.copyprop( name, source, obj);
-                    }
-                }
-            }
-        }
-        return obj;
-    };
+    // DELME?? Polymer 0.9 support behaviors, which do the same things
+    // EditorUI.mixin = function ( obj ) {
+    //     'use strict';
+    //     for ( var i = 1, length = arguments.length; i < length; ++i ) {
+    //         var source = arguments[i];
+    //         for ( var name in source) {
+    //             if ( name === 'properties' ||
+    //                  name === 'observers' ||
+    //                  name === 'listeners' )
+    //             {
+    //                 obj[name] = Editor.JS.addon( obj[name], source[name] );
+    //             }
+    //             else {
+    //                 if ( obj[name] === undefined ) {
+    //                     Editor.JS.copyprop( name, source, obj);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return obj;
+    // };
 
     return EditorUI;
 })();

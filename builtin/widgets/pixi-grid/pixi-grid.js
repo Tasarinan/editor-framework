@@ -20,14 +20,14 @@ window['widgets.pixi-grid'] = Polymer({
     properties: {
         debugInfo: {
             type: Object,
-            value: {
+            value: function () { return {
                 xAxisScale: 0,
                 xMinLevel: 0,
                 xMaxLevel: 0,
                 yAxisScale: 0,
                 yMinLevel: 0,
                 yMaxLevel: 0,
-            },
+            }; },
         },
 
         showDebugInfo: {
