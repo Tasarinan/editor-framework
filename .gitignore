@@ -35,3 +35,4 @@ utils/api
 
 # test files
 test/.settings/
+.settings/
