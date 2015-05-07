@@ -334,6 +334,10 @@ Panel.dockAt = function ( position, panelEL ) {
     // TODO
 };
 
+Panel.isDirty = function ( panelID ) {
+    return _dirtyPanels.indexOf(panelID) !== -1;
+};
+
 // ==========================
 // Ipc events
 // ==========================
@@ -360,6 +364,21 @@ Ipc.on('panel:undock', function ( panelID ) {
     window.requestAnimationFrame( function () {
         Editor.Panel.undock(panelID);
     });
+});
+
+var _dirtyPanels = [];
+Ipc.on('panel:dirty', function ( panelID ) {
+    var viewEL = Editor.Panel.find(panelID);
+    if ( viewEL ) {
+        var parentEL = Polymer.dom(viewEL).parentNode;
+        if ( parentEL instanceof EditorUI.Panel ) {
+            parentEL.warn(viewEL);
+        }
+    }
+
+    if ( _dirtyPanels.indexOf(panelID) === -1 ) {
+        _dirtyPanels.push(panelID);
+    }
 });
 
 module.exports = Panel;

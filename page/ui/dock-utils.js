@@ -150,6 +150,9 @@ EditorUI.DockUtils = (function () {
             // NOTE: you must focus after DockUtils flushed
             // NOTE: do not use panelEL focus, the activeTab is still not assigned
             viewEL.focus();
+            if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
+                targetPanelEL.warn(viewEL);
+            }
         }
         else {
             Editor.Panel.close(panelID);
@@ -175,6 +178,9 @@ EditorUI.DockUtils = (function () {
                     // NOTE: you must focus after DockUtils flushed
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
                     viewEL.focus();
+                    if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
+                        targetPanelEL.warn(viewEL);
+                    }
                 });
             });
         }
@@ -465,6 +471,9 @@ EditorUI.DockUtils = (function () {
                     // NOTE: you must focus after DockUtils flushed
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
                     viewEL.focus();
+                    if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
+                        newPanel.warn(viewEL);
+                    }
                 });
             });
 
@@ -572,6 +581,9 @@ EditorUI.DockUtils = (function () {
         // NOTE: you must focus after DockUtils flushed
         // NOTE: do not use panelEL focus, the activeTab is still not assigned
         viewEL.focus();
+        if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
+            newPanel.warn(viewEL);
+        }
     });
 
     return DockUtils;

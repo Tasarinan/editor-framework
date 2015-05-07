@@ -13,6 +13,14 @@ EditorUI.Tab = Polymer({
         // 'mouseleave': '_onMouseLeave',
     },
 
+    properties: {
+        warn: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+        },
+    },
+
     ready: function () {
         this.setIcon(null);
     },

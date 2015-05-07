@@ -60,6 +60,10 @@
     background-color: #444;
 }
 
+:host([warn]) .border, :host(.active[warn]) .border {
+    background-color: #700;
+}
+
 span.left-tab-border {
     /* display: inline-block;          */
     /* border-left: 1px solid #212121; */

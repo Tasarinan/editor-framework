@@ -22,7 +22,8 @@
     "winston": "1.0.0",
     "globby": "2.0.0",
     "async": "0.9.0",
-    "semver": "4.3.3"
+    "semver": "4.3.3",
+    "chokidar": "1.0.1"
   },
   "devDependencies": {
     "gulp": "",

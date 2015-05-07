@@ -253,6 +253,22 @@ EditorUI.Panel = Polymer({
         return Polymer.dom(this.$.tabs).children.length;
     },
 
+    warn: function ( idxOrViewEL ) {
+        var tabs = this.$.tabs;
+        if ( typeof idxOrViewEL === 'number' ) {
+            tabs.warn(idxOrViewEL);
+        }
+        else {
+            var thisDOM = Polymer.dom(this);
+            for ( var i = 0; i < thisDOM.children.length; ++i ) {
+                if ( idxOrViewEL === thisDOM.children[i] ) {
+                    tabs.warn(i);
+                    break;
+                }
+            }
+        }
+    },
+
     select: function ( idxOrViewEL ) {
         var tabs = this.$.tabs;
         if ( typeof idxOrViewEL === 'number' ) {

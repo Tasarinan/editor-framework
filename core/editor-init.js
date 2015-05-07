@@ -4,6 +4,7 @@ var Fs = require('fire-fs');
 var Path = require('fire-path');
 var Winston = require('winston');
 var Globby = require('globby');
+var Chokidar = require('chokidar');
 
 require('../share/platform') ;
 Editor.JS = require('../share/js-utils') ;
@@ -161,6 +162,10 @@ Editor.loadProfile = function ( name, type, defaultProfile ) {
 // ==========================
 
 Editor.quit = function () {
+    if ( packageWatcher ) {
+        packageWatcher.close();
+    }
+
     var winlist = Editor.Window.windows;
     for ( var i = 0; i < winlist.length; ++i ) {
         winlist[i].close();
@@ -177,6 +182,48 @@ Editor.loadPackages = function () {
     for ( i = 0; i < paths.length; ++i ) {
         Editor.Package.load( Path.dirname(paths[i]) );
     }
+
+    Editor.watchPackages();
+};
+
+var packageWatcher;
+Editor.watchPackages = function () {
+    var src = [];
+    for ( i = 0; i < Editor._packagePathList.length; ++i ) {
+        src.push( Editor._packagePathList[i] );
+    }
+    packageWatcher = Chokidar.watch(src, {
+        ignored: /[\/\\]\./,
+        ignoreInitial: true,
+        persistent: true,
+    });
+
+    packageWatcher
+    // .on('add', function(path) { Editor.log('File', path, 'has been added'); })
+    .on('change', function (path) {
+        var packageInfo = Editor.Package.packageInfo(path);
+        if ( packageInfo ) {
+            var panelPath = Path.join(packageInfo._path, 'panel');
+            if ( Path.contains(panelPath, path) ) {
+                for ( var panelName in packageInfo.panels ) {
+                    var panelID = packageInfo.name + '.' + panelName;
+                    Editor.sendToWindows( 'panel:dirty', panelID );
+                }
+            }
+            else {
+                Editor.Package.reload(packageInfo._path);
+            }
+        }
+    })
+    // .on('unlink', function(path) { Editor.log('File', path, 'has been removed'); })
+    // .on('addDir', function(path) { Editor.log('Directory', path, 'has been added'); })
+    // .on('unlinkDir', function(path) { Editor.log('Directory', path, 'has been removed'); })
+    .on('error', function (error) {
+        Editor.error('Package Watcher Error: %s', error.message);
+    })
+    // .on('ready', function() { Editor.log('Initial scan complete. Ready for changes.'); })
+    // .on('raw', function(event, path, details) { Editor.log('Raw event info:', event, path, details); })
+    ;
 };
 
 // ==========================

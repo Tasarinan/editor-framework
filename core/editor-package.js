@@ -20,6 +20,8 @@ Package.load = function ( path ) {
         return;
     }
 
+    packageObj._path = path;
+
     // load main.js
     if ( packageObj.main ) {
         var main;
@@ -148,6 +150,16 @@ Package.reload = function ( path ) {
 
 Package.panelInfo = function ( panelID ) {
     return _panel2info[panelID];
+};
+
+// the path can be any files in this package
+Package.packageInfo = function ( path ) {
+    for ( var p in _path2package ) {
+        if ( Path.contains( p, path )  ) {
+            return _path2package[p];
+        }
+    }
+    return null;
 };
 
 // ========================================

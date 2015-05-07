@@ -131,6 +131,25 @@ EditorUI.Tabs = Polymer({
         }
     },
 
+    warn: function ( tab ) {
+        var thisDOM = Polymer.dom(this);
+        var tabEL = null;
+
+        if ( typeof tab === 'number' ) {
+            if ( tab < thisDOM.children.length ) {
+                tabEL = thisDOM.children[tab];
+            }
+        }
+        else if ( tab instanceof EditorUI.Tab ) {
+            tabEL = tab;
+        }
+
+        //
+        if ( tabEL !== null ) {
+            tabEL.warn = true;
+        }
+    },
+
     _onClick: function ( event ) {
         event.stopPropagation();
         this.panelEL.focus();
