@@ -64,11 +64,11 @@ Editor.registerPanel( 'ipc-debugger.panel', {
 
     refresh: function () {
         Editor.sendRequestToCore( 'ipc-debugger:query', function ( results ) {
-            this.ipcInfos = results.filter ( function ( item ) {
+            var ipcInfos = results.filter ( function ( item ) {
                 return !/^ATOM/.test(item.name);
             });
 
-            this.ipcInfos.sort( function ( a, b ) {
+            ipcInfos.sort( function ( a, b ) {
                 var result = a.level.localeCompare( b.level );
                 if ( result === 0 ) {
                     result = a.name.localeCompare(b.name);
@@ -80,12 +80,14 @@ Editor.registerPanel( 'ipc-debugger.panel', {
             // TODO: keep watching on Polymer updates
             // this.ipcInfos = this.ipcInfos.slice();
 
-            this.ipcInfos = this.ipcInfos.map( function ( item ) {
+            ipcInfos = ipcInfos.map( function ( item ) {
                 if ( item.level === 'page' ) {
                     item.inspect = this.inspects[item.name] !== undefined;
                 }
                 return item;
             }.bind(this));
+
+            this.set( 'ipcInfos', ipcInfos );
 
         }.bind(this));
     },

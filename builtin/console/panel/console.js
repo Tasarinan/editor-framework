@@ -38,7 +38,7 @@ Editor.registerPanel( 'editor-console.panel', {
     },
 
     add: function ( type, text ) {
-        this.logs.push({
+        this.push('logs', {
             type: type,
             text: text,
             count: 0,

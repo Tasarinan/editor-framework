@@ -449,17 +449,17 @@ window['widgets.pixi-grid'] = Polymer({
 
         // DEBUG
         if ( this.showDebugInfo ) {
-            this.setPathValue('debugInfo.xAxisScale', this.xAxisScale.toFixed(3));
-            this.setPathValue('debugInfo.xAxisOffset', this.xAxisOffset.toFixed(3));
+            this.set('debugInfo.xAxisScale', this.xAxisScale.toFixed(3));
+            this.set('debugInfo.xAxisOffset', this.xAxisOffset.toFixed(3));
             if ( this.hticks ) {
-                this.setPathValue('debugInfo.xMinLevel', this.hticks.minTickLevel);
-                this.setPathValue('debugInfo.xMaxLevel', this.hticks.maxTickLevel);
+                this.set('debugInfo.xMinLevel', this.hticks.minTickLevel);
+                this.set('debugInfo.xMaxLevel', this.hticks.maxTickLevel);
             }
-            this.setPathValue('debugInfo.yAxisScale', this.yAxisScale.toFixed(3));
-            this.setPathValue('debugInfo.yAxisOffset', this.yAxisOffset.toFixed(3));
+            this.set('debugInfo.yAxisScale', this.yAxisScale.toFixed(3));
+            this.set('debugInfo.yAxisOffset', this.yAxisOffset.toFixed(3));
             if ( this.vticks ) {
-                this.setPathValue('debugInfo.yMinLevel', this.vticks.minTickLevel);
-                this.setPathValue('debugInfo.yMaxLevel', this.vticks.maxTickLevel);
+                this.set('debugInfo.yMinLevel', this.vticks.minTickLevel);
+                this.set('debugInfo.yMaxLevel', this.vticks.maxTickLevel);
             }
         }
     },

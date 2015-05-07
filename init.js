@@ -45,7 +45,7 @@ process.on('uncaughtException', function(error) {
 
 Editor.name = App.getName();
 
-// mainEntry = ./app.js
+// mainEntry = absolute path of ./app.js
 var _packageJsonPath = Path.join( Editor.cwd, 'package.json' );
 var _packageJson = JSON.parse(Fs.readFileSync(_packageJsonPath));
 Editor.mainEntry = Path.join( Editor.cwd, _packageJson.main );

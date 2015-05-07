@@ -6,17 +6,17 @@
             <canvas id="canvas"></canvas>
             <div id="hlabels" class="labels"></div>
             <div id="vlabels" class="labels"></div>
-            <template is="x-if" if="{{showDebugInfo}}">
+            <template is="dom-if" if="{{showDebugInfo}}">
                 <div class="debug-info">
-                    <div>X Scale: <span>{{parent.debugInfo.xAxisScale}}</span></div>
-                    <div>X Offset: <span>{{parent.debugInfo.xAxisOffset}}</span></div>
-                    <div>X Min Level: <span>{{parent.debugInfo.xMinLevel}}</span></div>
-                    <div>X Max Level: <span>{{parent.debugInfo.xMaxLevel}}</span></div>
+                    <div>X Scale: <span>{{debugInfo.xAxisScale}}</span></div>
+                    <div>X Offset: <span>{{debugInfo.xAxisOffset}}</span></div>
+                    <div>X Min Level: <span>{{debugInfo.xMinLevel}}</span></div>
+                    <div>X Max Level: <span>{{debugInfo.xMaxLevel}}</span></div>
                     <br/>
-                    <div>Y Scale: <span>{{parent.debugInfo.yAxisScale}}</span></div>
-                    <div>Y Offset: <span>{{parent.debugInfo.yAxisOffset}}</span></div>
-                    <div>Y Min Level: <span>{{parent.debugInfo.yMinLevel}}</span></div>
-                    <div>Y Max Level: <span>{{parent.debugInfo.yMaxLevel}}</span></div>
+                    <div>Y Scale: <span>{{debugInfo.yAxisScale}}</span></div>
+                    <div>Y Offset: <span>{{debugInfo.yAxisOffset}}</span></div>
+                    <div>Y Min Level: <span>{{debugInfo.yMinLevel}}</span></div>
+                    <div>Y Max Level: <span>{{debugInfo.yMaxLevel}}</span></div>
                 </div>
             </template>
         </div>

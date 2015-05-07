@@ -3,7 +3,7 @@
 
     <template>
         <ul>
-            <template is="x-repeat" id="list" items="{{packages}}">
+            <template is="dom-repeat" id="list" items="{{packages}}">
                 <li builtin$="{{item.builtin}}">
                     <div class="flex-1"><span>{{item.name}}</span></div>
                     <div class="flex-1">Enabled: <span>{{item.enabled}}</span></div>

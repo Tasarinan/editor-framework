@@ -3,7 +3,7 @@
 
     <template>
         <ul>
-            <template is="x-repeat" items="{{logs}}">
+            <template is="dom-repeat" items="{{logs}}">
                 <li class$="{{item.type}}">
                     <span>{{item.text}}</span>
                 </li>

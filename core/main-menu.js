@@ -138,13 +138,6 @@ function getDefaultMainMenu () {
                     }
                 },
                 {
-                    label: 'Reload App',
-                    accelerator: 'CmdOrCtrl+Shift+R',
-                    click: function() {
-                        Editor.App.reload();
-                    }
-                },
-                {
                     label: 'Developer Tools',
                     accelerator: 'CmdOrCtrl+Alt+I',
                     click: function() { BrowserWindow.getFocusedWindow().openDevTools(); }
@@ -156,19 +149,21 @@ function getDefaultMainMenu () {
                 // },
                 { type: 'separator' },
                 {
-                    label: 'Simple Tests',
+                    label: 'Test',
                     submenu: [
+                        {
+                            label: 'Reload App',
+                            accelerator: 'CmdOrCtrl+Shift+R',
+                            click: function() {
+                                Editor.App.reload();
+                            }
+                        },
                         {
                             label: 'Throw an Uncaught Exception',
                             click: function() {
                                 throw new Error('editor-framework Unknown Error');
                             }
                         },
-                    ],
-                },
-                {
-                    label: 'Ipc Tests',
-                    submenu: [
                         {
                             label: 'send2panel \'foo:bar\' foobar.panel',
                             click: function() {

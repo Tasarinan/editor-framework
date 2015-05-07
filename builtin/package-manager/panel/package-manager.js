@@ -10,9 +10,10 @@ Editor.registerPanel( 'package-manager.panel', {
 
     ready: function () {
         Editor.sendRequestToCore( 'package:query', function ( results ) {
-            this.packages = results.map( function (item) {
+            var packages = results.map( function (item) {
                 return { name: item.info.name, enabled: item.enabled, builtin: item.builtin };
             });
+            this.set( 'packages', packages );
         }.bind(this));
     },
 
