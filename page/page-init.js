@@ -69,8 +69,8 @@ try {
 }
 catch ( error ) {
     window.onload = function () {
-        var remote = require('remote');
-        var currentWindow = remote.getCurrentWindow();
+        var Remote = require('remote');
+        var currentWindow = Remote.getCurrentWindow();
         currentWindow.setSize(800, 600);
         currentWindow.center();
         currentWindow.show();

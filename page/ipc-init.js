@@ -2,13 +2,13 @@
 
 var Ipc = require('ipc');
 
-require( Editor.url('editor-framework://share/ipc-init') );
+Editor.require('editor-framework://share/ipc-init');
 
 // Messages
 
 Ipc.on('editor:sendreq2core:reply', function replyCallback (args, sessionId) {
     'use strict';
-    var key = "" + sessionId;
+    var key = '' + sessionId;
     var cb = replyCallbacks[key];
     if (cb) {
         cb.apply(null, args);
@@ -152,7 +152,7 @@ Editor.sendRequestToCore = function (request) {
             args.pop();
 
             var sessionId = nextSessionId++;
-            var key = "" + sessionId;
+            var key = '' + sessionId;
             replyCallbacks[key] = reply;
 
             Ipc.send('editor:sendreq2core', request, args, sessionId);
@@ -170,7 +170,7 @@ Editor.sendRequestToCore = function (request) {
 
 Editor.cancelRequestToCore = function (sessionId) {
     'use strict';
-    var key = "" + sessionId;
+    var key = '' + sessionId;
     var cb = replyCallbacks[key];
     if ( cb ) {
         delete replyCallbacks[key];

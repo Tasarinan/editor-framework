@@ -7,13 +7,14 @@ var del = require('del');
 
 // special tasks
 var stylus = require('gulp-stylus');
+var jshint = require('gulp-jshint');
 
 // modules
 var Path = require('path');
 var Chalk = require('chalk');
 
 // ==============================
-// pathas
+// paths
 // ==============================
 
 var dest = 'bin/dev';
@@ -23,7 +24,9 @@ var ignores = [
     '!node_modules/**',
     '!docs/**',
 ];
+var allfiles = ['**/*'].concat(ignores);
 var gulpfiles = ['**/gulpfile.js', '**/tasks/*.js'].concat(ignores);
+
 var paths = {
     js: ['**/*.js','!**/gulpfile.js', '!**/tasks/*.js'].concat(ignores),
     html: ['**/*.html'].concat(ignores),
@@ -32,8 +35,7 @@ var paths = {
     json: ['**/*.json'].concat(ignores),
     image: ['**/*.{png,jpg}'].concat(ignores),
 };
-
-var extTable = {
+var extnameMappings = {
     '.styl': '.css',
 };
 
@@ -45,6 +47,14 @@ var extTable = {
 gulp.task('js', function () {
     return gulp.src(paths.js)
         .pipe(changed(dest))
+        .pipe(jshint({
+            multistr: true,
+            smarttabs: false,
+            loopfunc: true,
+            esnext: true,
+        }))
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail'))
         .pipe(gulp.dest(dest));
 });
 
@@ -87,15 +97,19 @@ gulp.task('image', function () {
         .pipe(gulp.dest(dest));
 });
 
-//
-gulp.task('build', sequence('clean', [
+// clean
+gulp.task('clean', function(cb) {
+    del(dest, cb);
+});
+
+// build
+gulp.task('build', sequence('clean',
     'js',
     'html',
-    'css',
-    'styl',
+    [ 'css', 'styl' ],
     'json',
-    'image',
-]));
+    'image'
+));
 
 // ==============================
 // watch
@@ -130,12 +144,12 @@ gulp.task('deep-watch', function() {
         dowatch(name);
     }
 
-    watch( ['**/*'].concat(ignores), {
+    watch( allfiles, {
         events: ['unlink', 'unlinkDir', 'error']
     }, function ( file ) {
         if ( file.event === 'unlink' || file.event === 'unlinkDir' ) {
             var extname = Path.extname(file.relative);
-            var destExtname = extTable[extname];
+            var destExtname = extnameMappings[extname];
 
             var relative = file.relative;
             if ( destExtname ) {
@@ -182,12 +196,3 @@ gulp.task('watch', function() {
     });
     restart();
 });
-
-// ==============================
-// clean
-// ==============================
-
-gulp.task('clean', function(cb) {
-    del(dest, cb);
-});
-

@@ -8,6 +8,9 @@ var Url = require('fire-url');
 var Async = require('async');
 
 window.Editor = window.Editor || {};
+Editor.require = function ( path ) {
+    return require( Editor.url(path) );
+};
 
 // init argument list sending from core by url?queries
 // format: '?foo=bar&hell=world'
@@ -51,12 +54,12 @@ Editor.url = function (url) {
     return Editor.remote.url(url);
 };
 
-require( Editor.url('editor-framework://share/platform') );
-Editor.JS = require( Editor.url('editor-framework://share/js-utils') );
-Editor.Utils = require( Editor.url('editor-framework://share/editor-utils') );
-require( Editor.url('editor-framework://share/math') );
-Editor.Easing = require( Editor.url('editor-framework://share/easing') );
-require( Editor.url('editor-framework://page/ipc-init') );
+Editor.require('editor-framework://share/platform');
+Editor.JS = Editor.require('editor-framework://share/js-utils');
+Editor.Utils = Editor.require('editor-framework://share/editor-utils');
+Editor.require('editor-framework://share/math');
+Editor.Easing = Editor.require('editor-framework://share/easing');
+Editor.require('editor-framework://page/ipc-init');
 
 // ==========================
 // console log API
@@ -233,10 +236,10 @@ Editor.registerPanel = function ( panelID, obj ) {
 // load modules
 // ==========================
 
-Editor.Window = require( Editor.url('editor-framework://page/editor-window') );
-Editor.Menu = require( Editor.url('editor-framework://page/editor-menu') );
-Editor.Panel = require( Editor.url('editor-framework://page/editor-panel') );
+Editor.Window = Editor.require('editor-framework://page/editor-window' );
+Editor.Menu = Editor.require('editor-framework://page/editor-menu');
+Editor.Panel = Editor.require('editor-framework://page/editor-panel');
 
-Editor.MainMenu = require( Editor.url('editor-framework://page/main-menu') );
+Editor.MainMenu = Editor.require('editor-framework://page/main-menu');
 
 })();
