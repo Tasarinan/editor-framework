@@ -183,17 +183,11 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
 
 EditorWindow.prototype.commitWindowState = function ( layoutInfo ) {
     var nativeWin = this.nativeWin;
-    var winSize = nativeWin.getSize();
-    var winPos = nativeWin.getPosition();
+    var winBounds = nativeWin.getBounds();
 
     // store windows layout
     var winInfo = _windowLayouts[this.name];
-    winInfo = Editor.JS.mixin( winInfo || {}, {
-        x: winPos[0],
-        y: winPos[1],
-        width: winSize[0],
-        height: winSize[1],
-    });
+    winInfo = Editor.JS.mixin( winInfo || {}, winBounds);
     if ( layoutInfo ) {
         winInfo.layout = layoutInfo;
     }

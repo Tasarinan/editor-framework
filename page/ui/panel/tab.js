@@ -59,7 +59,7 @@ EditorUI.Tab = Polymer({
             if ( iconDOM.children.length > 0 ) {
                 iconDOM.removeChild(this.$.icon.firstChild);
             }
-            this.$.icon.appendChild(img);
+            iconDOM.appendChild(img);
             img.setAttribute('draggable','false'); // this will prevent item dragging
         }
         else {

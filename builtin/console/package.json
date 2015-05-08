@@ -14,6 +14,7 @@
       "view": "panel/console.html",
       "type": "dockable",
       "title": "Editor Console",
+      "icon": "panel/icon.png",
       "height": 300,
       "min-height": 200,
       "shortcuts": {

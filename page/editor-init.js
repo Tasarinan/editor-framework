@@ -162,7 +162,10 @@ Editor.loadLayout = function ( anchorEL, cb ) {
     });
 };
 
+var _layouting = false;
 Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
+    _layouting = true;
+
     var importList = EditorUI.createLayout( anchorEL, layoutInfo );
     Async.each( importList, function ( item, done ) {
         Editor.Panel.load (item.panelID, function ( err, viewEL ) {
@@ -179,6 +182,8 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
             done();
         });
     }, function ( err ) {
+        _layouting = false;
+
         // close error panels
         EditorUI.DockUtils.flushWithCollapse();
         Editor.saveLayout();
@@ -187,6 +192,10 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
 };
 
 Editor.saveLayout = function () {
+    // don't save layout when we are layouting
+    if ( _layouting )
+        return;
+
     window.requestAnimationFrame ( function () {
         Editor.sendToCore('window:save-layout', Editor.Panel.dumpLayout(), Editor.requireIpcEvent);
     });

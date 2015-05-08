@@ -3,24 +3,24 @@ try {
     // init document events
 
     // prevent default drag
-    document.addEventListener( "dragstart", function (event) {
+    document.addEventListener( 'dragstart', function (event) {
         event.preventDefault();
     } );
-    document.addEventListener( "drop", function (event) {
+    document.addEventListener( 'drop', function (event) {
         event.preventDefault();
     } );
-    document.addEventListener( "dragover", function (event) {
+    document.addEventListener( 'dragover', function (event) {
         event.preventDefault();
     } );
 
     // prevent contextmenu
-    document.addEventListener( "contextmenu", function (event) {
+    document.addEventListener( 'contextmenu', function (event) {
         event.preventDefault();
         event.stopPropagation();
     } );
 
     // prevent go back
-    document.addEventListener( "keydown", function (event) {
+    document.addEventListener( 'keydown', function (event) {
         if ( event.keyCode === 8 ) {
             if ( event.target === document.body ) {
                 event.preventDefault();

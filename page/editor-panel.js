@@ -120,6 +120,10 @@ Panel.load = function ( panelID, cb ) {
             Editor.sendToCore('panel:dock', panelID, Editor.requireIpcEvent);
 
             var viewEL = new viewCtor();
+            if ( panelInfo.icon ) {
+                viewEL.icon = new Image();
+                viewEL.icon.src = Path.join( panelInfo.path, panelInfo.icon );
+            }
             viewEL.setAttribute('id', panelID);
             viewEL.setAttribute('name', panelInfo.title);
             viewEL.classList.add('fit');

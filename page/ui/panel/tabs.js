@@ -114,7 +114,7 @@ EditorUI.Tabs = Polymer({
         //
         if ( tabEL !== null ) {
             if ( tabEL !== this.activeTab ) {
-                this.fire( 'tab-changed', { old: this.activeTab, new: tabEL  } );
+                var oldTabEL = this.activeTab;
 
                 if ( this.activeTab !== null ) {
                     this.activeTab.classList.remove('active');
@@ -127,6 +127,8 @@ EditorUI.Tabs = Polymer({
                 if ( panelInfo ) {
                     this.$.popup.classList.toggle('hide', !panelInfo.popable);
                 }
+
+                this.fire( 'tab-changed', { old: oldTabEL, new: tabEL  } );
             }
         }
     },

@@ -299,7 +299,7 @@ EditorUI.Panel = Polymer({
             viewEL.style.display = 'none';
         }
         tabEL.viewEL = viewEL;
-        tabEL.setIcon( viewEL.icon ); // TEMP HACK
+        tabEL.setIcon( viewEL.icon );
 
         //
         if ( insertBeforeTabEL ) {
@@ -326,7 +326,7 @@ EditorUI.Panel = Polymer({
 
         viewEL.style.display = 'none';
         tabEL.viewEL = viewEL;
-        tabEL.setIcon( viewEL.icon ); // TEMP HACK
+        tabEL.setIcon( viewEL.icon );
 
         thisDOM.appendChild(viewEL);
 
