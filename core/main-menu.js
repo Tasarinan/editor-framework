@@ -133,14 +133,35 @@ function getDefaultMainMenu () {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
                     click: function() {
-                        // BrowserWindow.getFocusedWindow().reload();
+                        BrowserWindow.getFocusedWindow().reload();
+                    }
+                },
+                {
+                    label: 'Reload Ignoring Cache',
+                    accelerator: 'CmdOrCtrl+Shift+R',
+                    click: function() {
                         BrowserWindow.getFocusedWindow().reloadIgnoringCache();
                     }
                 },
                 {
+                    label: 'Reload Editor.App',
+                    click: function() {
+                        Editor.App.reload();
+                    }
+                },
+                { type: 'separator' },
+                {
                     label: 'Developer Tools',
                     accelerator: 'CmdOrCtrl+Alt+I',
                     click: function() { BrowserWindow.getFocusedWindow().openDevTools(); }
+                },
+                {
+                    label: 'Debug Core',
+                    type: 'checkbox',
+                    checked: false,
+                    click: function() {
+                        Editor.Debugger.toggle();
+                    }
                 },
                 // {
                 //     label: 'Inspect Element',
@@ -151,13 +172,6 @@ function getDefaultMainMenu () {
                 {
                     label: 'Test',
                     submenu: [
-                        {
-                            label: 'Reload App',
-                            accelerator: 'CmdOrCtrl+Shift+R',
-                            click: function() {
-                                Editor.App.reload();
-                            }
-                        },
                         {
                             label: 'Throw an Uncaught Exception',
                             click: function() {

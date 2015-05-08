@@ -12,18 +12,43 @@ function EditorWindow ( name, options ) {
 
     // init options
     this.name = name;
-    this.closeWhenBlur = options['close-when-blur'] || false;
+    this.hideWhenBlur = false; // control by options['hide-when-blur'] or winType === 'quick';
+
+    var winType = options['window-type'];
+    switch ( winType ) {
+    case 'dockable':
+        options.resizable = true;
+        options['always-on-top'] = false;
+        break;
+
+    case 'float':
+        options.resizable = true;
+        options['always-on-top'] = true;
+        break;
+
+    case 'fixed-size':
+        options.resizable = false;
+        options['always-on-top'] = true;
+        break;
+
+    case 'quick':
+        options.resizable = true;
+        options['always-on-top'] = true;
+        this.hideWhenBlur = true;
+        break;
+    }
 
     this.nativeWin = new BrowserWindow(options);
 
-    if ( this.closeWhenBlur ) {
+    if ( this.hideWhenBlur ) {
         this.nativeWin.setAlwaysOnTop(true);
     }
 
     // init events
     this.nativeWin.on ( 'blur', function () {
-        if ( this.closeWhenBlur ) {
-            this.nativeWin.close();
+        if ( this.hideWhenBlur ) {
+            // this.nativeWin.close();
+            this.nativeWin.hide();
         }
     }.bind(this) );
 

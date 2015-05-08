@@ -90,45 +90,22 @@ Panel.open = function ( panelID, argv ) {
         options.height = parseInt(layoutProfile.height);
     }
 
+    options['window-type'] = panelInfo.type || 'dockable';
+
+    // NOTE: fixed-size window always use package.json settings
+    if ( panelInfo.type === 'fixed-size' ) {
+        options.width = parseInt(panelInfo.width);
+        options.height = parseInt(panelInfo.height);
+    }
+
+    if ( isNaN(options.width) ) options.width = 800;
+    if ( isNaN(options.height) ) options.height = 600;
+
     // create new window
     // DISABLE: currently, I don't want to support page
     // if ( panelInfo.page ) {
     //     url = panelInfo.page;
     // }
-
-    var winType = panelInfo.type || 'dockable';
-    switch ( panelInfo.type ) {
-    case 'dockable':
-        options.resizable = true;
-        options['always-on-top'] = false;
-        break;
-
-    case 'float':
-        options.resizable = true;
-        options['always-on-top'] = true;
-        break;
-
-    case 'fixed-size':
-        options.resizable = false;
-        options['always-on-top'] = true;
-        // NOTE: fixed-size window always use package.json settings
-        options.width = parseInt(panelInfo.width);
-        options.height = parseInt(panelInfo.height);
-        break;
-
-    case 'quick':
-        options.resizable = true;
-        options['always-on-top'] = true;
-        options['close-when-blur'] = true;
-        break;
-    }
-
-    if ( isNaN(options.width) ) {
-        options.width = 800;
-    }
-    if ( isNaN(options.height) ) {
-        options.height = 600;
-    }
 
     //
     editorWin = new Editor.Window(windowName, options);

@@ -249,5 +249,6 @@ Editor.Menu = require('./editor-menu');
 Editor.Window = require('./editor-window');
 Editor.Panel = require('./editor-panel');
 Editor.Package = require('./editor-package');
+Editor.Debugger = require('./debugger');
 
 Editor.MainMenu = require('./main-menu');
