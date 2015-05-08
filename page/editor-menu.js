@@ -18,7 +18,22 @@ EditorMenu.checkTemplate = function ( template ) {
     return true;
 };
 
-EditorMenu.popup = function ( x, y, template ) {
+// parameters: [x, y], template
+EditorMenu.popup = function () {
+    var x, y, template;
+    if ( arguments.length === 1 ) {
+        template = arguments[0];
+    }
+    else if ( arguments.length === 3 ) {
+        x = arguments[0];
+        y = arguments[1];
+        template = arguments[2];
+    }
+    else {
+        Editor.error( 'Invalid arguments, please try Editor.Menu.popup( x (optional), y (optional), template )' );
+        return;
+    }
+
     if ( EditorMenu.checkTemplate(template) ) {
         Editor.sendToCore('menu:popup', x, y, template, Editor.requireIpcEvent);
     }
