@@ -194,7 +194,7 @@ Editor.sendToPlugin = function ( packageName, message ) {
     }
 };
 
-// example: Editor.sendToPanel( 'panel@package', 'ipc-foo-bar', arguments... )
+// example: Editor.sendToPanel( 'package.panel', 'ipc-foo-bar', arguments... )
 Editor.sendToPanel = function ( panelID, message ) {
     var win = Editor.Panel.findWindow( panelID );
     if ( !win ) {

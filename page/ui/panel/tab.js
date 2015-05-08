@@ -38,7 +38,6 @@ EditorUI.Tab = Polymer({
     _onClick: function ( event ) {
         event.stopPropagation();
 
-        var thisDOM = Polymer.dom(this);
         this.fire( 'tab-click', {} );
     },
 

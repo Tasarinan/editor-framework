@@ -107,7 +107,7 @@ Panel.load = function ( panelID, cb ) {
         }
 
         var Path = require('fire-path');
-        viewPath = Path.join( panelInfo.path, panelInfo.view );
+        var viewPath = Path.join( panelInfo.path, panelInfo.view );
 
         Panel.import(viewPath, function () {
             var viewCtor = window[panelID];
