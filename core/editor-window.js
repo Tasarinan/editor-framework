@@ -13,9 +13,9 @@ function EditorWindow ( name, options ) {
     // init options
     this.name = name;
     this.hideWhenBlur = false; // control by options['hide-when-blur'] or winType === 'quick';
+    this.windowType = options['window-type'];
 
-    var winType = options['window-type'];
-    switch ( winType ) {
+    switch ( this.windowType ) {
     case 'dockable':
         options.resizable = true;
         options['always-on-top'] = false;
@@ -48,6 +48,14 @@ function EditorWindow ( name, options ) {
     this.nativeWin.on ( 'blur', function () {
         if ( this.hideWhenBlur ) {
             // this.nativeWin.close();
+            this.nativeWin.hide();
+        }
+    }.bind(this) );
+
+    this.nativeWin.on ( 'close', function ( event ) {
+        // quick window never close, it just hide
+        if ( this.windowType === 'quick' ) {
+            event.preventDefault();
             this.nativeWin.hide();
         }
     }.bind(this) );

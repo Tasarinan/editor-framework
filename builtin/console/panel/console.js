@@ -3,7 +3,7 @@
 var Ipc = require('ipc');
 var Util = require('util');
 
-Editor.registerPanel( 'editor-console.panel', {
+Editor.registerPanel( 'console.panel', {
     is: 'editor-console',
 
     properties: {
@@ -11,6 +11,16 @@ Editor.registerPanel( 'editor-console.panel', {
 
     ready: function () {
         this.logs = [];
+        Editor.sendRequestToCore( 'console:query', function ( results ) {
+            for ( var i = 0; i < results.length; ++i ) {
+                var item = results[i];
+                this.add( item.type, item.message );
+            }
+        }.bind(this));
+    },
+
+    attached: function () {
+        EditorUI.update( this, 'logs' );
     },
 
     'console:log': function ( message ) {
@@ -37,6 +47,10 @@ Editor.registerPanel( 'editor-console.panel', {
         this.add( 'error', message );
     },
 
+    'console:clear': function () {
+        this.clear();
+    },
+
     add: function ( type, text ) {
         this.push('logs', {
             type: type,
@@ -52,6 +66,7 @@ Editor.registerPanel( 'editor-console.panel', {
 
     clear: function () {
         this.logs = [];
+        Editor.sendToCore('console:clear');
     },
 
     _format: function ( args ) {

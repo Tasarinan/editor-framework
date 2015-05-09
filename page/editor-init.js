@@ -168,16 +168,16 @@ Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
 
     var importList = EditorUI.createLayout( anchorEL, layoutInfo );
     Async.each( importList, function ( item, done ) {
-        Editor.Panel.load (item.panelID, function ( err, viewEL ) {
+        Editor.Panel.load (item.panelID, function ( err, frameEL ) {
             if ( err ) {
                 done();
                 return;
             }
 
             var dockAt = item.dockEL;
-            dockAt.add(viewEL);
+            dockAt.add(frameEL);
             if ( item.active ) {
-                dockAt.select(viewEL);
+                dockAt.select(frameEL);
             }
             done();
         });
@@ -248,7 +248,9 @@ Editor.registerPanel = function ( panelID, obj ) {
 Editor.Window = Editor.require('editor-framework://page/editor-window' );
 Editor.Menu = Editor.require('editor-framework://page/editor-menu');
 Editor.Panel = Editor.require('editor-framework://page/editor-panel');
+Editor.Package = Editor.require('editor-framework://page/editor-package');
 
 Editor.MainMenu = Editor.require('editor-framework://page/main-menu');
+Editor.CmdP = Editor.require('editor-framework://page/cmdp');
 
 })();

@@ -93,6 +93,7 @@ Package.load = function ( path ) {
     //
     _path2package[path] = packageObj;
     Editor.success('%s loaded', packageObj.name);
+    Editor.sendToWindows('package:loaded', packageObj.name);
 };
 
 Package.unload = function ( path ) {
@@ -141,6 +142,7 @@ Package.unload = function ( path ) {
     //
     delete _path2package[path];
     Editor.success('%s unloaded', packageObj.name);
+    Editor.sendToWindows('package:unloaded', packageObj.name);
 };
 
 Package.reload = function ( path ) {

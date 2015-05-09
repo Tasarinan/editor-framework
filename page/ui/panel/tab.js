@@ -4,7 +4,7 @@ EditorUI.Tab = Polymer({
     is: 'editor-tab',
 
     name: '',
-    viewEL: null,
+    frameEL: null,
 
     listeners: {
         'dragstart': '_onDragStart',

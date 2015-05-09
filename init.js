@@ -359,6 +359,9 @@ App.on('ready', function() {
     Winston.normal('Loading packages');
     Editor.loadPackages();
 
+    // connect to console to sending ipc to it
+    Editor.connectToConsole();
+
     // run user App
     if ( !Editor.App.run ) {
         Winston.error('Can not find function "run" in your App');

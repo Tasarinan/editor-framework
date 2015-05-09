@@ -13,6 +13,10 @@ Editor.registerPanel( 'ipc-debugger.panel', {
         this.refresh();
     },
 
+    attached: function () {
+        EditorUI.update( this, 'ipcInfos' );
+    },
+
     _onRefresh: function ( event ) {
         this.refresh();
     },

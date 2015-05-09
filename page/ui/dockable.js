@@ -101,8 +101,8 @@ EditorUI.dockable = (function () {
 
                 // reset old panel's computed width, height
                 this.style.flex = '';
-                if ( this._applyViewSize )
-                    this._applyViewSize();
+                if ( this._applyFrameSize )
+                    this._applyFrameSize();
             }
             // if this is root panel
             else {
@@ -144,8 +144,8 @@ EditorUI.dockable = (function () {
 
                     // reset old panel's computed width, height
                     this.style.flex = '';
-                    if ( this._applyViewSize )
-                        this._applyViewSize();
+                    if ( this._applyFrameSize )
+                        this._applyFrameSize();
 
                     //
                     if ( position === 'left' || position === 'top' ) {

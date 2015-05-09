@@ -66,9 +66,9 @@ EditorUI.DockUtils = (function () {
     DockUtils.dragstart = function ( dataTransfer, tabEL ) {
         dataTransfer.setData('editor/type', 'tab');
 
-        var viewEL = tabEL.viewEL;
-        var panelID = viewEL.getAttribute('id');
-        var panelEL = Polymer.dom(viewEL).parentNode;
+        var frameEL = tabEL.frameEL;
+        var panelID = frameEL.getAttribute('id');
+        var panelEL = Polymer.dom(frameEL).parentNode;
         var panelRect = panelEL.getBoundingClientRect();
 
         _draggingInfo = {
@@ -119,21 +119,21 @@ EditorUI.DockUtils = (function () {
             return;
 
         var panelID = _draggingInfo.panelID;
-        var viewEL = Editor.Panel.find(panelID);
+        var frameEL = Editor.Panel.find(panelID);
 
-        if ( viewEL ) {
-            var panelEL = Polymer.dom(viewEL).parentNode;
+        if ( frameEL ) {
+            var panelEL = Polymer.dom(frameEL).parentNode;
             var targetPanelEL = target.panelEL;
 
             var needCollapse = panelEL !== targetPanelEL;
-            var currentTabEL = panelEL.$.tabs.findTab(viewEL);
+            var currentTabEL = panelEL.$.tabs.findTab(frameEL);
 
             if ( needCollapse ) {
                 panelEL.closeNoCollapse(currentTabEL);
             }
 
             //
-            var idx = targetPanelEL.insert( currentTabEL, viewEL, insertBeforeTabEL );
+            var idx = targetPanelEL.insert( currentTabEL, frameEL, insertBeforeTabEL );
             targetPanelEL.select(idx);
 
             if ( needCollapse ) {
@@ -149,23 +149,23 @@ EditorUI.DockUtils = (function () {
 
             // NOTE: you must focus after DockUtils flushed
             // NOTE: do not use panelEL focus, the activeTab is still not assigned
-            viewEL.focus();
-            if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
-                targetPanelEL.warn(viewEL);
+            frameEL.focus();
+            if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
+                targetPanelEL.warn(frameEL);
             }
         }
         else {
             Editor.Panel.close(panelID);
 
-            Editor.Panel.load( panelID, function ( err, viewEL ) {
+            Editor.Panel.load( panelID, function ( err, frameEL ) {
                 if ( err ) {
                     return;
                 }
 
                 requestAnimationFrame ( function () {
                     var targetPanelEL = target.panelEL;
-                    var newTabEL = new EditorUI.Tab(viewEL.getAttribute('name'));
-                    var idx = targetPanelEL.insert( newTabEL, viewEL, insertBeforeTabEL );
+                    var newTabEL = new EditorUI.Tab(frameEL.getAttribute('name'));
+                    var idx = targetPanelEL.insert( newTabEL, frameEL, insertBeforeTabEL );
                     targetPanelEL.select(idx);
 
                     // reset internal states
@@ -177,9 +177,9 @@ EditorUI.DockUtils = (function () {
 
                     // NOTE: you must focus after DockUtils flushed
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
-                    viewEL.focus();
-                    if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
-                        targetPanelEL.warn(viewEL);
+                    frameEL.focus();
+                    if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
+                        targetPanelEL.warn(frameEL);
                     }
                 });
             });
@@ -417,11 +417,11 @@ EditorUI.DockUtils = (function () {
         var targetDockEL = _resultDock.target;
         var dockPosition = _resultDock.position;
 
-        var viewEL = Editor.Panel.find(panelID);
-        if ( !viewEL ) {
+        var frameEL = Editor.Panel.find(panelID);
+        if ( !frameEL ) {
             Editor.Panel.close(panelID);
 
-            Editor.Panel.load( panelID, function ( err, viewEL ) {
+            Editor.Panel.load( panelID, function ( err, frameEL ) {
                 if ( err ) {
                     return;
                 }
@@ -435,12 +435,12 @@ EditorUI.DockUtils = (function () {
                     newPanel.minHeight = panelMinHeight;
                     newPanel.maxHeight = panelMaxHeight;
 
-                    // NOTE: here must use viewEL's width, height attribute to determine computed size
-                    var elWidth = parseInt(viewEL.getAttribute('width'));
+                    // NOTE: here must use frameEL's width, height attribute to determine computed size
+                    var elWidth = parseInt(frameEL.getAttribute('width'));
                     elWidth = isNaN(elWidth) ? 'auto' : elWidth;
                     newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
 
-                    var elHeight = parseInt(viewEL.getAttribute('height'));
+                    var elHeight = parseInt(frameEL.getAttribute('height'));
                     elHeight = isNaN(elHeight) ? 'auto' : elHeight;
                     newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
 
@@ -455,7 +455,7 @@ EditorUI.DockUtils = (function () {
                         newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
                     }
 
-                    newPanel.add(viewEL);
+                    newPanel.add(frameEL);
                     newPanel.select(0);
 
                     //
@@ -470,9 +470,9 @@ EditorUI.DockUtils = (function () {
 
                     // NOTE: you must focus after DockUtils flushed
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
-                    viewEL.focus();
-                    if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
-                        newPanel.warn(viewEL);
+                    frameEL.focus();
+                    if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
+                        newPanel.warn(frameEL);
                     }
                 });
             });
@@ -480,7 +480,7 @@ EditorUI.DockUtils = (function () {
             return;
         }
 
-        var panelEL = Polymer.dom(viewEL).parentNode;
+        var panelEL = Polymer.dom(frameEL).parentNode;
 
         if ( targetDockEL === panelEL &&
              targetDockEL.tabCount === 1 )
@@ -492,7 +492,7 @@ EditorUI.DockUtils = (function () {
         var parentDock = panelDOM.parentNode;
 
         //
-        var currentTabEL = panelEL.$.tabs.findTab(viewEL);
+        var currentTabEL = panelEL.$.tabs.findTab(frameEL);
         panelEL.closeNoCollapse(currentTabEL);
 
         //
@@ -504,12 +504,12 @@ EditorUI.DockUtils = (function () {
         newPanel.minHeight = panelMinHeight;
         newPanel.maxHeight = panelMaxHeight;
 
-        // NOTE: here must use viewEL's width, height attribute to determine computed size
-        var elWidth = parseInt(viewEL.getAttribute('width'));
+        // NOTE: here must use frameEL's width, height attribute to determine computed size
+        var elWidth = parseInt(frameEL.getAttribute('width'));
         elWidth = isNaN(elWidth) ? 'auto' : elWidth;
         newPanel.computedWidth = elWidth === 'auto' ? 'auto' : panelComputedWidth;
 
-        var elHeight = parseInt(viewEL.getAttribute('height'));
+        var elHeight = parseInt(frameEL.getAttribute('height'));
         elHeight = isNaN(elHeight) ? 'auto' : elHeight;
         newPanel.computedHeight = elHeight === 'auto' ? 'auto' : panelComputedHeight;
 
@@ -524,7 +524,7 @@ EditorUI.DockUtils = (function () {
             newPanel.curHeight = newPanel.computedHeight === 'auto' ? 'auto' : panelRectHeight;
         }
 
-        newPanel.add(viewEL);
+        newPanel.add(frameEL);
         newPanel.select(0);
 
         //
@@ -580,9 +580,9 @@ EditorUI.DockUtils = (function () {
 
         // NOTE: you must focus after DockUtils flushed
         // NOTE: do not use panelEL focus, the activeTab is still not assigned
-        viewEL.focus();
-        if ( Editor.Panel.isDirty(viewEL.getAttribute('id')) ) {
-            newPanel.warn(viewEL);
+        frameEL.focus();
+        if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
+            newPanel.warn(frameEL);
         }
     });
 

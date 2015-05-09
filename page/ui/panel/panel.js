@@ -13,7 +13,7 @@ EditorUI.Panel = Polymer({
     },
 
     ready: function () {
-        this._initFocusable(null); // NOTE: panel's focus element is variable (a.k.a viewEL)
+        this._initFocusable(null); // NOTE: panel's focus element is variable (a.k.a frameEL)
         this._initResizable();
         this._initTabs();
 
@@ -50,13 +50,13 @@ EditorUI.Panel = Polymer({
 
     focus: function () {
         if ( this.activeTab ) {
-            this.activeTab.viewEL.focus();
+            this.activeTab.frameEL.focus();
         }
     },
 
     blur: function () {
         if ( this.activeTab ) {
-            this.activeTab.viewEL.blur();
+            this.activeTab.frameEL.blur();
         }
     },
 
@@ -77,7 +77,7 @@ EditorUI.Panel = Polymer({
             tabEL.setAttribute('draggable', 'true');
 
             el.style.display = 'none';
-            tabEL.viewEL = el;
+            tabEL.frameEL = el;
             tabEL.setIcon( el.icon );
         }
 
@@ -89,7 +89,7 @@ EditorUI.Panel = Polymer({
     },
 
     _finalizeSizeRecursively: function () {
-        this._applyViewSize();
+        this._applyFrameSize();
     },
 
     _finalizeMinMaxRecursively: function () {
@@ -103,7 +103,7 @@ EditorUI.Panel = Polymer({
     _reflowRecursively: function () {
     },
 
-    _applyViewSize: function () {
+    _applyFrameSize: function () {
         var thisDOM = Polymer.dom(this);
         var autoWidth = false, autoHeight = false;
 
@@ -285,28 +285,28 @@ EditorUI.Panel = Polymer({
         }
     },
 
-    insert: function ( tabEL, viewEL, insertBeforeTabEL ) {
+    insert: function ( tabEL, frameEL, insertBeforeTabEL ) {
         var thisDOM = Polymer.dom(this);
         var tabDOM = Polymer.dom(tabEL);
         var tabs = this.$.tabs;
 
-        var name = viewEL.getAttribute('name');
+        var name = frameEL.getAttribute('name');
         tabs.insertTab(tabEL, insertBeforeTabEL);
         tabEL.setAttribute('draggable', 'true');
 
-        // NOTE: if we just move tabs, we must not hide viewEL
+        // NOTE: if we just move tabs, we must not hide frameEL
         if ( tabDOM.parentNode !== tabs ) {
-            viewEL.style.display = 'none';
+            frameEL.style.display = 'none';
         }
-        tabEL.viewEL = viewEL;
-        tabEL.setIcon( viewEL.icon );
+        tabEL.frameEL = frameEL;
+        tabEL.setIcon( frameEL.icon );
 
         //
         if ( insertBeforeTabEL ) {
-            thisDOM.insertBefore(viewEL, insertBeforeTabEL.viewEL);
+            thisDOM.insertBefore(frameEL, insertBeforeTabEL.frameEL);
         }
         else {
-            thisDOM.appendChild(viewEL);
+            thisDOM.appendChild(frameEL);
         }
 
         //
@@ -316,19 +316,19 @@ EditorUI.Panel = Polymer({
         return EditorUI.index(tabEL);
     },
 
-    add: function ( viewEL ) {
+    add: function ( frameEL ) {
         var thisDOM = Polymer.dom(this);
         var tabs = this.$.tabs;
 
-        var name = viewEL.getAttribute('name');
+        var name = frameEL.getAttribute('name');
         var tabEL = tabs.addTab(name);
         tabEL.setAttribute('draggable', 'true');
 
-        viewEL.style.display = 'none';
-        tabEL.viewEL = viewEL;
-        tabEL.setIcon( viewEL.icon );
+        frameEL.style.display = 'none';
+        tabEL.frameEL = frameEL;
+        tabEL.setIcon( frameEL.icon );
 
-        thisDOM.appendChild(viewEL);
+        thisDOM.appendChild(frameEL);
 
         //
         this._applyViewMinMax();
@@ -343,10 +343,10 @@ EditorUI.Panel = Polymer({
 
         //
         tabs.removeTab(tabEL);
-        if ( tabEL.viewEL ) {
-            var panelDOM = Polymer.dom(Polymer.dom(tabEL.viewEL).parentNode);
-            panelDOM.removeChild(tabEL.viewEL);
-            tabEL.viewEL = null;
+        if ( tabEL.frameEL ) {
+            var panelDOM = Polymer.dom(Polymer.dom(tabEL.frameEL).parentNode);
+            panelDOM.removeChild(tabEL.frameEL);
+            tabEL.frameEL = null;
         }
 
         //
@@ -378,12 +378,12 @@ EditorUI.Panel = Polymer({
 
         var detail = event.detail;
         if ( detail.old !== null ) {
-            detail.old.viewEL.style.display = 'none';
-            detail.old.viewEL.dispatchEvent( new CustomEvent('panel-hide') );
+            detail.old.frameEL.style.display = 'none';
+            detail.old.frameEL.dispatchEvent( new CustomEvent('panel-hide') );
         }
         if ( detail.new !== null ) {
-            detail.new.viewEL.style.display = '';
-            detail.new.viewEL.dispatchEvent( new CustomEvent('panel-show') );
+            detail.new.frameEL.style.display = '';
+            detail.new.frameEL.dispatchEvent( new CustomEvent('panel-show') );
         }
 
         Editor.saveLayout();

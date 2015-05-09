@@ -2,7 +2,7 @@
 
 // only window open with panelID needs send request
 if ( Editor.argv.panelID ) {
-    Editor.Panel.load( Editor.argv.panelID, function ( err, viewEL, panelInfo ) {
+    Editor.Panel.load( Editor.argv.panelID, function ( err, frameEL, panelInfo ) {
         if ( err ) {
             return;
         }
@@ -13,7 +13,7 @@ if ( Editor.argv.panelID ) {
             dock.classList.add('fit');
 
             var panelEL = new EditorUI.Panel();
-            panelEL.add(viewEL);
+            panelEL.add(frameEL);
             panelEL.select(0);
 
             Polymer.dom(dock).appendChild(panelEL);
@@ -22,9 +22,9 @@ if ( Editor.argv.panelID ) {
             EditorUI.DockUtils.root = dock;
         }
         else {
-            document.body.appendChild(viewEL);
+            document.body.appendChild(frameEL);
 
-            EditorUI.DockUtils.root = viewEL;
+            EditorUI.DockUtils.root = frameEL;
         }
         EditorUI.DockUtils.reset();
 

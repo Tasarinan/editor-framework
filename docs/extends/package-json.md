@@ -16,17 +16,17 @@ Each package use a `package.json` file to descript it.
   - `panels` Object [Optional] - The panel list.
     - `key` String - Panel name, this name will be used with package name to create an ID (e.g. `PackageName.PanelName`).
     - `value` Object - Panel options.
-      - `view` String - The panel view html file. ( It is recommended to define as a Polymer element ).
+      - `frame` String - The panel frame html file. ( It is recommended to define as a Polymer element ).
       - `type` String [Optional] - Default is `dockable`, can be `dockable`, `float`, `fixed-size`, `quick`.
       - `title` String [Optional] - The panel title show in the tab, default is the panelID.
       - `popable` Boolean [Optional] - Default is `true`, indicate if the panel is popable.
-      - `width` Integer [Optional] - The width of the panel view.
-      - `height` Integer [Optional] - The height of the panel view.
-      - `min-width` Integer [Optional] - The min-width of the panel view.
-      - `min-height` Integer [Optional] - The min-height of the panel view.
+      - `width` Integer [Optional] - The width of the panel frame.
+      - `height` Integer [Optional] - The height of the panel frame.
+      - `min-width` Integer [Optional] - The min-width of the panel frame.
+      - `min-height` Integer [Optional] - The min-height of the panel frame.
       - `shortcuts` Object [Optional] - The shortcuts for the panel.
         - `key` String - The shortcut define (example: `command+k`).
-        - `value` String - The method name defined in the panel view.
+        - `value` String - The method name defined in the panel frame.
       - `messages` Array [Optional] - The ipc message name list.
       - `profiles` Object [Optional] - The list of default profile settings.
         - `key` String - The profile type, by default it can be `local` and `global`. You can register more profile type through `Editor.registerProfilePath`

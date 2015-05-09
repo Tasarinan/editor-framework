@@ -11,13 +11,11 @@
   },
   "panels": {
     "panel": {
-      "view": "panel/package-manager.html",
+      "frame": "panel/package-manager.html",
       "type": "dockable",
       "title": "Package Manager",
       "width": 500,
       "height": 800,
-      "min-width": 400,
-      "min-height": 200,
       "messages": [
       ],
       "profiles": {

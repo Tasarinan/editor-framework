@@ -16,26 +16,44 @@ require('./ipc-init');
 // console log API
 // ==========================
 
+var _consoleConnected = false;
+var _logs = [];
+
 Editor.log = function () {
     var text = Util.format.apply(Util, arguments);
+
+    if ( _consoleConnected )
+        _logs.push({ type: 'log', message: text });
+
     Winston.normal(text);
     Editor.sendToWindows('console:log',text);
 };
 
 Editor.success = function () {
     var text = Util.format.apply(Util, arguments);
+
+    if ( _consoleConnected )
+        _logs.push({ type: 'success', message: text });
+
     Winston.success(text);
     Editor.sendToWindows('console:success',text);
 };
 
 Editor.failed = function () {
     var text = Util.format.apply(Util, arguments);
+
+    if ( _consoleConnected )
+        _logs.push({ type: 'failed', message: text });
+
     Winston.failed(text);
     Editor.sendToWindows('console:failed',text);
 };
 
 Editor.info = function () {
     var text = Util.format.apply(Util, arguments);
+    if ( _consoleConnected )
+        _logs.push({ type: 'info', message: text });
+
     Winston.info(text);
     Editor.sendToWindows('console:info',text);
 };
@@ -46,6 +64,9 @@ Editor.warn = function () {
     var e = new Error('dummy');
     var lines = e.stack.split('\n');
     text = text + '\n' + lines.splice(2).join('\n');
+
+    if ( _consoleConnected )
+        _logs.push({ type: 'warn', message: text });
 
     Winston.warn(text);
     Editor.sendToWindows('console:warn',text);
@@ -58,6 +79,9 @@ Editor.error = function () {
     var lines = e.stack.split('\n');
     text = text + '\n' + lines.splice(2).join('\n');
 
+    if ( _consoleConnected )
+        _logs.push({ type: 'error', message: text });
+
     Winston.error(text);
     Editor.sendToWindows('console:error',text);
 };
@@ -69,16 +93,31 @@ Editor.fatal = function () {
     var lines = e.stack.split('\n');
     text = text + '\n' + lines.splice(2).join('\n');
 
+    if ( _consoleConnected )
+        _logs.push({ type: 'fatal', message: text });
+
     Winston.fatal(text);
     // NOTE: fatal error will close app immediately, no need for ipc.
 };
 
+Editor.connectToConsole = function () {
+    _consoleConnected = true;
+};
+
+Editor.clearLog = function () {
+    _logs = [];
+};
+
 Ipc.on ( 'console:log', function () { Editor.log.apply(Editor,arguments); } );
-Ipc.on ( 'console:success', function ( detail ) { Editor.success.apply(Editor,arguments); } );
-Ipc.on ( 'console:failed', function ( detail ) { Editor.failed.apply(Editor,arguments); } );
-Ipc.on ( 'console:info', function ( detail ) { Editor.info.apply(Editor,arguments); } );
-Ipc.on ( 'console:warn', function ( detail ) { Editor.warn.apply(Editor,arguments); } );
-Ipc.on ( 'console:error', function ( detail ) { Editor.error.apply(Editor,arguments); } );
+Ipc.on ( 'console:success', function () { Editor.success.apply(Editor,arguments); } );
+Ipc.on ( 'console:failed', function () { Editor.failed.apply(Editor,arguments); } );
+Ipc.on ( 'console:info', function () { Editor.info.apply(Editor,arguments); } );
+Ipc.on ( 'console:warn', function () { Editor.warn.apply(Editor,arguments); } );
+Ipc.on ( 'console:error', function () { Editor.error.apply(Editor,arguments); } );
+Ipc.on ( 'console:clear', function () { Editor.clearLog(); } );
+Ipc.on ( 'console:query', function ( reply ) {
+    reply(_logs);
+});
 
 // ==========================
 // profiles API
@@ -199,7 +238,18 @@ Editor.watchPackages = function () {
     });
 
     packageWatcher
-    // .on('add', function(path) { Editor.log('File', path, 'has been added'); })
+    .on('add', function(path) {
+        packageWatcher.add(path);
+    })
+    .on('addDir', function(path) {
+        packageWatcher.add(path);
+    })
+    .on('unlink', function(path) {
+        packageWatcher.unwatch(path);
+    })
+    .on('unlinkDir', function(path) {
+        packageWatcher.unwatch(path);
+    })
     .on('change', function (path) {
         var packageInfo = Editor.Package.packageInfo(path);
         if ( packageInfo ) {
@@ -215,9 +265,6 @@ Editor.watchPackages = function () {
             }
         }
     })
-    // .on('unlink', function(path) { Editor.log('File', path, 'has been removed'); })
-    // .on('addDir', function(path) { Editor.log('Directory', path, 'has been added'); })
-    // .on('unlinkDir', function(path) { Editor.log('Directory', path, 'has been removed'); })
     .on('error', function (error) {
         Editor.error('Package Watcher Error: %s', error.message);
     })

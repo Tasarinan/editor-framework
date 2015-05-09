@@ -1,4 +1,3 @@
-
 var EditorMenu = {};
 
 EditorMenu.checkTemplate = function ( template ) {

@@ -1,6 +1,7 @@
 ## Manual
 
   * [define your app](manual/define-your-app.md)
+  * [define your panel frame](manual/define-your-panel-frame.md)
 
 ## Extends
 

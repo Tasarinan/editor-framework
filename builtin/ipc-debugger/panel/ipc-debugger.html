@@ -10,10 +10,10 @@
             <ul>
                 <template is="dom-repeat" id="list" items="{{ipcInfos}}">
                     <li>
-                        <div class="flex-1"><span>{{item.level}}</span></div>
-                        <div class="flex-2"><span>{{item.name}}</span></div>
-                        <div class="count">{{item.count}}</div>
-                        <i class="fa fa-eye btn" on-click="_onInspect"></i>
+                        <div class="row-item flex-1"><span>{{item.level}}</span></div>
+                        <div class="row-item flex-2"><span>{{item.name}}</span></div>
+                        <div class="row-item count">{{item.count}}</div>
+                        <i class="row-item fa fa-eye btn" on-click="_onInspect"></i>
                     </li>
                 </template>
             </ul>

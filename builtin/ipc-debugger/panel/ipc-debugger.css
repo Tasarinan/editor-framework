@@ -41,6 +41,11 @@ li[builtin] {
     color: #888;
 }
 
+li .row-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .count {
     margin-right: 10px;
 }

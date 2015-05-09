@@ -11,13 +11,11 @@
   },
   "panels": {
     "panel": {
-      "view": "panel/ipc-debugger.html",
+      "frame": "panel/ipc-debugger.html",
       "type": "dockable",
       "title": "Ipc Debugger",
       "width": 500,
       "height": 800,
-      "min-width": 400,
-      "min-height": 200,
       "messages": [
       ],
       "shortcuts": {

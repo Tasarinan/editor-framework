@@ -1,0 +1,30 @@
+:host {
+    overflow: auto;
+    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
+    background: #333;
+}
+
+ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+li {
+    list-style-type: none;
+    display: block;
+    padding: 5px;
+    padding-left: 10px;
+    overflow-x: hidden;
+
+    font-weight: bold;
+    color: #999;
+    background: #222;
+}
+
+li:nth-child(even) {
+    background: #292929;
+}
+
+li>span {
+    white-space: pre-wrap;
+}

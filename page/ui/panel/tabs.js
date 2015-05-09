@@ -29,12 +29,12 @@ EditorUI.Tabs = Polymer({
         }
     },
 
-    findTab: function ( viewEL ) {
+    findTab: function ( frameEL ) {
         var thisDOM = Polymer.dom(this);
 
         for ( var i = 0; i < thisDOM.children.length; ++i ) {
             var tabEL = thisDOM.children[i];
-            if ( tabEL.viewEL === viewEL )
+            if ( tabEL.frameEL === frameEL )
                 return tabEL;
         }
 
@@ -122,10 +122,10 @@ EditorUI.Tabs = Polymer({
                 this.activeTab = tabEL;
                 this.activeTab.classList.add('active');
 
-                var panelID = tabEL.viewEL.getAttribute('id');
-                var panelInfo = Editor.Panel.getPanelInfo(panelID);
-                if ( panelInfo ) {
-                    this.$.popup.classList.toggle('hide', !panelInfo.popable);
+                var panelID = tabEL.frameEL.getAttribute('id');
+                var pagePanelInfo = Editor.Panel.getPanelInfo(panelID);
+                if ( pagePanelInfo ) {
+                    this.$.popup.classList.toggle('hide', !pagePanelInfo.popable);
                 }
 
                 this.fire( 'tab-changed', { old: oldTabEL, new: tabEL  } );
@@ -213,7 +213,7 @@ EditorUI.Tabs = Polymer({
 
     _onPopup: function ( event ) {
         if ( this.activeTab ) {
-            var panelID = this.activeTab.viewEL.getAttribute('id','');
+            var panelID = this.activeTab.frameEL.getAttribute('id','');
             Editor.Panel.popup(panelID);
         }
     },
@@ -222,7 +222,7 @@ EditorUI.Tabs = Polymer({
         var rect = this.$.menu.getBoundingClientRect();
         var panelID = '';
         if ( this.activeTab ) {
-            panelID = this.activeTab.viewEL.getAttribute('id','');
+            panelID = this.activeTab.frameEL.getAttribute('id','');
         }
 
         var panelInfo = Editor.Panel.getPanelInfo(panelID);

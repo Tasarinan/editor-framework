@@ -18,7 +18,7 @@
     border: 1px solid #212121;
 }
 
-.content {
+#frame-wrapper {
     border-left: 1px solid rgba(255, 255, 255, 0.08);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -27,7 +27,7 @@
     background-color: #474747;
 }
 
-.content:focus {
+#frame-wrapper:focus {
     outline: none;
 }
 

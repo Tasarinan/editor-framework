@@ -82,14 +82,6 @@ function getDefaultMainMenu () {
             ]
         },
 
-        // View
-        {
-            label: 'View',
-            id: 'view',
-            submenu: [
-            ]
-        },
-
         // Window
         {
             label: 'Window',
@@ -124,11 +116,28 @@ function getDefaultMainMenu () {
             ]
         },
 
+        // Panel
+        {
+            label: 'Panel',
+            id: 'panel',
+            submenu: [
+            ]
+        },
+
         // Developer
         {
             label: 'Developer',
             id: 'developer',
             submenu: [
+                {
+                    label: 'Command-P',
+                    accelerator: 'CmdOrCtrl+P',
+                    click: function() {
+                        Editor.mainWindow.focus();
+                        Editor.sendToMainWindow('cmdp:show');
+                    }
+                },
+                { type: 'separator' },
                 {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',

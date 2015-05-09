@@ -123,6 +123,8 @@
         }
         _dragGhost.style.cursor = cursor;
         document.body.appendChild(_dragGhost);
+
+        return _dragGhost;
     };
 
     EditorUI.removeDragGhost = function () {
@@ -159,6 +161,8 @@
                 onhit();
         });
         document.body.appendChild(_hitGhost);
+
+        return _hitGhost;
     };
 
     EditorUI.removeHitGhost = function () {
@@ -215,6 +219,8 @@
         });
 
         document.body.appendChild(_loadingMask);
+
+        return _loadingMask;
     };
 
     EditorUI.removeLoadingMask = function () {
@@ -312,6 +318,13 @@
     //     }
     //     return obj;
     // };
+
+    EditorUI.update = function ( element, name ) {
+        var prop = element[name];
+        if ( Array.isArray(prop) ) {
+            element.set( name, prop.slice(0) );
+        }
+    };
 
     return EditorUI;
 })();

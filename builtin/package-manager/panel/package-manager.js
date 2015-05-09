@@ -9,7 +9,7 @@ Editor.registerPanel( 'package-manager.panel', {
     },
 
     ready: function () {
-        Editor.sendRequestToCore( 'package:query', function ( results ) {
+        Editor.Package.query(function ( results ) {
             var packages = results.map( function (item) {
                 return { name: item.info.name, enabled: item.enabled, builtin: item.builtin };
             });
@@ -17,11 +17,15 @@ Editor.registerPanel( 'package-manager.panel', {
         }.bind(this));
     },
 
+    attached: function () {
+        EditorUI.update( this, 'packages' );
+    },
+
     _onReload: function ( event ) {
         event.stopPropagation();
 
         var item = this.$.list.itemForElement(event.target);
-        Editor.sendToCore( 'package:reload', item.name );
+        Editor.Package.reload(item.name);
     },
 });
 
