@@ -2,6 +2,7 @@ var Ipc = require('ipc');
 var BrowserWindow = require('browser-window');
 var Menu = require('menu');
 var Path = require('fire-path');
+var Fs = require('fire-fs');
 
 function getDefaultMainMenu () {
     return [
@@ -121,6 +122,21 @@ function getDefaultMainMenu () {
             label: 'Panel',
             id: 'panel',
             submenu: [
+            ]
+        },
+
+        // Layout
+        {
+            label: 'Layout',
+            id: 'layout',
+            submenu: [
+                {
+                    label: 'Debuggers',
+                    click: function () {
+                        var layoutInfo = JSON.parse(Fs.readFileSync(Editor.url('editor-framework://static/layout.json') ));
+                        Editor.sendToMainWindow( 'editor:reset-layout', layoutInfo);
+                    }
+                },
             ]
         },
 

@@ -1,0 +1,42 @@
+{
+    "docks": [
+        {
+            "docks": [
+                {
+                    "active": 0,
+                    "height": 519,
+                    "panels": [
+                        "ipc-debugger.panel"
+                    ],
+                    "type": "panel",
+                    "width": 507
+                },
+                {
+                    "active": 0,
+                    "height": 519,
+                    "panels": [
+                        "package-manager.panel"
+                    ],
+                    "type": "panel",
+                    "width": 557
+                }
+            ],
+            "height": 519,
+            "row": true,
+            "type": "dock",
+            "width": 1067
+        },
+        {
+            "active": 0,
+            "height": 348,
+            "panels": [
+                "console.panel"
+            ],
+            "type": "panel",
+            "width": 1067
+        }
+    ],
+    "no-collapse": true,
+    "row": false,
+    "type": "dock"
+}

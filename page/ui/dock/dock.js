@@ -30,10 +30,7 @@ EditorUI.Dock = Polymer({
                 var isRootDock = this.noCollapse && !thisDOM.parentNode['ui-dockable'];
                 if ( isRootDock ) {
                     EditorUI.DockUtils.root = this;
-                    this._finalizeSizeRecursively();
-                    this._finalizeMinMaxRecursively();
-                    this._finalizeStyleRecursively();
-                    this._notifyResize();
+                    EditorUI.DockUtils.reset();
                 }
             }
         }.bind(this));
@@ -73,7 +70,7 @@ EditorUI.Dock = Polymer({
     },
 
     // depth first calculate the width and height
-    _finalizeSizeRecursively: function () {
+    _finalizeSizeRecursively: function ( reset ) {
         var elements = [];
         var thisDOM = Polymer.dom(this);
 
@@ -81,13 +78,13 @@ EditorUI.Dock = Polymer({
         for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
             var el = thisDOM.children[i];
             if ( el['ui-dockable'] ) {
-                el._finalizeSizeRecursively();
+                el._finalizeSizeRecursively(reset);
                 elements.push(el);
             }
         }
 
         //
-        this.finalizeSize(elements);
+        this.finalizeSize(elements,reset);
     },
 
     // depth first calculate the min max width and height
@@ -211,10 +208,10 @@ EditorUI.Dock = Polymer({
 
             if ( this.row ) {
                 el.curWidth = sizeList[i];
-                el.curHeight = parentRect.height;
+                // el.curHeight = parentRect.height; // DISABLE, disable this can store the last used height
             }
             else {
-                el.curWidth = parentRect.width;
+                // el.curWidth = parentRect.width; // DISABLE, disable this can store the last used height
                 el.curHeight = sizeList[i];
             }
         }

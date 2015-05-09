@@ -17,11 +17,11 @@ EditorUI.resizable = (function () {
         'ui-resizable': true,
 
         properties: {
-            width: { type: String, value: 'auto', },
+            width: { type: String, value: '200', },
             minWidth: { type: String, value: 'auto', },
             maxWidth: { type: String, value: 'auto', },
 
-            height: { type: String, value: 'auto', },
+            height: { type: String, value: '200', },
             minHeight: { type: String, value: 'auto', },
             maxHeight: { type: String, value: 'auto', },
         },
@@ -114,7 +114,7 @@ EditorUI.resizable = (function () {
         },
 
         // init and finalize min,max depends on children
-        finalizeSize: function ( elements ) {
+        finalizeSize: function ( elements, reset ) {
             var autoWidth = false, autoHeight = false;
 
             // reset width, height
@@ -147,8 +147,20 @@ EditorUI.resizable = (function () {
                 }
             }
 
-            this.curWidth = this.computedWidth;
-            this.curHeight = this.computedHeight;
+            if ( reset ) {
+                this.curWidth = this.computedWidth;
+                this.curHeight = this.computedHeight;
+            }
+            // if reset is false, we just reset the part that
+            else {
+                var thisDOM = Polymer.dom(this);
+                if ( thisDOM.parentNode.row ) {
+                    this.curHeight = this.computedHeight;
+                }
+                else {
+                    this.curWidth = this.computedWidth;
+                }
+            }
         },
 
         // init and finalize min,max depends on children

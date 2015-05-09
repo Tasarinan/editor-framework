@@ -77,8 +77,10 @@ var Panel = {};
 Panel.import = function ( url, cb ) {
     var link = _url2link[url];
     if ( link ) {
-        link.remove();
-        delete _url2link[url];
+        HTMLImports.whenReady( function () {
+            cb();
+        });
+        return;
     }
 
     link = document.createElement('link');
