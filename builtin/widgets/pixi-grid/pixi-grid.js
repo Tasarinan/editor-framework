@@ -88,6 +88,17 @@ window['widgets.pixi-grid'] = Polymer({
         background.addChild(this.graphics);
     },
 
+    attached: function () {
+        this.async(function() {
+            this.lightDomReady();
+        });
+    },
+
+    lightDomReady: function() {
+        this.resize();
+        this.repaint();
+    },
+
     // default 0.5, 0.5
     setAnchor: function ( x, y ) {
         this.xAnchor = Math.clamp( x, -1, 1 );
