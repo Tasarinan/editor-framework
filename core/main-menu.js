@@ -142,6 +142,7 @@ function getDefaultMainMenu () {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
                     click: function() {
+                        Editor.clearLog();
                         BrowserWindow.getFocusedWindow().reload();
                     }
                 },
@@ -149,6 +150,7 @@ function getDefaultMainMenu () {
                     label: 'Reload Ignoring Cache',
                     accelerator: 'CmdOrCtrl+Shift+R',
                     click: function() {
+                        Editor.clearLog();
                         BrowserWindow.getFocusedWindow().reloadIgnoringCache();
                     }
                 },

@@ -25,17 +25,24 @@ EditorUI.dockable = (function () {
             var parentDOM = Polymer.dom(parentEL);
             var elements = [];
             var newDock, newDockDOM, newResizer, nextEL;
+            var newWidth, newHeight;
 
             if ( parentEL['ui-dockable'] ) {
                 // check if need to create new Dock element
                 if ( position === 'left' || position === 'right' ) {
                     if ( !parentEL.row ) {
                         needNewDock = true;
+
+                        newWidth = Math.max( 0, this.curWidth-element.curWidth );
+                        newHeight = this.curHeight;
                     }
                 }
                 else {
                     if ( parentEL.row ) {
                         needNewDock = true;
+
+                        newWidth = this.curWidth;
+                        newHeight = Math.max( 0, this.curHeight-element.curHeight );
                     }
                 }
 
@@ -103,17 +110,25 @@ EditorUI.dockable = (function () {
                 this.style.flex = '';
                 if ( this._applyFrameSize )
                     this._applyFrameSize();
+                this.curWidth = newWidth;
+                this.curHeight = newHeight;
             }
             // if this is root panel
             else {
                 if ( position === 'left' || position === 'right' ) {
                     if ( !this.row ) {
                         needNewDock = true;
+
+                        newWidth = Math.max( 0, this.curWidth-element.curWidth );
+                        newHeight = this.curHeight;
                     }
                 }
                 else {
                     if ( this.row ) {
                         needNewDock = true;
+
+                        newWidth = this.curWidth;
+                        newHeight = Math.max( 0, this.curHeight-element.curHeight );
                     }
                 }
 
@@ -146,6 +161,8 @@ EditorUI.dockable = (function () {
                     this.style.flex = '';
                     if ( this._applyFrameSize )
                         this._applyFrameSize();
+                    this.curWidth = newWidth;
+                    this.curHeight = newHeight;
 
                     //
                     if ( position === 'left' || position === 'top' ) {

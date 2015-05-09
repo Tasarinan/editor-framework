@@ -112,6 +112,10 @@ EditorUI.Dock = Polymer({
         var elements = [];
         var thisDOM = Polymer.dom(this);
 
+        // NOTE: finalizeStyle is breadth first calculation, because we need to make sure
+        //       parent style applied so that the children would not calculate wrong.
+        this.finalizeStyle();
+
         //
         for ( var i = 0; i < thisDOM.children.length; i += 2 ) {
             var el = thisDOM.children[i];
@@ -121,7 +125,6 @@ EditorUI.Dock = Polymer({
         }
 
         //
-        this.finalizeStyle();
         this.reflow();
     },
 
@@ -167,13 +170,14 @@ EditorUI.Dock = Polymer({
                     el.style.flex = "1 1 auto";
                 }
                 else {
-                    // if this is last el and we don't have auto-layout elements, give rest size to last el
-                    if ( i === (thisDOM.children.length-1) && !hasAutoLayout ) {
-                        el.style.flex = "1 1 auto";
-                    }
-                    else {
-                        el.style.flex = "0 0 " + size + "px";
-                    }
+                    // // if this is last el and we don't have auto-layout elements, give rest size to last el
+                    // if ( i === (thisDOM.children.length-1) && !hasAutoLayout ) {
+                    //     el.style.flex = "1 1 auto";
+                    // }
+                    // else {
+                    //     el.style.flex = "0 0 " + size + "px";
+                    // }
+                    el.style.flex = "0 0 " + size + "px";
                 }
             }
         }

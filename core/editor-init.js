@@ -51,6 +51,7 @@ Editor.failed = function () {
 
 Editor.info = function () {
     var text = Util.format.apply(Util, arguments);
+
     if ( _consoleConnected )
         _logs.push({ type: 'info', message: text });
 

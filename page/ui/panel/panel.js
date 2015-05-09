@@ -253,15 +253,15 @@ EditorUI.Panel = Polymer({
         return Polymer.dom(this.$.tabs).children.length;
     },
 
-    warn: function ( idxOrViewEL ) {
+    warn: function ( idxOrFrameEL ) {
         var tabs = this.$.tabs;
-        if ( typeof idxOrViewEL === 'number' ) {
-            tabs.warn(idxOrViewEL);
+        if ( typeof idxOrFrameEL === 'number' ) {
+            tabs.warn(idxOrFrameEL);
         }
         else {
             var thisDOM = Polymer.dom(this);
             for ( var i = 0; i < thisDOM.children.length; ++i ) {
-                if ( idxOrViewEL === thisDOM.children[i] ) {
+                if ( idxOrFrameEL === thisDOM.children[i] ) {
                     tabs.warn(i);
                     break;
                 }
@@ -269,15 +269,15 @@ EditorUI.Panel = Polymer({
         }
     },
 
-    select: function ( idxOrViewEL ) {
+    select: function ( idxOrFrameEL ) {
         var tabs = this.$.tabs;
-        if ( typeof idxOrViewEL === 'number' ) {
-            tabs.select(idxOrViewEL);
+        if ( typeof idxOrFrameEL === 'number' ) {
+            tabs.select(idxOrFrameEL);
         }
         else {
             var thisDOM = Polymer.dom(this);
             for ( var i = 0; i < thisDOM.children.length; ++i ) {
-                if ( idxOrViewEL === thisDOM.children[i] ) {
+                if ( idxOrFrameEL === thisDOM.children[i] ) {
                     tabs.select(i);
                     break;
                 }
