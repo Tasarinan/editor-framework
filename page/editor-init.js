@@ -166,6 +166,7 @@ var _layouting = false;
 Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
     _layouting = true;
 
+    Editor.Panel.closeAll();
     var importList = EditorUI.createLayout( anchorEL, layoutInfo );
     Async.each( importList, function ( item, done ) {
         Editor.Panel.load (item.panelID, function ( err, frameEL ) {
