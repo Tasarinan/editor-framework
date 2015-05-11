@@ -22,10 +22,6 @@ node_modules/
 bower_components/
 bin/
 ext/
-dist/
-compiler/
-apidocs/
-utils/api
 
 # webstorm
 .idea
@@ -34,5 +30,5 @@ utils/api
 *.log
 
 # test files
-test/.settings/
+demo/.settings/
 .settings/
