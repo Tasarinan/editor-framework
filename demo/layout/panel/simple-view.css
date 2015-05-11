@@ -1,0 +1,15 @@
+:host {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#text {
+    text-align: left;
+    margin: 10px;
+    font-size: 14px;
+    white-space: pre;
+}
+
+#text span {
+    color: #0a0;
+}

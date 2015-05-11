@@ -2,7 +2,7 @@
 
 [Documentation](https://github.com/fireball-x/editor-framework/tree/master/docs) |
 [Downloads](http://github.com/fireball-x/releases/) |
-[Install](https://github.com/fireball-x/editor-framework#install)
+[Install](https://github.com/fireball-x/editor-framework#install) |
 [Features](https://github.com/fireball-x/editor-framework#features)
 
 The `Editor Framework` lets you easily write professional IDE like desktop tools just in HTML5 and
@@ -48,17 +48,17 @@ sh demo.sh
    - Easily register shortcuts(hotkeys) for your panel
    - Save and load panels layout in json
    - Save and load panel profiles
- - Main Menu Extends
+ - Menu Extends
    - Dynamically add and remove menu item
    - Dynamically change menu item state ( enabled, checked, visible, ...)
    - Load user menu from packages
- - Quick Command
+ - Commands
    - Register and customize commands for your App
    - A powerful command window (CmdP) for searching and executing your commands
  - Profiles
    - Allow user register different type of profile in demand ( global, local, project, ... )
    - Load and save profiles through unified API
- - Log System
+ - Logs
    - Use Winston for low level logs
    - Log to file
    - A powerful console window for display and query your logs
@@ -67,7 +67,7 @@ sh demo.sh
    - User can register his own selection type
    - Automatically filter selections
  - Global Undo and Redo
- - Improve the native Dialog
+ - Enhance the native Dialog
    - Remember dialog last edit position
  - Enhance Ipc Programming Experience
    - Lots of Ipc APIs for easily control ipc send and recv

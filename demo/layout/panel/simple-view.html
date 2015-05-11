@@ -1,0 +1,94 @@
+<style>
+#text span {
+    color: #0a0;
+}
+</style>
+
+<dom-module id="test-hierarchy">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<dom-module id="test-assets">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<dom-module id="test-inspector">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<dom-module id="test-game">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<dom-module id="test-scene">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<dom-module id="test-console">
+    <link rel="import" type="css" href="simple-view.css">
+    <template>
+        <div id="text"></div>
+    </template>
+</dom-module>
+
+<script>
+Editor.easyRegister = function ( panelID, elementID ) {
+    Editor.registerPanel( panelID, {
+        is: elementID,
+
+        listeners: {
+            'resize': '_onResize'
+        },
+
+        _onResize: function () {
+            var thisDOM = Polymer.dom(this);
+            var panel = thisDOM.parentNode;
+            var rect = panel.getBoundingClientRect();
+
+            var html = "";
+            html = 'size: <span>' + rect.width.toFixed(2) + '</span>';
+            html += ', <span>' + rect.height.toFixed(2) + '</span>\n';
+            html += '\npanel: \n';
+            html += '  cur:  <span>' + panel.curWidth + '</span>';
+            html += ', <span>' + panel.curHeight + '</span>\n';
+            html += '  comp:  <span>' + panel.computedWidth + '</span>';
+            html += ', <span>' + panel.computedHeight + '</span>\n';
+            html += '  min:  <span>' + panel.computedMinWidth + '</span>';
+            html += ', <span>' + panel.computedMinHeight + '</span>\n';
+            html += '  max:  <span>' + panel.computedMaxWidth + '</span>';
+            html += ', <span>' + panel.computedMaxHeight + '</span>\n';
+            html += '\nview: \n';
+            html += '  size:  <span>' + this.getAttribute('width') + '</span>';
+            html += ', <span>' + this.getAttribute('height') + '</span>\n';
+            html += '  min:  <span>' + this.getAttribute('min-width') + '</span>';
+            html += ', <span>' + this.getAttribute('min-height') + '</span>\n';
+            html += '  max:  <span>' + this.getAttribute('max-width') + '</span>';
+            html += ', <span>' + this.getAttribute('max-height') + '</span>\n';
+
+            this.$.text.innerHTML = html;
+        },
+    });
+};
+
+Editor.easyRegister( 'test-layout.hierarchy', 'test-hierarchy' );
+Editor.easyRegister( 'test-layout.assets', 'test-assets' );
+Editor.easyRegister( 'test-layout.inspector', 'test-inspector' );
+Editor.easyRegister( 'test-layout.game', 'test-game' );
+Editor.easyRegister( 'test-layout.scene', 'test-scene' );
+Editor.easyRegister( 'test-layout.console', 'test-console' );
+</script>
