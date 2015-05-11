@@ -1,7 +1,7 @@
 ## Define Your Application
 
 To run your app with editor-framework, you should download and put `editor-framework` under your app
-folder. You also need to create a `package.json` file, and set its main to your app.js, like this:
+folder. You also need to create a `package.json` file, and set its main to your app.js. like this:
 
 ```
 your-app-path/
@@ -85,3 +85,5 @@ global.__app = {
 // must have, important
 require('./editor-framework/init');
 ```
+
+An example repo also available here: https://github.com/fireball-x/editor-framework-app
