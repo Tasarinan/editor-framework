@@ -50,7 +50,7 @@ sh demo.sh
    - Save and load panel profiles
  - Menu Extends
    - Dynamically add and remove menu item
-   - Dynamically change menu item state ( enabled, checked, visible, ...)
+   - Dynamically change menu item state ( enabled, checked, visible, ... )
    - Load user menu from packages
  - Commands
    - Register and customize commands for your App
