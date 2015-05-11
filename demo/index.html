@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Main Window</title>
+    <style>
+      #mainDock {
+        position: relative;
+      }
+      h2 {
+          margin: auto;
+      }
+      h2 span {
+          color: #090;
+      }
+    </style>
+    <script src="app://bower_components/pace/pace.js"></script>
+    <link href="app://bower_components/pace/themes/red/pace-theme-center-simple.css" rel="stylesheet">
+
+    <script type="text/javascript" src="editor-framework://page/page-init.js"></script>
+    <script type="text/javascript" src="editor-framework://page/editor-init.js"></script>
+    <link rel="import" href="editor-framework://page/ui/ui.html">
+  </head>
+
+  <body class="layout vertical">
+    <h2>Run demos from <span>Main Menu/Demos</span></h2>
+    <div id="mainDock" class="flex-1"></div>
+    <script>
+        Pace.once( 'hide', function () {
+            EditorUI.removeLoadingMask();
+        });
+
+        EditorUI.addLoadingMask({
+            background: '#333',
+        });
+
+        var mainDock = document.getElementById('mainDock');
+        Editor.loadLayout( mainDock, function () {
+        });
+    </script>
+  </body>
+</html>

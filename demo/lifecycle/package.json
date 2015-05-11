@@ -1,0 +1,27 @@
+{
+  "name": "lifecycle",
+  "version": "0.0.1",
+  "description": "Test Lifecycle",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Demos/Test Lifecycle": {
+      "message": "lifecycle:open"
+    }
+  },
+  "panels": {
+    "panel": {
+      "frame": "panel/lifecycle.html",
+      "type": "dockable",
+      "title": "Lifecycle",
+      "width": 800,
+      "height": 600,
+      "messages": [
+      ],
+      "profiles": {
+        "local": {
+        }
+      }
+    }
+  }
+}

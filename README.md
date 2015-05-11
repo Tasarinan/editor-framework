@@ -2,29 +2,45 @@
 
 [Documentation](https://github.com/fireball-x/editor-framework/tree/master/docs) |
 [Downloads](http://github.com/fireball-x/releases/) |
+[Install](https://github.com/fireball-x/editor-framework#install)
+[Features](https://github.com/fireball-x/editor-framework#features)
 
-The `Editor Framework` lets you easily write professional desktop IDE like tools just in HTML5 and
+The `Editor Framework` lets you easily write professional IDE like desktop tools just in HTML5 and
 io.js.
 
 The Framework is based on top of Electron and Polymer. It is heavily designed with the Electron's
 main and renderer process architecture. To make multiple window communicate easily, `Editor Framework`
-extends the Ipc API provided from Electron, make it easily to send and recieve callback between main
-and renderer process, renderer and renderer process.
+extends the Ipc API provided from Electron, make it easily to send and recieve callback amongs main
+and renderers process.
 
-`Editor Framework` is designed for fully extends, in the core-level ( main process ), we doing this
+It is designed for fully extends. In the core-level ( main process ), we doing this
 by introduce a package management module and several register API. User can load or unload packages
-lively without close or restart the app.
+lively without close or restart the app. In the page-level ( renderer process ), we use HTML5
+Web-Component standards and includes the Polymer solution by default. User can extends the
+widgets and panels, then refresh the page apply your changes.
 
-In the page-level ( renderer process ), we use HTML5 Web-Component standards and includes the Polymer
-solution by default. User can extends the interface and panels and only need to refresh the page to
-make it work.
+## Install
+
+```bash
+# Install npm packages
+npm install .
+
+# Install bower packages
+bower install .
+
+# Install electron
+gulp update-electron
+
+# run the demo app
+sh demo.sh
+```
 
 ## Features
 
  - Package Management
    - Dynamically load and unload packages
    - Watch package changes and reload or notify changes immediately
-   - A package management panel to let you operate your packages
+   - Manage your packages in package manager Window
  - Panel Management
    - Freely docking panel in multiple window
    - Dynamically load user define panels from package
@@ -45,7 +61,7 @@ make it work.
  - Log System
    - Use Winston for low level logs
    - Log to file
-   - A powerful console panel for display and query your logs
+   - A powerful console window for display and query your logs
  - Global Selection
    - Selection cached and synced amongs windows
    - User can register his own selection type
@@ -59,19 +75,3 @@ make it work.
    - Can sending ipc message to specific window
    - Add ipc callback, which can wait for a callback message
    - A powerfule ipc-debugger to help you writing better ipc programmes
-
-## Install
-
-```bash
-# Install npm packages
-npm install .
-
-# Install bower packages
-bower install .
-
-# Install electron
-gulp update-electron
-
-# run the demo app
-sh app.sh
-```

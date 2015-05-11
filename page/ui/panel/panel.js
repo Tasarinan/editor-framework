@@ -309,7 +309,9 @@ EditorUI.Panel = Polymer({
 
         //
         if ( insertBeforeTabEL ) {
-            thisDOM.insertBefore(frameEL, insertBeforeTabEL.frameEL);
+            if ( frameEL !== insertBeforeTabEL.frameEL ) {
+                thisDOM.insertBefore(frameEL, insertBeforeTabEL.frameEL);
+            }
         }
         else {
             thisDOM.appendChild(frameEL);

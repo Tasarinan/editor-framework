@@ -1,0 +1,36 @@
+<link rel="import" href="simple-life.html">
+
+<dom-module id="test-lifecycle">
+    <style>
+        :host {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            flex-direction: column;
+        }
+    </style>
+
+    <template>
+        <simple-life name="a" class="flex-1">
+            <simple-life name="a.b" class="fit">
+                <simple-life name="a.b.c-01" class="flex-1">
+                    <simple-life name="a.b.c-01.d" class="fit">
+                        Hello World 001!
+                    </simple-life>
+                </simple-life>
+
+                <simple-life name="a.b.c-02" class="flex-1">
+                    <simple-life name="a.b.c-02.d" class="fit">
+                        Hello World 002!
+                    </simple-life>
+                </simple-life>
+            </simple-life>
+        </simple-life>
+    </template>
+</dom-module>
+
+<script>
+Editor.registerPanel( 'lifecycle.panel', {
+    is: 'test-lifecycle',
+});
+</script>

@@ -40,5 +40,5 @@
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.25.3",
-  "main": "app.js"
+  "main": "demo.js"
 }

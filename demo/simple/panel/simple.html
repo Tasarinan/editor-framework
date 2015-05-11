@@ -1,0 +1,20 @@
+<dom-module id="simple-panel">
+    <style>
+        :host {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            flex-direction: column;
+        }
+    </style>
+
+    <template>
+        This is a simple panel
+    </template>
+</dom-module>
+
+<script>
+Editor.registerPanel( 'simple.panel', {
+    is: 'simple-panel',
+});
+</script>
