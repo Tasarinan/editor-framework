@@ -420,7 +420,7 @@ window['widgets.pixi-grid'] = Polymer({
                     else {
                         labelEL.innerText = numeral(ticks[j]).format(fmt);
                     }
-                    labelEL.style.left = screen_x + 'px';
+                    labelEL.style.left = _snapPixel(screen_x) + 'px';
                     labelEL.style.bottom = '0px';
                     labelEL.style.right = '';
                     labelEL.style.top = '';
@@ -447,7 +447,7 @@ window['widgets.pixi-grid'] = Polymer({
                         labelEL.innerText = numeral(ticks[j]).format(fmt);
                     }
                     labelEL.style.left = '0px';
-                    labelEL.style.top = screen_y + 'px';
+                    labelEL.style.top = _snapPixel(screen_y) + 'px';
                     labelEL.style.bottom = '';
                     labelEL.style.right = '';
                     Polymer.dom(this.$.vlabels).appendChild(labelEL);

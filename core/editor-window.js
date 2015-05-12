@@ -45,7 +45,24 @@ function EditorWindow ( name, options ) {
     }
 
     // init events
+    this.nativeWin.on ( 'focus', function ( event ) {
+        if ( !Editor.focused ) {
+            Editor.focused = true;
+            // Editor.emit('focus'); // TODO:
+        }
+    }.bind(this) );
+
     this.nativeWin.on ( 'blur', function () {
+        // BUG: this is an atom-shell bug,
+        //      it can not get focused window at the same frame
+        // https://github.com/atom/atom-shell/issues/984
+        setImmediate( function () {
+            if ( !BrowserWindow.getFocusedWindow() ) {
+                Editor.focused = false;
+                // Editor.emit('blur'); // TODO:
+            }
+        }.bind(this));
+
         if ( this.hideWhenBlur ) {
             // this.nativeWin.close();
             this.nativeWin.hide();
