@@ -193,7 +193,7 @@ EditorUI.Dock = Polymer({
             el = thisDOM.children[i];
 
             rect = el.getBoundingClientRect();
-            var size = Math.floor(this.row ? rect.width : rect.height);
+            var size = Math.round(this.row ? rect.width : rect.height);
             sizeList.push(size);
             totalSize += size;
         }
