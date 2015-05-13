@@ -79,6 +79,15 @@ function EditorWindow ( name, options ) {
 
     this.nativeWin.on ( 'closed', function () {
         Editor.Panel._onWindowClosed(this);
+
+        // if we still have sendRequestToPage callbacks,
+        // just call them directly to prevent request endless waiting
+        for ( var sessionId in this._replyCallbacks ) {
+            var cb = this._replyCallbacks[sessionId];
+            if (cb) cb();
+            delete this._replyCallbacks[sessionId];
+        }
+
         if ( this.isMainWindow ) {
             EditorWindow.commitWindowStates();
             EditorWindow.saveWindowStates();
