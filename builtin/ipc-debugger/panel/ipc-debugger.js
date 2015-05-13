@@ -11,6 +11,7 @@ Editor.registerPanel( 'ipc-debugger.panel', {
     ready: function () {
         this.inspects = {};
         this.refresh();
+
     },
 
     attached: function () {
@@ -88,7 +89,6 @@ Editor.registerPanel( 'ipc-debugger.panel', {
             }.bind(this));
 
             this.set( 'ipcInfos', ipcInfos );
-
         }.bind(this));
     },
 });

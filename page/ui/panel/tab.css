@@ -60,7 +60,7 @@
     background-color: #444;
 }
 
-:host([warn]) .border, :host(.active[warn]) .border {
+:host([out-of-date]) .border, :host(.active[out-of-date]) .border {
     background-color: #700;
 }
 

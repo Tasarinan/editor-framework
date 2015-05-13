@@ -33,7 +33,9 @@ module.exports = {
 
         Async.each( windows, function ( win, done ) {
             win.sendRequestToPage( 'ipc-debugger:query', function ( infos ) {
-                infoList = infoList.concat(infos);
+                if ( infos ) {
+                    infoList = infoList.concat(infos);
+                }
                 done();
             });
         }, function ( err ) {

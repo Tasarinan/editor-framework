@@ -133,7 +133,7 @@ EditorUI.Tabs = Polymer({
         }
     },
 
-    warn: function ( tab ) {
+    outOfDate: function ( tab ) {
         var thisDOM = Polymer.dom(this);
         var tabEL = null;
 
@@ -148,7 +148,7 @@ EditorUI.Tabs = Polymer({
 
         //
         if ( tabEL !== null ) {
-            tabEL.warn = true;
+            tabEL.outOfDate = true;
         }
     },
 

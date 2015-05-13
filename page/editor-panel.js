@@ -408,7 +408,7 @@ Ipc.on('panel:dirty', function ( panelID ) {
     if ( frameEL ) {
         var parentEL = Polymer.dom(frameEL).parentNode;
         if ( parentEL instanceof EditorUI.Panel ) {
-            parentEL.warn(frameEL);
+            parentEL.outOfDate(frameEL);
         }
     }
 

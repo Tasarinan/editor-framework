@@ -160,7 +160,7 @@ EditorUI.DockUtils = (function () {
             // NOTE: do not use panelEL focus, the activeTab is still not assigned
             frameEL.focus();
             if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
-                targetPanelEL.warn(frameEL);
+                targetPanelEL.outOfDate(frameEL);
             }
         }
         else {
@@ -188,7 +188,7 @@ EditorUI.DockUtils = (function () {
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
                     frameEL.focus();
                     if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
-                        targetPanelEL.warn(frameEL);
+                        targetPanelEL.outOfDate(frameEL);
                     }
                 });
             });
@@ -480,7 +480,7 @@ EditorUI.DockUtils = (function () {
                     // NOTE: do not use panelEL focus, the activeTab is still not assigned
                     frameEL.focus();
                     if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
-                        newPanel.warn(frameEL);
+                        newPanel.outOfDate(frameEL);
                     }
                 });
             });
@@ -588,7 +588,7 @@ EditorUI.DockUtils = (function () {
         // NOTE: do not use panelEL focus, the activeTab is still not assigned
         frameEL.focus();
         if ( Editor.Panel.isDirty(frameEL.getAttribute('id')) ) {
-            newPanel.warn(frameEL);
+            newPanel.outOfDate(frameEL);
         }
     });
 
