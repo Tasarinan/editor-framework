@@ -219,9 +219,39 @@ Panel.close = function ( panelID ) {
     Editor.sendToCore('panel:close', panelID);
 };
 
-Panel.closeAll = function () {
+Panel.closeAll = function ( cb ) {
+    // if we have root, clear all children in it
+    var rootEL = EditorUI.DockUtils.root;
+    if ( rootEL ) {
+        rootEL.remove();
+        EditorUI.DockUtils.root = null;
+    }
+
+    var panelIDs = [];
     for ( var id in _idToPagePanelInfo ) {
-        Panel.close(id);
+        // remove pagePanelInfo
+        var pagePanelInfo = _idToPagePanelInfo[id];
+        if ( pagePanelInfo) {
+            pagePanelInfo.ipcListener.clear();
+            delete _idToPagePanelInfo[id];
+        }
+
+        panelIDs.push(id);
+    }
+
+    var finishCount = panelIDs.length;
+    if ( panelIDs.length === 0 ) {
+        if ( cb ) cb();
+    }
+    else {
+        var checkIfDone = function () {
+            --finishCount;
+            if ( finishCount === 0 && cb ) cb();
+        };
+
+        for ( var i = 0; i < panelIDs.length; ++i ) {
+            Editor.sendRequestToCore('panel:wait-for-close', panelIDs[i], checkIfDone );
+        }
     }
 };
 

@@ -247,6 +247,11 @@ Ipc.on('panel:close', function ( panelID ) {
     Panel.close( panelID );
 });
 
+Ipc.on('panel:wait-for-close', function ( reply, panelID ) {
+    Panel.close( panelID );
+    reply();
+});
+
 //
 Ipc.on('panel:save-profile', function ( panelID, type, panelProfile ) {
     var profile = Editor.loadProfile( panelID, type );

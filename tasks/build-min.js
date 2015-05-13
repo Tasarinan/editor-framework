@@ -9,7 +9,7 @@ var Path = require('path');
 
 // special tasks
 var browserify = require('browserify');
-var vulcanize = require('gulp-vulcanize');
+// var vulcanize = require('gulp-vulcanize');
 
 // ==============================
 // paths

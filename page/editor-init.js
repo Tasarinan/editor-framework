@@ -166,30 +166,31 @@ var _layouting = false;
 Editor.resetLayout = function ( anchorEL, layoutInfo, cb ) {
     _layouting = true;
 
-    Editor.Panel.closeAll();
-    var importList = EditorUI.createLayout( anchorEL, layoutInfo );
-    Async.each( importList, function ( item, done ) {
-        Editor.Panel.load (item.panelID, function ( err, frameEL ) {
-            if ( err ) {
+    Editor.Panel.closeAll(function () {
+        var importList = EditorUI.createLayout( anchorEL, layoutInfo );
+        Async.each( importList, function ( item, done ) {
+            Editor.Panel.load (item.panelID, function ( err, frameEL ) {
+                if ( err ) {
+                    done();
+                    return;
+                }
+
+                var dockAt = item.dockEL;
+                dockAt.add(frameEL);
+                if ( item.active ) {
+                    dockAt.select(frameEL);
+                }
                 done();
-                return;
-            }
+            });
+        }, function ( err ) {
+            _layouting = false;
 
-            var dockAt = item.dockEL;
-            dockAt.add(frameEL);
-            if ( item.active ) {
-                dockAt.select(frameEL);
-            }
-            done();
+            // close error panels
+            EditorUI.DockUtils.flushWithCollapse();
+            Editor.saveLayout();
+            if ( cb ) cb ();
         });
-    }, function ( err ) {
-        _layouting = false;
-
-        // close error panels
-        EditorUI.DockUtils.flushWithCollapse();
-        Editor.saveLayout();
-        if ( cb ) cb ();
-    } );
+    });
 };
 
 Editor.saveLayout = function () {
