@@ -258,7 +258,7 @@ Editor.watchPackages = function () {
             if ( Path.contains(panelPath, path) ) {
                 for ( var panelName in packageInfo.panels ) {
                     var panelID = packageInfo.name + '.' + panelName;
-                    Editor.sendToWindows( 'panel:dirty', panelID );
+                    Editor.sendToWindows( 'panel:out-of-date', panelID );
                 }
             }
             else {

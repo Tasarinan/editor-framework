@@ -371,7 +371,7 @@ Panel.dockAt = function ( position, panelEL ) {
 };
 
 Panel.isDirty = function ( panelID ) {
-    return _dirtyPanels.indexOf(panelID) !== -1;
+    return _outOfDatePanels.indexOf(panelID) !== -1;
 };
 
 // ==========================
@@ -402,8 +402,8 @@ Ipc.on('panel:undock', function ( panelID ) {
     });
 });
 
-var _dirtyPanels = [];
-Ipc.on('panel:dirty', function ( panelID ) {
+var _outOfDatePanels = [];
+Ipc.on('panel:out-of-date', function ( panelID ) {
     var frameEL = Editor.Panel.find(panelID);
     if ( frameEL ) {
         var parentEL = Polymer.dom(frameEL).parentNode;
@@ -412,8 +412,8 @@ Ipc.on('panel:dirty', function ( panelID ) {
         }
     }
 
-    if ( _dirtyPanels.indexOf(panelID) === -1 ) {
-        _dirtyPanels.push(panelID);
+    if ( _outOfDatePanels.indexOf(panelID) === -1 ) {
+        _outOfDatePanels.push(panelID);
     }
 });
 
