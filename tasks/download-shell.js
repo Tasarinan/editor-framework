@@ -6,6 +6,7 @@
 var gulp = require('gulp');
 var updateFireShell = require('gulp-download-fire-shell');
 var shell = require('gulp-shell');
+var mkdirp = require('mkdirp').sync;
 
 var Path = require('path');
 var Fs = require('fs');
@@ -33,6 +34,7 @@ if ( electronVer === null || electronVer === undefined ) {
 /////////////////////////////////////////////////////
 
 gulp.task('update-electron', function(cb) {
+    mkdirp('bin');
     updateFireShell.downloadAtomShell({
         version: electronVer,
         outputDir: 'bin/electron'
@@ -40,6 +42,7 @@ gulp.task('update-electron', function(cb) {
 });
 
 gulp.task('update-fire-shell', function(cb) {
+    mkdirp('bin');
     updateFireShell.downloadFireShell({
         version: fireshellVer,
         outputDir: 'bin/fire-shell'
@@ -47,6 +50,7 @@ gulp.task('update-fire-shell', function(cb) {
 });
 
 gulp.task('update-fire-shell-china', function(cb) {
+    mkdirp('bin');
     updateFireShell.downloadFireShell({
         version: fireshellVer,
         outputDir: 'bin/fire-shell',

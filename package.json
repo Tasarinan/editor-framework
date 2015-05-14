@@ -13,17 +13,17 @@
     "url": "https://github.com/fireball-x/editor-framework/issues"
   },
   "dependencies": {
-    "fire-fs": "0.1.8",
-    "fire-url": "0.1.6",
-    "fire-path": "0.1.6",
-    "browserify": "10.1.1",
-    "commander": "2.7.1",
-    "chalk": "1.0.0",
-    "winston": "1.0.0",
-    "globby": "2.0.0",
     "async": "0.9.0",
+    "browserify": "10.1.1",
+    "chalk": "1.0.0",
+    "chokidar": "1.0.1",
+    "commander": "2.7.1",
+    "fire-fs": "0.1.8",
+    "fire-path": "0.1.6",
+    "fire-url": "0.1.6",
+    "globby": "2.0.0",
     "semver": "4.3.3",
-    "chokidar": "1.0.1"
+    "winston": "1.0.0"
   },
   "devDependencies": {
     "gulp": "",
@@ -35,6 +35,7 @@
     "gulp-jshint": "1.10.0",
     "jshint-stylish": "1.0.2",
     "vulcanize": "1.4.2",
+    "mkdirp": "^0.5.1",
     "hydrolysis": "1.4.0",
     "gulp-shell": "0.2.11",
     "gulp-download-fire-shell": "0.1.2"
