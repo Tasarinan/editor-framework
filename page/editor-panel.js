@@ -219,9 +219,39 @@ Panel.close = function ( panelID ) {
     Editor.sendToCore('panel:close', panelID);
 };
 
-Panel.closeAll = function () {
+Panel.closeAll = function ( cb ) {
+    // if we have root, clear all children in it
+    var rootEL = EditorUI.DockUtils.root;
+    if ( rootEL ) {
+        rootEL.remove();
+        EditorUI.DockUtils.root = null;
+    }
+
+    var panelIDs = [];
     for ( var id in _idToPagePanelInfo ) {
-        Panel.close(id);
+        // remove pagePanelInfo
+        var pagePanelInfo = _idToPagePanelInfo[id];
+        if ( pagePanelInfo) {
+            pagePanelInfo.ipcListener.clear();
+            delete _idToPagePanelInfo[id];
+        }
+
+        panelIDs.push(id);
+    }
+
+    var finishCount = panelIDs.length;
+    if ( panelIDs.length === 0 ) {
+        if ( cb ) cb();
+    }
+    else {
+        var checkIfDone = function () {
+            --finishCount;
+            if ( finishCount === 0 && cb ) cb();
+        };
+
+        for ( var i = 0; i < panelIDs.length; ++i ) {
+            Editor.sendRequestToCore('panel:wait-for-close', panelIDs[i], checkIfDone );
+        }
     }
 };
 
@@ -341,7 +371,7 @@ Panel.dockAt = function ( position, panelEL ) {
 };
 
 Panel.isDirty = function ( panelID ) {
-    return _dirtyPanels.indexOf(panelID) !== -1;
+    return _outOfDatePanels.indexOf(panelID) !== -1;
 };
 
 // ==========================
@@ -372,18 +402,18 @@ Ipc.on('panel:undock', function ( panelID ) {
     });
 });
 
-var _dirtyPanels = [];
-Ipc.on('panel:dirty', function ( panelID ) {
+var _outOfDatePanels = [];
+Ipc.on('panel:out-of-date', function ( panelID ) {
     var frameEL = Editor.Panel.find(panelID);
     if ( frameEL ) {
         var parentEL = Polymer.dom(frameEL).parentNode;
         if ( parentEL instanceof EditorUI.Panel ) {
-            parentEL.warn(frameEL);
+            parentEL.outOfDate(frameEL);
         }
     }
 
-    if ( _dirtyPanels.indexOf(panelID) === -1 ) {
-        _dirtyPanels.push(panelID);
+    if ( _outOfDatePanels.indexOf(panelID) === -1 ) {
+        _outOfDatePanels.push(panelID);
     }
 });
 

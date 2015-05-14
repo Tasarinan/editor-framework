@@ -137,6 +137,13 @@ function getDefaultMainMenu () {
                         Editor.sendToMainWindow( 'editor:reset-layout', layoutInfo);
                     }
                 },
+                { type: 'separator' },
+                {
+                    label: 'Empty',
+                    click: function () {
+                        Editor.sendToMainWindow( 'editor:reset-layout', null);
+                    }
+                },
             ]
         },
 

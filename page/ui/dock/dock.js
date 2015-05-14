@@ -22,18 +22,11 @@ EditorUI.Dock = Polymer({
     ready: function () {
         this._initResizable();
         this._initResizers();
+    },
 
-        // this will make sure all dock children is ready
-        window.requestAnimationFrame( function () {
-            if ( !EditorUI.DockUtils.root ) {
-                var thisDOM = Polymer.dom(this);
-                var isRootDock = this.noCollapse && !thisDOM.parentNode['ui-dockable'];
-                if ( isRootDock ) {
-                    EditorUI.DockUtils.root = this;
-                    EditorUI.DockUtils.reset();
-                }
-            }
-        }.bind(this));
+    factoryImpl: function ( row, noCollapse ) {
+        this.row = row || false;
+        this.noCollapse = noCollapse || false;
     },
 
     _initResizers: function () {

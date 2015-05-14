@@ -9,7 +9,8 @@ var Path = require('path');
 
 // special tasks
 var browserify = require('browserify');
-var vulcanize = require('gulp-vulcanize');
+var vulcanize = require('vulcanize');
+var hydrolysis = require('hydrolysis');
 
 // ==============================
 // paths
@@ -55,34 +56,33 @@ gulp.task('js-min', function () {
 });
 
 // html
-gulp.task('html-min', function () {
+gulp.task('html-min', function ( done ) {
     // DISABLE
-    // vulcanize.setOptions({
-    //     abspath: Path.resolve('./bin/dev/page/ui/'),
-    //     excludes: [
-    //     ],
-    //     stripExcludes: true,
-    //     inlineScripts: true
-    // });
-    // vulcanize.process('ui.html', function ( err, inlinedHtml ) {
-    //     console.log(err);
-    //     console.log(inlinedHtml);
-    //     Fs.writeFileSync( Path.join(dest,'page/ui/ui.html'), inlinedHtml, 'utf8');
-    //     done();
-    // });
+    vulcanize.setOptions({
+        abspath: Path.resolve('./bin/dev/page/ui/'),
+        excludes: [
+        ],
+        stripExcludes: true,
+        inlineScripts: true,
+        inlineCss: false,
+        implicitStrip: true,
+        stripComments: false,
+        loader: hydrolysis.FileLoader,
+    });
+    vulcanize.process('ui.html', function ( err, inlinedHtml ) {
+        console.log(err);
+        console.log(inlinedHtml);
+        Fs.writeFileSync( Path.join(dest,'page/ui/ui.html'), inlinedHtml, 'utf8');
+        done();
+    });
 
-    return gulp.src('bin/dev/page/ui/ui.html')
-        .pipe(vulcanize({
-            dest: 'bin/min/page/ui/',
-            inline: true,
-            strip: true
-        }))
-        // .pipe(htmlmin({
-        //     removeComments: true,
-        //     collapseWhitespace: true
-        // }))
-        .pipe(gulp.dest('bin/min/page/ui/'))
-        ;
+    // return gulp.src('bin/dev/page/ui/ui.html')
+    //     .pipe(htmlmin({
+    //         removeComments: true,
+    //         collapseWhitespace: true
+    //     }))
+    //     .pipe(gulp.dest('bin/min/page/ui/'))
+    //     ;
 });
 
 // clean-min

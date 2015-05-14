@@ -14,7 +14,7 @@ EditorUI.Tab = Polymer({
     },
 
     properties: {
-        warn: {
+        outOfDate: {
             type: Boolean,
             value: false,
             reflectToAttribute: true,

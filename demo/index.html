@@ -22,7 +22,7 @@
 
   <body class="layout vertical">
     <h2>Run demos from <span>Main Menu/Demos</span></h2>
-    <div id="mainDock" class="flex-1"></div>
+    <main-dock class="flex-1"></main-dock>
     <script>
         Pace.once( 'hide', function () {
             EditorUI.removeLoadingMask();
@@ -30,10 +30,6 @@
 
         EditorUI.addLoadingMask({
             background: '#333',
-        });
-
-        var mainDock = document.getElementById('mainDock');
-        Editor.loadLayout( mainDock, function () {
         });
     </script>
   </body>

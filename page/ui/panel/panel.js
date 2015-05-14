@@ -259,16 +259,16 @@ EditorUI.Panel = Polymer({
         return Polymer.dom(this.$.tabs).children.length;
     },
 
-    warn: function ( idxOrFrameEL ) {
+    outOfDate: function ( idxOrFrameEL ) {
         var tabs = this.$.tabs;
         if ( typeof idxOrFrameEL === 'number' ) {
-            tabs.warn(idxOrFrameEL);
+            tabs.outOfDate(idxOrFrameEL);
         }
         else {
             var thisDOM = Polymer.dom(this);
             for ( var i = 0; i < thisDOM.children.length; ++i ) {
                 if ( idxOrFrameEL === thisDOM.children[i] ) {
-                    tabs.warn(i);
+                    tabs.outOfDate(i);
                     break;
                 }
             }

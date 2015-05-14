@@ -11,6 +11,7 @@ Editor.registerPanel( 'ipc-debugger.panel', {
     ready: function () {
         this.inspects = {};
         this.refresh();
+
     },
 
     attached: function () {
@@ -80,10 +81,6 @@ Editor.registerPanel( 'ipc-debugger.panel', {
                 return result;
             });
 
-            // NOTE: the sort will not repaint in x-repeat,
-            // TODO: keep watching on Polymer updates
-            // this.ipcInfos = this.ipcInfos.slice();
-
             ipcInfos = ipcInfos.map( function ( item ) {
                 if ( item.level === 'page' ) {
                     item.inspect = this.inspects[item.name] !== undefined;
@@ -92,7 +89,6 @@ Editor.registerPanel( 'ipc-debugger.panel', {
             }.bind(this));
 
             this.set( 'ipcInfos', ipcInfos );
-
         }.bind(this));
     },
 });
