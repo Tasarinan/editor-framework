@@ -1,4 +1,4 @@
-<dom-module id="selection-panel2">
+<dom-module id="selection-demo-panel2">
     <style>
         :host {
             display: flex;
@@ -30,9 +30,8 @@
 </dom-module>
 
 <script>
-Editor.Selection.register('normal');
-Editor.registerPanel( 'selection.panel2', {
-    is: 'selection-panel2',
+Editor.registerPanel( 'selection-demo.panel2', {
+    is: 'selection-demo-panel2',
 
     ready: function () {
         this.list = [
@@ -59,10 +58,12 @@ Editor.registerPanel( 'selection.panel2', {
         Editor.Selection.select( 'normal', model.item.name, true, true );
     },
 
-    'selection:selected': function ( type, ids ) {
+    'selection:changed': function ( type ) {
+        var selection = Editor.Selection.selecting(type);
+
         for ( var i = 0; i < this.list.length; ++i ) {
             var item = this.list[i];
-            this.set('list.' + i + '.selected', ids.indexOf(item.name) !== -1 );
+            this.set('list.' + i + '.selected', selection.indexOf(item.name) !== -1 );
         }
     },
 });

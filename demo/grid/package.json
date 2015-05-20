@@ -1,21 +1,23 @@
 {
-  "name": "simple-demo",
+  "name": "grid-demo",
   "version": "0.0.1",
-  "description": "Simple Demo",
+  "description": "Grid Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
-    "Demos/Simple": {
-      "message": "simple-demo:open"
+    "Demos/Grid": {
+      "message": "grid-demo:open"
     }
   },
   "panels": {
     "panel": {
       "frame": "panel/panel.html",
       "type": "dockable",
-      "title": "Simple",
+      "title": "Grid",
       "width": 800,
       "height": 600,
+      "min-width": 400,
+      "min-height": 300,
       "messages": [
       ]
     }

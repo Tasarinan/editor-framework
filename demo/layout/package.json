@@ -1,50 +1,50 @@
 {
-  "name": "test-layout",
+  "name": "layout-demo",
   "version": "0.0.1",
-  "description": "Layout",
+  "description": "Layout Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
-    "Demos/Test Layout": {
-      "message": "layout:reset"
+    "Demos/Layout": {
+      "message": "layout-demo:reset"
     }
   },
   "panels": {
     "hierarchy": {
       "frame": "panel/simple-view.html",
-      "title": "Test Hierarchy",
+      "title": "Hierarchy",
       "width": 200,
       "height": "auto",
       "min-width": 200
     },
     "assets": {
       "frame": "panel/simple-view.html",
-      "title": "Test Assets",
+      "title": "Assets",
       "width": 200,
       "height": "auto",
       "min-width": 200
     },
     "inspector": {
       "frame": "panel/simple-view.html",
-      "title": "Test Inspector",
+      "title": "Inspector",
       "width": 300,
       "min-width": 240
     },
     "scene": {
       "frame": "panel/simple-view.html",
-      "title": "Test Scene",
+      "title": "Scene",
       "width": "auto",
       "height": "auto"
     },
     "game": {
       "frame": "panel/simple-view.html",
-      "title": "Test Game",
+      "title": "Game",
       "width": "auto",
       "height": "auto"
     },
     "console": {
       "frame": "panel/simple-view.html",
-      "title": "Test Console",
+      "title": "Console",
       "height": "300"
     }
   }

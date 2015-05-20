@@ -1,0 +1,36 @@
+<link rel="import" href="editor-framework://builtin/widgets/pixi-grid/pixi-grid.html">
+
+<dom-module id="grid-demo">
+  <style>
+    :host {
+        margin: 1px;
+        overflow: hidden;
+    }
+    .border {
+        border: 1px solid #171717;
+        background: #333;
+        box-sizing: border-box;
+    }
+    #timeline {
+        height: 20px;
+        border-bottom: 2px solid black;
+    }
+    #curveEditor {
+        cursor: -webkit-grab;
+    }
+  </style>
+
+  <template>
+    <div class="border fit">
+        <pixi-grid id="grid" class="fit"
+            show-label-h
+            show-label-v
+            show-debug-info
+            on-mousedown="_onMouseDown"
+            on-mousewheel="_onMouseWheel"
+        ></pixi-grid>
+    </div>
+  </template>
+</dom-module>
+
+<script type="text/javascript" src="panel.js"></script>

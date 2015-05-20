@@ -54,14 +54,6 @@ Editor.url = function (url) {
     return Editor.remote.url(url);
 };
 
-Editor.require('editor-framework://share/platform');
-Editor.JS = Editor.require('editor-framework://share/js-utils');
-Editor.Utils = Editor.require('editor-framework://share/editor-utils');
-Editor.require('editor-framework://share/math');
-Editor.Easing = Editor.require('editor-framework://share/easing');
-Editor.require('editor-framework://page/ipc-init');
-Editor.Selection = Editor.require('editor-framework://share/selection');
-
 // ==========================
 // console log API
 // ==========================
@@ -147,6 +139,18 @@ Editor.error = function ( text ) {
 
     Editor.sendToCore('console:error',text);
 };
+
+// ==========================
+// pre-require modules
+// ==========================
+
+Editor.require('editor-framework://share/platform');
+Editor.JS = Editor.require('editor-framework://share/js-utils');
+Editor.Utils = Editor.require('editor-framework://share/editor-utils');
+Editor.require('editor-framework://share/math');
+Editor.Easing = Editor.require('editor-framework://share/easing');
+Editor.require('editor-framework://page/ipc-init');
+Editor.Selection = Editor.require('editor-framework://share/selection');
 
 // ==========================
 // Layout API

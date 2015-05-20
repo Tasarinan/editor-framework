@@ -1,3 +1,5 @@
+var Ipc = require('ipc');
+
 var _lastActiveUnit = null;
 var _units = {};
 
@@ -10,12 +12,13 @@ function SelectionUnit(type) {
     this.lastHover = null;
     this._context = null; // NOTE: it is better to use lastHover, but some platform have bug with lastHover
 
-    this.ipc_selected = 'selection:selected';      // argument is an array of ids
-    this.ipc_unselected = 'selection:unselected';  // argument is an array of ids
+    this.ipc_selected = 'selection:selected';       // argument is an array of ids
+    this.ipc_unselected = 'selection:unselected';   // argument is an array of ids
     this.ipc_activated = 'selection:activated';     // argument is an id
     this.ipc_deactivated = 'selection:deactivated'; // argument is an id
-    this.ipc_hoverin = 'selection:hoverin';        // argument is an id
-    this.ipc_hoverout = 'selection:hoverout';      // argument is an id
+    this.ipc_hoverin = 'selection:hoverin';         // argument is an id
+    this.ipc_hoverout = 'selection:hoverout';       // argument is an id
+    this.ipc_changed = 'selection:changed';
 }
 
 SelectionUnit.prototype._activate = function (id) {
@@ -30,6 +33,8 @@ SelectionUnit.prototype._activate = function (id) {
 };
 
 SelectionUnit.prototype._unselectOthers = function (id) {
+    var changed = false;
+
     if (Array.isArray(id)) {
         var unselected = [];
         for (var j = this.selection.length - 1; j >= 0; j--) {
@@ -41,6 +46,7 @@ SelectionUnit.prototype._unselectOthers = function (id) {
         }
         if (unselected.length > 0) {
             Editor.sendToAll(this.ipc_unselected, this.type, unselected);
+            changed = true;
         }
     }
     else {
@@ -49,27 +55,35 @@ SelectionUnit.prototype._unselectOthers = function (id) {
             this.selection.splice(index, 1);
             if (this.selection.length > 0) {
                 Editor.sendToAll(this.ipc_unselected, this.type, this.selection);
+                changed = true;
             }
             this.selection = [id];
         }
         else {
             if (this.selection.length > 0) {
                 Editor.sendToAll(this.ipc_unselected, this.type, this.selection);
+                changed = true;
             }
             this.selection.length = 0;
         }
     }
+
+    return changed;
 };
 
 SelectionUnit.prototype.select = function (id, unselectOthers) {
+    var changed = false;
+
     if (unselectOthers) {
-        this._unselectOthers(id);
+        changed = this._unselectOthers(id);
     }
+
     if ( !Array.isArray(id) ) {
         // single
         if (this.selection.indexOf(id) === -1) {
             this.selection.push(id);
             Editor.sendToAll(this.ipc_selected, this.type, [id]);
+            changed = true;
         }
         this._activate(id);
     }
@@ -84,13 +98,19 @@ SelectionUnit.prototype.select = function (id, unselectOthers) {
         }
         if (diff.length > 0) {
             Editor.sendToAll(this.ipc_selected, this.type, diff);
+            changed = true;
         }
         this._activate(id[id.length - 1]);
     }
+
+    if ( changed )
+        Editor.sendToAll(this.ipc_changed, this.type);
 };
 
 SelectionUnit.prototype.unselect = function (id) {
+    var changed = false;
     var unselectActiveObj = false;
+
     if ( !Array.isArray(id) ) {
         // single
         var index = this.selection.indexOf(id);
@@ -98,6 +118,7 @@ SelectionUnit.prototype.unselect = function (id) {
             this.selection.splice(index, 1);
             Editor.sendToAll(this.ipc_unselected, this.type, [id]);
             unselectActiveObj = (id === this.lastActive);
+            changed = true;
         }
     }
     else if (id.length > 0) {
@@ -113,8 +134,10 @@ SelectionUnit.prototype.unselect = function (id) {
         }
         if (diff.length > 0) {
             Editor.sendToAll(this.ipc_unselected, this.type, diff);
+            changed = true;
         }
     }
+
     if (unselectActiveObj) {
         // activate another
         if (this.selection.length > 0) {
@@ -124,6 +147,9 @@ SelectionUnit.prototype.unselect = function (id) {
             this._activate('');
         }
     }
+
+    if ( changed )
+        Editor.sendToAll(this.ipc_changed, this.type);
 };
 
 SelectionUnit.prototype.hover = function (id) {
@@ -231,9 +257,13 @@ ConfirmableSelectionUnit.prototype.cancel = function () {
 };
 
 // selection module
-
-module.exports = {
+var Selection = {
     register: function ( type ) {
+        if ( !Editor.isCoreLevel ) {
+            Editor.warn('Editor.Selection.register can only be called in core level.');
+            return;
+        }
+
         if ( _units[type] )
             return;
 
@@ -462,12 +492,13 @@ module.exports = {
     },
 };
 
+module.exports = Selection;
+
 // ==========================
 // Ipc
 // ==========================
 
 // recv ipc message and update the local data
-var Ipc = require('ipc');
 
 Ipc.on( 'selection:selected', function ( type, ids ) {
     var selectionUnit = _units[type];
@@ -533,3 +564,23 @@ Ipc.on( 'selection:hoverout', function ( type, id ) {
 
     selectionUnit.lastHover = null;
 });
+
+// ==========================
+// init
+// ==========================
+
+if ( Editor.isCoreLevel ) {
+    Ipc.on( 'selection:get-registers', function ( event ) {
+        event.returnValue = Object.keys(_units);
+    });
+}
+
+if ( Editor.isPageLevel ) {
+    var results = Ipc.sendSync('selection:get-registers');
+    for ( var i = 0; i < results.length; ++i ) {
+        var type = results[i];
+        if ( _units[type] )
+            return;
+        _units[type] = new ConfirmableSelectionUnit(type);
+    }
+}

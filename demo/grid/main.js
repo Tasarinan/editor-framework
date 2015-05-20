@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'simple-demo:open': function () {
-        Editor.Panel.open('simple-demo.panel');
+    'grid-demo:open': function () {
+        Editor.Panel.open( 'grid-demo.panel' );
     },
 };

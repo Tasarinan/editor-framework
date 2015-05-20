@@ -6,13 +6,6 @@ var Winston = require('winston');
 var Globby = require('globby');
 var Chokidar = require('chokidar');
 
-require('../share/platform') ;
-Editor.JS = require('../share/js-utils') ;
-Editor.Utils = require('../share/editor-utils');
-require('../share/math');
-require('./ipc-init');
-Editor.Selection = require('../share/selection');
-
 // ==========================
 // console log API
 // ==========================
@@ -120,6 +113,17 @@ Ipc.on ( 'console:clear', function () { Editor.clearLog(); } );
 Ipc.on ( 'console:query', function ( reply ) {
     reply(_logs);
 });
+
+// ==========================
+// pre-require modules
+// ==========================
+
+require('../share/platform') ;
+Editor.JS = require('../share/js-utils') ;
+Editor.Utils = require('../share/editor-utils');
+require('../share/math');
+require('./ipc-init');
+Editor.Selection = require('../share/selection');
 
 // ==========================
 // profiles API

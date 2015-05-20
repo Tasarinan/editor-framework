@@ -75,28 +75,36 @@ function _registerProfile ( panelID, type, profile ) {
 var Panel = {};
 
 Panel.import = function ( url, cb ) {
-    var link = _url2link[url];
-    if ( link ) {
-        HTMLImports.whenReady( function () {
-            cb();
-        });
-        return;
-    }
+    // DISABLE:
+    // var link = _url2link[url];
+    // if ( link ) {
+    //     HTMLImports.whenReady( function () {
+    //         cb();
+    //     });
+    //     return;
+    // }
 
-    link = document.createElement('link');
-    link.rel = 'import';
-    link.href = url;
-    // link.onload = cb;
-    link.onerror = function(e) {
-        Editor.error('Failed to import %s', link.href);
-    };
+    // link = document.createElement('link');
+    // link.rel = 'import';
+    // link.href = url;
+    // // link.onload = cb;
+    // link.onerror = function(e) {
+    //     Editor.error('Failed to import %s', link.href);
+    // };
 
-    document.head.appendChild(link);
-    _url2link[url] = link;
+    // document.head.appendChild(link);
+    // _url2link[url] = link;
 
-    //
-    HTMLImports.whenReady( function () {
+    // //
+    // HTMLImports.whenReady( function () {
+    //     cb();
+    // });
+
+    Polymer.Base.importHref( url, function ( event ) {
+        // event.target.import is the import document.
         cb();
+    }, function ( err ) {
+        Editor.error( 'Failed to load %s. message: %s', url, err.message );
     });
 };
 
