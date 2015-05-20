@@ -154,6 +154,11 @@ window['widgets.pixi-grid'] = Polymer({
         }.bind(this);
     },
 
+    setRangeH: function ( minValue, maxValue ) {
+        this.xMinRange = minValue;
+        this.xMaxRange = maxValue;
+    },
+
     setScaleV: function ( lods, minScale, maxScale, type ) {
         this.vticks = new LinearTicks()
         .initTicks( lods, minScale, maxScale )
@@ -202,9 +207,84 @@ window['widgets.pixi-grid'] = Polymer({
         }.bind(this);
     },
 
+    setRangeV: function ( minValue, maxValue ) {
+        this.yMinRange = minValue;
+        this.yMaxRange = maxValue;
+    },
+
     pan: function ( deltaPixelX, deltaPixelY ) {
-        this.xAxisOffset += deltaPixelX;
-        this.yAxisOffset += deltaPixelY;
+        this.panX(deltaPixelX);
+        this.panY(deltaPixelY);
+    },
+
+    panX: function ( deltaPixelX ) {
+        if ( !this.valueToPixelH ) {
+            return;
+        }
+
+        var newOffset = this.xAxisOffset + deltaPixelX;
+        this.xAxisOffset = 0.0; // calc range without offset
+
+        var min, max;
+        if ( this.xMinRange !== undefined && this.xMinRange !== null ) {
+            min = this.valueToPixelH(this.xMinRange);
+        }
+        if ( this.xMaxRange !== undefined && this.xMaxRange !== null ) {
+            max = this.valueToPixelH(this.xMaxRange);
+            max = Math.max(0, max - this.canvasWidth);
+        }
+
+        this.xAxisOffset = newOffset;
+
+        if ( min !== undefined && max !== undefined ) {
+            this.xAxisOffset = Math.clamp( this.xAxisOffset, -max, -min );
+            return;
+        }
+
+        if ( min !== undefined ) {
+            this.xAxisOffset = Math.min( this.xAxisOffset, -min );
+            return;
+        }
+
+        if ( max !== undefined ) {
+            this.xAxisOffset = Math.max( this.xAxisOffset, -max );
+            return;
+        }
+    },
+
+    panY: function ( deltaPixelY ) {
+        if ( !this.valueToPixelV ) {
+            return;
+        }
+
+        var newOffset = this.yAxisOffset + deltaPixelY;
+        this.yAxisOffset = 0.0; // calc range without offset
+
+        var min, max;
+        if ( this.yMinRange !== undefined && this.yMinRange !== null ) {
+            min = this.valueToPixelV(this.yMinRange);
+        }
+        if ( this.yMaxRange !== undefined && this.yMaxRange !== null ) {
+            max = this.valueToPixelV(this.yMaxRange);
+            max = Math.max(0, max - this.canvasHeight);
+        }
+
+        this.yAxisOffset = newOffset;
+
+        if ( min !== undefined && max !== undefined ) {
+            this.yAxisOffset = Math.clamp( this.yAxisOffset, -max, -min );
+            return;
+        }
+
+        if ( min !== undefined ) {
+            this.yAxisOffset = Math.min( this.yAxisOffset, -min );
+            return;
+        }
+
+        if ( max !== undefined ) {
+            this.yAxisOffset = Math.max( this.yAxisOffset, -max );
+            return;
+        }
     },
 
     xAxisScaleAt: function ( pixelX, scale ) {
@@ -221,6 +301,16 @@ window['widgets.pixi-grid'] = Polymer({
         this.pan( 0, pixelY - newScreenY );
     },
 
+    xAxisSync: function ( x, scaleX ) {
+        this.xAxisOffset = x;
+        this.xAxisScale = scaleX;
+    },
+
+    yAxisSync: function ( y, scaleY ) {
+        this.yAxisOffset = y;
+        this.yAxisScale = scaleY;
+    },
+
     resize: function ( w, h ) {
         if ( !w || !h ) {
             var rect = this.$.view.getBoundingClientRect();
@@ -233,21 +323,26 @@ window['widgets.pixi-grid'] = Polymer({
 
         // adjust xAxisOffset by anchor x
         if ( this.canvasWidth !== 0 ) {
-            this.xAxisOffset += (w - this.canvasWidth) * (this.xAnchor + this._xAnchorOffset);
+            this.panX((w - this.canvasWidth) * (this.xAnchor + this._xAnchorOffset));
         }
 
         // adjust yAxisOffset by anchor y
         if ( this.canvasHeight !== 0 ) {
-            this.yAxisOffset += (h - this.canvasHeight) * (this.yAnchor + this._yAnchorOffset);
+            this.panY((h - this.canvasHeight) * (this.yAnchor + this._yAnchorOffset));
         }
 
         this.canvasWidth = w;
         this.canvasHeight = h;
 
-        this.renderer.resize( this.canvasWidth, this.canvasHeight );
+        if ( this.renderer ) {
+            this.renderer.resize( this.canvasWidth, this.canvasHeight );
+        }
     },
 
     repaint: function () {
+        if ( !this.renderer )
+            return;
+
         this._updateGrids();
         requestAnimationFrame( function () {
             this.renderer.render(this.stage);

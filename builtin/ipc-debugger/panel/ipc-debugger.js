@@ -11,7 +11,6 @@ Editor.registerPanel( 'ipc-debugger.panel', {
     ready: function () {
         this.inspects = {};
         this.refresh();
-
     },
 
     attached: function () {
@@ -25,8 +24,10 @@ Editor.registerPanel( 'ipc-debugger.panel', {
     _onInspect: function ( event ) {
         event.stopPropagation();
 
-        var item = this.$.list.itemForElement(event.target);
-        item.inspect = !item.inspect;
+        var model = event.model;
+        // var item = this.$.list.itemForElement(event.target);
+        var item = model.item;
+        model.set( 'item.inspect', !item.inspect );
         event.target.classList.toggle( 'active', item.inspect );
 
         if ( item.level === 'core' ) {

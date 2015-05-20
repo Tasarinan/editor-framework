@@ -1,0 +1,69 @@
+<dom-module id="selection-panel2">
+    <style>
+        :host {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            flex-direction: column;
+        }
+        li {
+            cursor: pointer;
+            padding: 5px;
+            margin: 1px;
+            list-style-type: none;
+        }
+        li:hover {
+            background: #555;
+        }
+        li[selected] {
+            background: #09f;
+        }
+    </style>
+
+    <template>
+        <ul>
+            <template is="dom-repeat" items="{{list}}">
+                <li on-click="_onSelect" selected$="{{item.selected}}"><span>{{item.name}}</span></li>
+            </template>
+        </ul>
+    </template>
+</dom-module>
+
+<script>
+Editor.Selection.register('normal');
+Editor.registerPanel( 'selection.panel2', {
+    is: 'selection-panel2',
+
+    ready: function () {
+        this.list = [
+            { name: 'extrajudicially', selected: false },
+            { name: 'duse',  selected: false },
+            { name: 'appleton', selected: false },
+            { name: 'aborning', selected: false },
+            { name: 'evacuee', selected: false },
+            { name: 'impecunious', selected: false },
+            { name: 'overrude', selected: false },
+            { name: 'subrange', selected: false },
+            { name: 'hamlet', selected: false },
+            { name: 'subtranslucency', selected: false },
+        ];
+    },
+
+    attached: function () {
+        EditorUI.update( this, 'list' );
+    },
+
+    _onSelect: function ( event ) {
+        var model = event.model;
+        // model.set( 'item.selected', !model.item.selected );
+        Editor.Selection.select( 'normal', model.item.name, true, true );
+    },
+
+    'selection:selected': function ( type, ids ) {
+        for ( var i = 0; i < this.list.length; ++i ) {
+            var item = this.list[i];
+            this.set('list.' + i + '.selected', ids.indexOf(item.name) !== -1 );
+        }
+    },
+});
+</script>
