@@ -17,7 +17,9 @@
       "width": 800,
       "height": 600,
       "messages": [
-          "selection:changed"
+          "selection:changed",
+          "selection:hoverin",
+          "selection:hoverout"
       ]
     },
     "panel2": {
@@ -27,7 +29,9 @@
       "width": 800,
       "height": 600,
       "messages": [
-          "selection:changed"
+          "selection:changed",
+          "selection:hoverin",
+          "selection:hoverout"
       ]
     }
   }

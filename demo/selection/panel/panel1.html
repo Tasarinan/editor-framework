@@ -41,6 +41,9 @@
         ul li[selected] {
             background: #09f;
         }
+        ul li[hover] {
+            background: #f90;
+        }
         svg {
             border: 1px solid black;
             background: #333;
@@ -51,12 +54,16 @@
     <template>
         <div class="layout vertical fit">
             <ul class="flex-1">
-                <template is="dom-repeat" items="{{list}}">
-                    <li on-click="_onSelect" selected$="{{item.selected}}"><span>{{item.name}}</span></li>
+                <template is="dom-repeat" items="{{list}}" id="list">
+                    <li on-click="_onSelect"
+                        hover$="{{item.hover}}"
+                        selected$="{{item.selected}}"><span>{{item.name}}</span>
+                    </li>
                 </template>
             </ul>
             <svg id="svg" class="flex-1"
                 on-mousedown="_onMouseDown"
+                on-mousemove="_onMouseMove"
                 ></svg>
         </div>
     </template>
@@ -69,17 +76,19 @@ Editor.registerPanel( 'selection-demo.panel1', {
 
     ready: function () {
         this.list = [
-            { name: 'extrajudicially', selected: false },
-            { name: 'duse',  selected: false },
-            { name: 'appleton', selected: false },
-            { name: 'aborning', selected: false },
-            { name: 'evacuee', selected: false },
-            { name: 'impecunious', selected: false },
-            { name: 'overrude', selected: false },
-            { name: 'subrange', selected: false },
-            { name: 'hamlet', selected: false },
-            { name: 'subtranslucency', selected: false },
-        ];
+            'extrajudicially',
+            'duse',
+            'appleton',
+            'aborning',
+            'evacuee',
+            'impecunious',
+            'overrude',
+            'subrange',
+            'hamlet',
+            'subtranslucency',
+        ].map( function ( item ) {
+            return { name: item, hover: false, selected: false };
+        });
     },
 
     attached: function () {
@@ -99,8 +108,8 @@ Editor.registerPanel( 'selection-demo.panel1', {
         this.rectNodes = [];
 
         var rect = this.$.svg.getBoundingClientRect();
-        for ( var i = 0; i < this.list.length; ++i ) {
-            var name = this.list[i].name;
+        this.list.forEach( function ( item ) {
+            var name = item.name;
 
             var x = Math.randomRange( 20, rect.width-20 );
             var y = Math.randomRange( 20, rect.height-20 );
@@ -116,6 +125,14 @@ Editor.registerPanel( 'selection-demo.panel1', {
             rectNode.name = name;
             this.rectNodes.push(rectNode);
 
+            // rectNode.on('mouseenter', function () {
+            //     Editor.Selection.hover( 'normal', rectNode.name );
+            // });
+
+            // rectNode.on('mouseleave', function () {
+            //     Editor.Selection.hover( 'normal', null);
+            // });
+
             node.plain(name)
                 .font({
                     size: 15,
@@ -124,7 +141,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
                 .fill({ color: '#999' } )
                 .translate( x, y - 5 )
                 ;
-        }
+        }.bind(this));
 
         this.syncSelection('normal');
     },
@@ -133,6 +150,18 @@ Editor.registerPanel( 'selection-demo.panel1', {
         var model = event.model;
         // model.set( 'item.selected', !model.item.selected );
         Editor.Selection.select( 'normal', model.item.name, true, true );
+    },
+
+    _onMouseMove: function ( event ) {
+        event.stopPropagation();
+
+        var results = this.rectHitTest(event.offsetX, event.offsetY, 1, 1 );
+        if ( results.length > 0 ) {
+            Editor.Selection.hover( 'normal', results[0].name );
+        }
+        else {
+            Editor.Selection.hover( 'normal', null);
+        }
     },
 
     _onMouseDown: function ( event ) {
@@ -240,6 +269,34 @@ Editor.registerPanel( 'selection-demo.panel1', {
 
     'selection:changed': function ( type ) {
         this.syncSelection(type);
+    },
+
+    'selection:hoverin': function ( type, name ) {
+        var idx = -1;
+        for ( var i = 0; i < this.list.length; ++i ) {
+            if ( this.list[i].name === name ) {
+                idx = i;
+                break;
+            }
+        }
+        if ( idx !== -1 ) {
+            var item = this.$.list.indexForElement(idx);
+            this.set('list.' + i + '.hover', true );
+        }
+    },
+
+    'selection:hoverout': function ( type, name ) {
+        var idx = -1;
+        for ( var i = 0; i < this.list.length; ++i ) {
+            if ( this.list[i].name === name ) {
+                idx = i;
+                break;
+            }
+        }
+        if ( idx !== -1 ) {
+            var item = this.$.list.indexForElement(idx);
+            this.set('list.' + i + '.hover', false );
+        }
     },
 
     syncSelection: function ( type ) {
