@@ -72,6 +72,16 @@ function _registerProfile ( panelID, type, profile ) {
     };
 }
 
+function _registerShortcut ( panelID, mousetrap, frameEL, shortcut, methodName ) {
+    var fn = frameEL[methodName];
+    if ( typeof fn === 'function' ) {
+        mousetrap.bind(shortcut, fn.bind(frameEL) );
+    }
+    else {
+        Editor.warn('Failed to register shortcut for method %s in panel %s, can not find it.', methodName, panelID );
+    }
+}
+
 var Panel = {};
 
 Panel.import = function ( url, cb ) {
@@ -170,14 +180,6 @@ Panel.load = function ( panelID, cb ) {
                 _registerIpc( panelID, frameEL, ipcListener, panelInfo.messages[i] );
             }
 
-            //
-            _idToPagePanelInfo[panelID] = {
-                frameEL: frameEL,
-                messages: panelInfo.messages,
-                ipcListener: ipcListener,
-                popable: panelInfo.popable,
-            };
-
             // register profiles
             frameEL.profiles = panelInfo.profiles;
             for ( var type in panelInfo.profiles ) {
@@ -186,24 +188,68 @@ Panel.load = function ( panelID, cb ) {
 
             // register shortcuts
             // TODO: load overwrited shortcuts from profile?
+            var mousetrapList = [];
             if ( panelInfo.shortcuts ) {
                 var mousetrap = new Mousetrap(frameEL);
+                mousetrapList.push(mousetrap);
+
                 for ( var shortcut in panelInfo.shortcuts ) {
-                    var methodName = panelInfo.shortcuts[shortcut];
-                    var fn = frameEL[methodName];
-                    if ( typeof fn === 'function' ) {
-                        mousetrap.bind(shortcut, fn.bind(frameEL) );
+                    if ( shortcut.length > 1 && shortcut[0] === '#' ) {
+                        var elementID = shortcut.substring(1);
+                        var subElement = frameEL.$[elementID];
+                        if ( subElement ) {
+                            var subShortcuts = panelInfo.shortcuts[shortcut];
+                            var subMousetrap = new Mousetrap(subElement);
+                            mousetrapList.push(subMousetrap);
+                            for ( var subShortcut in subShortcuts ) {
+                                _registerShortcut(panelID,
+                                                  subMousetrap,
+                                                  frameEL, // NOTE: here must be frameEL
+                                                  subShortcut,
+                                                  subShortcuts[subShortcut]
+                                                 );
+                            }
+                        }
+                        else {
+                            Editor.warn('Failed to register shortcut for method %s for element %s, can not find it.', methodName, shortcut );
+                        }
                     }
                     else {
-                        Editor.warn('Failed to register shortcut for method %s in panel %s, can not find it.', methodName, panelID );
+                        _registerShortcut(panelID,
+                                          mousetrap,
+                                          frameEL,
+                                          shortcut,
+                                          panelInfo.shortcuts[shortcut]
+                                         );
                     }
                 }
             }
+
+            //
+            _idToPagePanelInfo[panelID] = {
+                frameEL: frameEL,
+                messages: panelInfo.messages,
+                popable: panelInfo.popable,
+                ipcListener: ipcListener,
+                mousetrapList: mousetrapList,
+            };
 
             // done
             cb ( null, frameEL, panelInfo );
         });
     });
+};
+
+Panel.unload = function ( panelID ) {
+    // remove pagePanelInfo
+    var pagePanelInfo = _idToPagePanelInfo[panelID];
+    if ( pagePanelInfo) {
+        pagePanelInfo.ipcListener.clear();
+        for ( var i = 0; i < pagePanelInfo.mousetrapList.length; ++i ) {
+            pagePanelInfo.mousetrapList[i].reset();
+        }
+        delete _idToPagePanelInfo[panelID];
+    }
 };
 
 Panel.open = function ( panelID, argv ) {
@@ -237,13 +283,8 @@ Panel.closeAll = function ( cb ) {
 
     var panelIDs = [];
     for ( var id in _idToPagePanelInfo ) {
-        // remove pagePanelInfo
-        var pagePanelInfo = _idToPagePanelInfo[id];
-        if ( pagePanelInfo) {
-            pagePanelInfo.ipcListener.clear();
-            delete _idToPagePanelInfo[id];
-        }
-
+        // unload pagePanelInfo
+        Editor.Panel.unload(id);
         panelIDs.push(id);
     }
 
@@ -280,12 +321,8 @@ Panel.undock = function ( panelID ) {
         Editor.saveLayout();
     }
 
-    // remove pagePanelInfo
-    var pagePanelInfo = _idToPagePanelInfo[panelID];
-    if ( pagePanelInfo) {
-        pagePanelInfo.ipcListener.clear();
-        delete _idToPagePanelInfo[panelID];
-    }
+    // unload pagePanelInfo
+    Editor.Panel.unload(id);
 };
 
 Panel.dispatch = function ( panelID, ipcName ) {

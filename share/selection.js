@@ -492,6 +492,10 @@ var Selection = {
 
         return results;
     },
+
+    local: function () {
+        // TODO: return a local selection wrap Editor.Selection functions
+    }
 };
 
 module.exports = Selection;

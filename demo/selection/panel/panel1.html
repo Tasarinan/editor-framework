@@ -295,8 +295,8 @@ Editor.registerPanel( 'selection-demo.panel1', {
 
         for ( var i = 0; i < els.length; ++i ) {
             var el = els[i];
-            var node = SVG.get(el.id);
-            if ( node.selectable ) {
+            var node = el.instance;
+            if ( node && node.selectable ) {
                 results.push( node );
             }
         }

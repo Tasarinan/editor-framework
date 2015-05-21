@@ -1,0 +1,60 @@
+<dom-module id="shortcuts-demo">
+    <style>
+        :host {
+        }
+
+        .view {
+            border: 1px solid black;
+            margin: 5px;
+        }
+
+        .view:focus {
+            border: 1px solid #09f;
+        }
+    </style>
+
+    <template>
+        <div class="fit layout vertical" >
+            <div>Press "A" in Root</div>
+            <div class="layout horizontal flex-1" >
+                <div id="foo" class="flex-1 view" tabindex="1"
+                    on-mousedown="focusFoo"
+                    >
+                    Press "A" in foo and stopPropagation
+                </div>
+                <div id="bar" class="flex-1 view" tabindex="1"
+                    on-mousedown="focusBar"
+                    >
+                    Press "A" in bar without event.stopPropagation()
+                </div>
+            </div>
+        </div>
+    </template>
+</dom-module>
+
+<script>
+Editor.registerPanel( 'shortcuts-demo.panel', {
+    is: 'shortcuts-demo',
+
+    pressA: function () {
+        Editor.log('Pressed A in root');
+    },
+
+    focusFoo: function () {
+        this.$.foo.focus();
+    },
+
+    focusBar: function () {
+        this.$.bar.focus();
+    },
+
+    fooPressA: function ( event ) {
+        event.stopPropagation();
+        Editor.log('Pressed A in #foo');
+    },
+
+    barPressA: function ( event ) {
+        Editor.log('Pressed A in #bar');
+    },
+});
+</script>

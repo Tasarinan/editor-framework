@@ -1,0 +1,30 @@
+{
+  "name": "shortcuts-demo",
+  "version": "0.0.1",
+  "description": "Shortcuts Demo",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Demos/Shortcuts": {
+      "message": "shortcuts-demo:open"
+    }
+  },
+  "panels": {
+    "panel": {
+      "frame": "panel/panel.html",
+      "type": "dockable",
+      "title": "Simple",
+      "width": 800,
+      "height": 600,
+      "shortcuts": {
+        "a": "pressA",
+        "#foo": {
+            "a": "fooPressA"
+        },
+        "#bar": {
+            "a": "barPressA"
+        }
+      }
+    }
+  }
+}
