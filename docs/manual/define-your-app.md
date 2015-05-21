@@ -85,5 +85,43 @@ global.__app = {
 // must have, important
 require('./editor-framework/init');
 ```
-
 An example repo also available here: https://github.com/fireball-x/editor-framework-app
+
+## Class Method: initCommander(commander)
+
+ - `commander` An instance of [commander.js](https://github.com/tj/commander.js)
+
+Invoked at the very beginning of the app, before Editor module inited. There is no `Editor`
+method can be used in this function.
+
+## Class Method: init(options)
+
+ - `options` The options parsed from `process.argv`
+
+Invoked after `Editor` and its sub modules initialized. It is recommended to put your register
+code in this function:
+
+ - register your protocol
+ - register your profile path
+ - register your package path
+ - define your main menu
+
+## Class Method: run()
+
+Invoked after all packages loaded. Basically you should open your main window in this function.
+
+## Define App ipc messages
+
+You can define ipc messages in your app script. Just add a function with `app:` suffix, the
+editor-framework will load it before your app run.
+
+Example:
+
+```javascript
+global.__app = {
+    // An ipc message start with `app:` will be automatically registerred
+    'app:foobar': function () {
+        Editor.log('foobar');
+    },
+};
+```
