@@ -90,6 +90,9 @@ Editor.registerPanel( 'selection-demo.panel1', {
     },
 
     lightDomReady: function () {
+        if ( this.svg )
+            return;
+
         this.svg = SVG(this.$.svg);
         this.scene = this.svg.group();
         this.foreground = this.svg.group();
