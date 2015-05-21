@@ -199,6 +199,8 @@ SelectionUnit.prototype.clear = function () {
     Editor.sendToAll(this.ipc_unselected, this.type, this.selection);
     this.selection.length = 0;
     this._activate('');
+
+    Editor.sendToAll(this.ipc_changed, this.type);
 };
 
 // ConfirmableSelectionUnit
@@ -419,9 +421,9 @@ var Selection = {
 
     /**
      * @param {string} type
-     * @return {string} activating
+     * @return {string} current activated
      */
-    activating: function ( type ) {
+    curActivate: function ( type ) {
         var selectionUnit = _units[type];
         if ( !selectionUnit ) {
             Editor.error('Can not find the type %s for selection, please register it first', type);
@@ -433,9 +435,9 @@ var Selection = {
 
     /**
      * @param {string} type
-     * @return {string[]} selecting
+     * @return {string[]} selected list
      */
-    selecting: function ( type ) {
+    curSelection: function ( type ) {
         var selectionUnit = _units[type];
         if ( !selectionUnit ) {
             Editor.error('Can not find the type %s for selection, please register it first', type);
@@ -571,16 +573,34 @@ Ipc.on( 'selection:hoverout', function ( type, id ) {
 
 if ( Editor.isCoreLevel ) {
     Ipc.on( 'selection:get-registers', function ( event ) {
-        event.returnValue = Object.keys(_units);
+        results = [];
+        for ( var key in _units ) {
+            var selectionUnit = _units[key];
+            results.push({
+                type: key,
+                selection: selectionUnit.selection,
+                lastActive: selectionUnit.lastActive,
+                lastHover: selectionUnit.lastHover,
+                context: selectionUnit._context,
+            });
+        }
+        event.returnValue = results;
     });
 }
 
 if ( Editor.isPageLevel ) {
     var results = Ipc.sendSync('selection:get-registers');
     for ( var i = 0; i < results.length; ++i ) {
-        var type = results[i];
-        if ( _units[type] )
+        var info = results[i];
+        if ( _units[info.type] )
             return;
-        _units[type] = new ConfirmableSelectionUnit(type);
+
+        var selectionUnit = new ConfirmableSelectionUnit(info.type);
+        selectionUnit.selection = info.selection.slice();
+        selectionUnit.lastActive = info.lastActive;
+        selectionUnit.lastHover = info.lastHover;
+        selectionUnit._context = info.context;
+
+        _units[info.type] = selectionUnit;
     }
 }

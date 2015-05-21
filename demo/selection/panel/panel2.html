@@ -50,6 +50,7 @@ Editor.registerPanel( 'selection-demo.panel2', {
 
     attached: function () {
         EditorUI.update( this, 'list' );
+        this.syncSelection('normal');
     },
 
     _onSelect: function ( event ) {
@@ -59,7 +60,11 @@ Editor.registerPanel( 'selection-demo.panel2', {
     },
 
     'selection:changed': function ( type ) {
-        var selection = Editor.Selection.selecting(type);
+        this.syncSelection(type);
+    },
+
+    syncSelection: function ( type ) {
+        var selection = Editor.Selection.curSelection(type);
 
         for ( var i = 0; i < this.list.length; ++i ) {
             var item = this.list[i];

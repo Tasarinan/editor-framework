@@ -5,6 +5,10 @@
         stroke: #fff;
         cursor: pointer;
     }
+    selection-demo-panel1 svg rect.node.selected {
+        fill: black;
+        stroke: #0f0;
+    }
 
     selection-demo-panel1 svg .rect-select {
         fill: rgba( 0, 128, 255, 0.4 );
@@ -89,6 +93,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
         this.svg = SVG(this.$.svg);
         this.scene = this.svg.group();
         this.foreground = this.svg.group();
+        this.rectNodes = [];
 
         var rect = this.$.svg.getBoundingClientRect();
         for ( var i = 0; i < this.list.length; ++i ) {
@@ -106,6 +111,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
                 ;
             rectNode.selectable = true;
             rectNode.name = name;
+            this.rectNodes.push(rectNode);
 
             node.plain(name)
                 .font({
@@ -117,9 +123,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
                 ;
         }
 
-        this.selectRect = this.foreground.rect();
-        this.selectRect.addClass('rect-select');
-        this.selectRect.hide();
+        this.syncSelection('normal');
     },
 
     _onSelect: function ( event ) {
@@ -132,6 +136,12 @@ Editor.registerPanel( 'selection-demo.panel1', {
         if ( event.which === 1 ) {
             event.stopPropagation();
 
+            var toggleMode = false;
+            if ( event.metaKey || event.ctrlKey ) {
+                toggleMode = true;
+            }
+            var lastSelection = Editor.Selection.curSelection('normal');
+
             var rect = this.$.svg.getBoundingClientRect();
             var pressx = event.clientX;
             var pressy = event.clientY;
@@ -139,6 +149,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
             var mousemoveHandle = function(event) {
                 event.stopPropagation();
 
+                // process selection
                 var startx = pressx - rect.left;
                 var starty = pressy - rect.top;
                 var offsetx = event.clientX - pressx;
@@ -158,13 +169,18 @@ Editor.registerPanel( 'selection-demo.panel1', {
                     offsety = -offsety;
                 }
 
-                this.selectRect
-                    .show()
-                    .move( startx, starty )
-                    .size( offsetx, offsety )
-                    ;
+                this.updateSelectRect( startx, starty, offsetx, offsety );
                 var results = this.rectHitTest( startx, starty, offsetx, offsety );
-                Editor.Selection.select ( 'normal', results, true, false );
+                var names = results.map( function (node) {
+                    return node.name;
+                });
+                if ( toggleMode ) {
+                    for ( i = 0; i < lastSelection.length; ++i ) {
+                        if ( names.indexOf(lastSelection[i]) === -1 )
+                            names.push( lastSelection[i] );
+                    }
+                }
+                Editor.Selection.select ( 'normal', names, true, false );
             }.bind(this);
 
             var mouseupHandle = function(event) {
@@ -175,8 +191,39 @@ Editor.registerPanel( 'selection-demo.panel1', {
 
                 EditorUI.removeDragGhost();
                 this.style.cursor = '';
+                this.fadeoutSelectRect();
 
-                this.selectRect.hide();
+                // process selection
+                var startx = pressx - rect.left;
+                var starty = pressy - rect.top;
+                var offsetx = event.clientX - pressx;
+                var offsety = event.clientY - pressy;
+
+                var magSqr = offsetx*offsetx + offsety*offsety;
+                if ( magSqr >= 2.0 * 2.0 ) {
+                    Editor.Selection.confirm ();
+                }
+                else {
+                    var results = this.rectHitTest( startx, starty, 1, 1 );
+                    if ( toggleMode ) {
+                        if ( results.length > 0 ) {
+                            if ( lastSelection.indexOf(results[0].name) === -1 ) {
+                                Editor.Selection.select ( 'normal', results[0].name, false, true );
+                            }
+                            else {
+                                Editor.Selection.unselect ( 'normal', results[0].name, true );
+                            }
+                        }
+                    }
+                    else {
+                        if ( results.length > 0 ) {
+                            Editor.Selection.select ( 'normal', results[0].name, true, true );
+                        }
+                        else {
+                            Editor.Selection.clear ( 'normal' );
+                        }
+                    }
+                }
             }.bind(this);
 
             //
@@ -189,11 +236,48 @@ Editor.registerPanel( 'selection-demo.panel1', {
     },
 
     'selection:changed': function ( type ) {
-        var selection = Editor.Selection.selecting(type);
-        for ( var i = 0; i < this.list.length; ++i ) {
-            var item = this.list[i];
+        this.syncSelection(type);
+    },
+
+    syncSelection: function ( type ) {
+        var selection = Editor.Selection.curSelection(type);
+        var i, item;
+        for ( i = 0; i < this.list.length; ++i ) {
+            item = this.list[i];
             this.set('list.' + i + '.selected', selection.indexOf(item.name) !== -1 );
         }
+        for ( i = 0; i < this.rectNodes.length; ++i ) {
+            item = this.rectNodes[i];
+            if ( selection.indexOf(item.name) !== -1 )
+                item.addClass('selected');
+            else
+                item.removeClass('selected');
+        }
+    },
+
+    updateSelectRect: function ( x, y, w, h ) {
+        if ( !this.selectRect ) {
+            this.selectRect = this.foreground.rect();
+        }
+
+        this.selectRect
+            .addClass('rect-select')
+            .move( x, y )
+            .size( w, h )
+            ;
+    },
+
+    fadeoutSelectRect: function () {
+        if ( !this.selectRect ) {
+            return;
+        }
+
+        var selectRect = this.selectRect;
+        this.selectRect = null;
+
+        selectRect.animate( 100, '-' ).opacity(0.0).after( function () {
+            selectRect.remove();
+        });
     },
 
     rectHitTest: function ( x, y, w, h ) {
@@ -210,7 +294,7 @@ Editor.registerPanel( 'selection-demo.panel1', {
             var el = els[i];
             var node = SVG.get(el.id);
             if ( node.selectable ) {
-                results.push( node.name );
+                results.push( node );
             }
         }
 
