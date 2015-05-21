@@ -1,13 +1,19 @@
-## Package.json
+## Create Your Package
 
-Each package use a `package.json` file to descript it.
+Editor Framework loads package before App runs. By default it load packages from
+`editor-framework://builtin/` and `~/.{app-name}/packages/`. You can customize the package loading
+place through the method `Editor.registerPackagePath` when in your `App.init` function.
+
+Each package use a `package.json` file to descript itself. Just create a folder include it and put
+it in your registered package path.
 
 ## Options
 
   - `name` String - Name of the package, this name must be uniqued, otherwise it can not be published online.
-  - `version` String [Optional] - The version number.
+  - `version` String - The version number.
   - `description` String [Optional] - A simple description of the usage of your package.
   - `author` String [Optional] - Who made this.
+  - `environment` Object [Optional] - The version of the runtime module required for this package.
   - `main` String [Optional] - A file path to the main entry javascript.
   - `menus` Object [Optional] - The menu list.
     - `key` String - Menu path, example: `foo/bar/foobar`
@@ -31,6 +37,11 @@ Each package use a `package.json` file to descript it.
       - `profiles` Object [Optional] - The list of default profile settings.
         - `key` String - The profile type, by default it can be `local` and `global`. You can register more profile type through `Editor.registerProfilePath`
         - `value` Object - The default setting values.
+  - `dependencies` Object [Optional] - The dependencies list.
+  - `npmDependencies??` Object [Optional] - The npm dependencies list.
+  - `bowerDependencies??` Object [Optional] - The bower dependencies list.
+
+## Main Entry
 
 ## Menu Path
 

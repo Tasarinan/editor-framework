@@ -328,7 +328,7 @@ App.on('ready', function() {
 
     // register package path
     Editor.registerPackagePath( Path.join( Editor.frameworkPath, 'builtin' ) );
-    Editor.registerPackagePath( Path.join( Editor.dataPath, 'extends' ) );
+    Editor.registerPackagePath( Path.join( Editor.dataPath, 'packages' ) );
 
     // init user App
     if ( !Editor.App.init ) {

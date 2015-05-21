@@ -40,6 +40,6 @@
     "gulp-download-fire-shell": "0.1.3"
   },
   "fire-shell-version": "0.24.0",
-  "electron-version": "0.26.0",
+  "electron-version": "0.26.1",
   "main": "demo.js"
 }

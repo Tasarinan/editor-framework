@@ -1,12 +1,9 @@
 ## Manual
 
   * [define your app](manual/define-your-app.md)
-  * [define your panel frame](manual/define-your-panel-frame.md)
+  * [create your package](manual/create-your-package.md)
+  * [register your panels](manual/register-panels.md)
   * [register shortcuts for your panel frame](manual/register-shortcuts.md)
-
-## Extends
-
-  * [package.json](extends/package-json.md)
 
 ## API references
 
