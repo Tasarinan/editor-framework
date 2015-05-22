@@ -184,15 +184,16 @@ Editor.sendToAll = function () {
     }
 };
 
-Editor.sendToPlugin = function ( packageName, message ) {
-    var panels = Editor.Panel.findPanels(packageName);
-    var args = [].slice.call( arguments, 1 );
+// DISABLE: not make sense
+// Editor.sendToPackage = function ( packageName, message ) {
+//     var panels = Editor.Panel.findPanels(packageName);
+//     var args = [].slice.call( arguments, 1 );
 
-    for ( var i = 0; i < panels.length; ++i ) {
-        var panelID = packageName + '.' + panels[i];
-        Editor.sendToPanel.apply( Editor, [panelID].concat(args) );
-    }
-};
+//     for ( var i = 0; i < panels.length; ++i ) {
+//         var panelID = packageName + '.' + panels[i];
+//         Editor.sendToPanel.apply( Editor, [panelID].concat(args) );
+//     }
+// };
 
 // example: Editor.sendToPanel( 'package.panel', 'ipc-foo-bar', arguments... )
 Editor.sendToPanel = function ( panelID, message ) {

@@ -75,8 +75,8 @@ for using native node modules.
  - Enhance the native Dialog
    - Remember dialog last edit position
  - Enhance Ipc Programming Experience
-   - Lots of Ipc APIs for easily control ipc send and recv
-   - Can sending ipc message to specific panel
-   - Can sending ipc message to specific window
-   - Add ipc callback, which can wait for a callback message
-   - A powerfule ipc-debugger to help you writing better ipc programmes
+   - Add more Ipc methods to help sending and recieving ipc messages in different level
+   - Allow sending ipc message to specific panel
+   - Allow sending ipc message to specific window
+   - Allow sending ipc request and waiting for the reply in callback function
+   - An ipc-debugger to help you writing better ipc code
