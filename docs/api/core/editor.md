@@ -10,6 +10,8 @@
 ## Editor Protocols
   - `editor-framework://`: Map to the editor framework module path.
   - `app://`: Map to the root path of your app.
+  - `packages://{package-name}`: Map to the `{package-name}` path.
+  - `widgets://{widget-name}`: Map to the `{widget-name}` path.
 
 ## Editor Options
 

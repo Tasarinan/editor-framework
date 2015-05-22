@@ -29,6 +29,19 @@ Protocol.registerProtocol('app', function(request) {
     return new Protocol.RequestFileJob(file);
 });
 
+// register protocol packages://
+Protocol.registerProtocol('packages', function(request) {
+    var url = decodeURIComponent(request.url);
+    var data = Url.parse(url);
+
+    var packagePath = Editor.Package.packagePath(data.hostname);
+    if ( packagePath ) {
+        var file = Path.join( packagePath, data.pathname );
+        return new Protocol.RequestFileJob(file);
+    }
+    return new Protocol.RequestErrorJob(-6); // net::ERR_FILE_NOT_FOUND
+});
+
 // register protocol widgets://
 Protocol.registerProtocol('widgets', function(request) {
     var url = decodeURIComponent(request.url);

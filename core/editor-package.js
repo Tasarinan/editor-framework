@@ -4,6 +4,7 @@ var Fs = require('fire-fs');
 
 var Package = {};
 var _path2package = {};
+var _name2packagePath = {};
 var _panel2info = {};
 var _widget2info = {};
 
@@ -98,14 +99,16 @@ Package.load = function ( path ) {
                 Editor.error( 'Failed to register widget \'%s\' from \'%s\', already exists.', widgetName, packageObj.name );
                 continue;
             }
+            var widgetPath = packageObj.widgets[widgetName];
             _widget2info[widgetName] = {
-                path: Path.join( path, packageObj.widgets[widgetName] ),
+                path: Path.join( path, Path.dirname(widgetPath) ),
             };
         }
     }
 
     //
     _path2package[path] = packageObj;
+    _name2packagePath[packageObj.name] = path;
     Editor.success('%s loaded', packageObj.name);
     Editor.sendToWindows('package:loaded', packageObj.name);
 };
@@ -162,6 +165,7 @@ Package.unload = function ( path ) {
 
     //
     delete _path2package[path];
+    delete _name2packagePath[packageObj.name];
     Editor.success('%s unloaded', packageObj.name);
     Editor.sendToWindows('package:unloaded', packageObj.name);
 };
@@ -189,6 +193,10 @@ Package.packageInfo = function ( path ) {
     return null;
 };
 
+Package.packagePath = function ( packageName ) {
+    return _name2packagePath[packageName];
+};
+
 // ========================================
 // Ipc
 // ========================================
@@ -208,15 +216,7 @@ Ipc.on('package:query', function ( reply ) {
 });
 
 Ipc.on('package:reload', function ( name ) {
-    var path = null;
-    for ( var p in _path2package ) {
-        var packageInfo = _path2package[p];
-        if ( packageInfo.name === name ) {
-            path = p;
-            break;
-        }
-    }
-
+    var path = _name2packagePath[name];
     if ( !path ) {
         Editor.error('Failed to reload package %s, not found', name);
         return;
