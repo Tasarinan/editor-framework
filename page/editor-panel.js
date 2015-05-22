@@ -322,7 +322,7 @@ Panel.undock = function ( panelID ) {
     }
 
     // unload pagePanelInfo
-    Editor.Panel.unload(id);
+    Editor.Panel.unload(panelID);
 };
 
 Panel.dispatch = function ( panelID, ipcName ) {
