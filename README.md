@@ -23,7 +23,7 @@ widgets and panels, then refresh the page apply your changes.
 
 ```bash
 # Install npm packages
-sh npm.sh install # DO NOT use npm directly
+sh utils/npm.sh install # DO NOT use npm directly
 
 # Install bower packages
 bower install
@@ -39,6 +39,21 @@ sh demo.sh
 [electron way](https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md)
 for using native node modules.
 
+## Install Builtin Packages
+
+To install builtin packages, just create a folder named builtin, and git clone your packages in it.
+Here are a list of recommended packages to install for developing editor-framework:
+
+```bash
+# widgets
+git clone https://github.com/fireball-x/uikits
+git clone https://github.com/fireball-x/pixi-grid
+
+# panels
+git clone https://github.com/fireball-x/console
+git clone https://github.com/fireball-x/package-manager
+git clone https://github.com/fireball-x/ipc-debugger
+```
 
 ## Features
 
