@@ -1,4 +1,4 @@
-## Define Your Application
+## Define Your App
 
 To run your app with editor-framework, you should download and put `editor-framework` under your app
 folder. You also need to create a `package.json` file, and set its main to your app.js. like this:
@@ -110,10 +110,10 @@ code in this function:
 
 Invoked after all packages loaded. Basically you should open your main window in this function.
 
-## Define App ipc messages
+## Define ipc messages in your App
 
-You can define ipc messages in your app script. Just add a function with `app:` suffix, the
-editor-framework will load it before your app run.
+You can define ipc messages in your app script. Just add a function that use `app:` as prefix, the
+editor-framework will detect and load it before your app run.
 
 Example:
 
@@ -125,3 +125,9 @@ global.__app = {
     },
 };
 ```
+## Reload your App
+
+You can reload your App by calling `Editor.App.reload()`. This is useful if you have any changes
+in your app code, especially when you add or remove ipc messages.
+
+The Editor Framework also add a menu item `Developer/Reload Editor.App` to help you ease this task.

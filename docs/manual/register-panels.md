@@ -2,7 +2,7 @@
 
 Panel is the docking unit in Editor Framework. Each panel contains a panel frame.
 You can define a polymer element as your panel frame, and register it in `package.json`. The
-Editor Framework will dynamically load your custom element when it invoked.
+Editor Framework will dynamically load your polymer element when the panel opened.
 
 To define a panel frame, just create a html file like this:
 
@@ -28,7 +28,7 @@ To define a panel frame, just create a html file like this:
     });
 </script>
 ```
-Then save it in your package's panel folder. Then register it in your `package.json`:
+Then save it in your package's panel folder. After that register the html file in `package.json`:
 
 ```json
 {
@@ -45,8 +45,44 @@ Then save it in your package's panel folder. Then register it in your `package.j
 }
 ```
 
-When you use `Editor.Panel.open('simple.panel')` for the package we created above, the panel
-will be open and your frame will be loaded in it.
+Once your package loaded, you can use `Editor.Panel.open('simple.panel')` to open your panel.
+
+## Panel ID
+
+A panel id is a string equals to `{package-name}.{panel-name}`. It is used in most of
+the functions in `Editor.Panel` that needs to operate a specific panel.
+
+Suppose we have the following `package.json` file:
+
+```json
+{
+  "name": "foo",
+  "panels": {
+    "bar": {
+      "frame": "panel/simple.html"
+    },
+    "bar02": {
+      "frame": "panel/simple.html"
+    }
+  }
+}
+```
+
+The file register two panels `bar` and `bar02`, so that we will have two panel ID
+whiches are `foo.bar` and `foo.bar02`.
+
+## Messages
+
+TODO:
+
+
+## Shortcuts
+
+TODO:
+
+## Profiles
+
+TODO:
 
 ## Message: 'panel:open (argv)'
 

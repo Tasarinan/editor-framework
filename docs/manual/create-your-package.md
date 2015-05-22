@@ -46,19 +46,3 @@ it in your registered package path.
 ## Menu Path
 
 TODO:
-
-## Panel Profile
-
-TODO:
-
-## Panel Name
-
-TODO:
-
-## Panel Position
-
-TODO:
-
-## Panel Messages
-
-TODO:
