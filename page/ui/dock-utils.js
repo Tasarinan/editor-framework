@@ -8,7 +8,7 @@ EditorUI.DockUtils = (function () {
     var _dragenterCnt = 0;
     var _draggingInfo = null;
 
-    if ( Editor.isApp ) {
+    if ( Editor.isNative ) {
         var Ipc = require('ipc');
 
         Ipc.on( 'panel:dragstart', function ( info ) {

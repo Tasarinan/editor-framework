@@ -11,6 +11,7 @@ Modules for the main process (a.k.a `core`):
 
   * [Editor](api/core/editor.md)
   * [Editor.Menu](api/core/editor-menu.md)
+  * [Editor.Package](api/core/editor-package.md)
 
 Modules for the renderer process (a.k.a `page`):
 

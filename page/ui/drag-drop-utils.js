@@ -1,6 +1,6 @@
 EditorUI.DragDrop = (function () {
     var Path = null;
-    if ( Editor.isApp ) {
+    if ( Editor.isNative ) {
         Path = require('fire-path');
     }
 

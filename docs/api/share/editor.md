@@ -1,29 +1,65 @@
 ## Editor
 
-## Editor.log(...)
+## Editor.isNode
 
-log messages in normal level
+If we have nodejs or iojs.
 
-## Editor.success(...)
+## Editor.isElectron
 
-log messages in success level
+If we are running in electron.
 
-## Editor.failed(...)
+## Editor.isNative
 
-log messages in failed level
+If we are running in any shells.
 
-## Editor.info(...)
+## Editor.isPureWeb
 
-log messages in info level
+If we are a pure web app ( Run in browser ).
 
-## Editor.warn(...)
+## Editor.isPageLevel
 
-log messages in warning level and output the stack
+If we are in `page-level`.
 
-## Editor.error(...)
+## Editor.isCoreLevel
 
-log messages in error level and output the stack
+If we are in `core-level`.
 
-## Editor.fatal(...)
+## Editor.isDarwin
 
-log messages in fatal level and shutdown the process
+If we are in Mac OSX platform.
+
+## Editor.isWin32
+
+If we are in Windows platform.
+
+## Editor.isRetina
+
+If we are in retina display. Only works in `page-level`.
+
+## Class Method: Editor.log(...)
+
+Log messages in normal level.
+
+## Class Method: Editor.success(...)
+
+Log messages in success level.
+
+## Class Method: Editor.failed(...)
+
+Log messages in failed level.
+
+## Class Method: Editor.info(...)
+
+Log messages in info level.
+
+## Class Method: Editor.warn(...)
+
+Log messages in warning level and output the stack.
+
+## Class Method: Editor.error(...)
+
+Log messages in error level and output the stack.
+
+## Class Method: Editor.fatal(...)
+
+Log messages in fatal level and shutdown the process.

@@ -7,6 +7,10 @@
   - `Editor.frameworkPath`: The editor framework module path. Usually it is `{your-app}/editor-framework/`
   - `Editor.dataPath`: Your application's data path. Usually it is `~/.{your-app-name}`
 
+## Editor Protocols
+  - `editor-framework://`: Map to the editor framework module path.
+  - `app://`: Map to the root path of your app.
+
 ## Editor Options
 
   - `Editor.isDev`: Indicate if the application run with `--dev`

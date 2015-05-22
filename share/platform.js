@@ -4,22 +4,22 @@
  * @type {boolean}
  */
 Editor.isNode = !!(typeof process !== 'undefined' && process.versions && process.versions.node);
-Editor.isAtomShell = !!(Editor.isNode && ('atom-shell' in process.versions || 'electron' in process.versions));
-Editor.isApp = Editor.isAtomShell;
+Editor.isElectron = !!(Editor.isNode && ('electron' in process.versions));
+Editor.isNative = Editor.isElectron;
 
 /**
  * indicates whether executes in common web browser
  * @property isPureWeb
  * @type {boolean}
  */
-Editor.isPureWeb = !Editor.isNode && !Editor.isApp; // common web browser
+Editor.isPureWeb = !Editor.isNode && !Editor.isNative; // common web browser
 
 /**
  * indicates whether executes in common web browser, or editor's window process(atom-shell's renderer context)
  * @property isPageLevel
  * @type {boolean}
  */
-if (Editor.isAtomShell) {
+if (Editor.isElectron) {
     Editor.isPageLevel = typeof process !== 'undefined' && process.type === 'renderer';
 } else {
     Editor.isPageLevel = (typeof __dirname === 'undefined' || __dirname === null);
