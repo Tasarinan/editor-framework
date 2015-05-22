@@ -13,7 +13,7 @@ it in your registered package path.
   - `version` String - The version number.
   - `description` String [Optional] - A simple description of the usage of your package.
   - `author` String [Optional] - Who made this.
-  - `environment` Object [Optional] - The version of the runtime module required for this package.
+  - `hosts` Object [Optional] - The version of the hosts required for this package.
   - `main` String [Optional] - A file path to the main entry javascript.
   - `menus` Object [Optional] - The menu list.
     - `key` String - Menu path, example: `foo/bar/foobar`
