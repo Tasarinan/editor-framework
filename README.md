@@ -22,8 +22,8 @@ widgets and panels, then refresh the page apply your changes.
 ## Install
 
 ```bash
-# Install npm packages (A shell script help the gyp to build native module for electron)
-sh npm.sh install
+# Install npm packages
+sh npm.sh install # DO NOT use npm directly
 
 # Install bower packages
 bower install
