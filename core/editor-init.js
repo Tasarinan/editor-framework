@@ -259,16 +259,24 @@ Editor.watchPackages = function () {
     .on('change', function (path) {
         var packageInfo = Editor.Package.packageInfo(path);
         if ( packageInfo ) {
+            // reload panel
             var panelPath = Path.join(packageInfo._path, 'panel');
             if ( Path.contains(panelPath, path) ) {
                 for ( var panelName in packageInfo.panels ) {
                     var panelID = packageInfo.name + '.' + panelName;
                     Editor.sendToWindows( 'panel:out-of-date', panelID );
                 }
+                return;
             }
-            else {
-                Editor.Package.reload(packageInfo._path);
+
+            // reload element
+            var elementPath = Path.join(packageInfo._path, 'element');
+            if ( Path.contains(elementPath, path) ) {
+                return;
             }
+
+            // reload core
+            Editor.Package.reload(packageInfo._path);
         }
     })
     .on('error', function (error) {

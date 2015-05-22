@@ -1,6 +1,7 @@
 var Protocol = require('protocol');
 var Url = require('fire-url');
 var Path = require('fire-path');
+var Fs = require('fire-fs');
 
 // native protocol register
 
@@ -26,6 +27,19 @@ Protocol.registerProtocol('app', function(request) {
     }
     var file = Path.join( Editor.cwd, relativePath );
     return new Protocol.RequestFileJob(file);
+});
+
+// register protocol widgets://
+Protocol.registerProtocol('widgets', function(request) {
+    var url = decodeURIComponent(request.url);
+    var data = Url.parse(url);
+
+    var info = Editor.Package.widgetInfo(data.hostname);
+    if ( info ) {
+        var file = Path.join( info.path, data.pathname );
+        return new Protocol.RequestFileJob(file);
+    }
+    return new Protocol.RequestErrorJob(-6); // net::ERR_FILE_NOT_FOUND
 });
 
 // Editor.url protocol register

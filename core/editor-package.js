@@ -5,6 +5,7 @@ var Fs = require('fire-fs');
 var Package = {};
 var _path2package = {};
 var _panel2info = {};
+var _widget2info = {};
 
 Package.load = function ( path ) {
     if ( _path2package[path] )
@@ -90,6 +91,19 @@ Package.load = function ( path ) {
         }
     }
 
+    // register widget
+    if ( packageObj.widgets && typeof packageObj.widgets === 'object' ) {
+        for ( var widgetName in packageObj.widgets ) {
+            if ( _widget2info[widgetName] ) {
+                Editor.error( 'Failed to register widget \'%s\' from \'%s\', already exists.', widgetName, packageObj.name );
+                continue;
+            }
+            _widget2info[widgetName] = {
+                path: Path.join( path, packageObj.widgets[widgetName] ),
+            };
+        }
+    }
+
     //
     _path2package[path] = packageObj;
     Editor.success('%s loaded', packageObj.name);
@@ -106,6 +120,13 @@ Package.unload = function ( path ) {
         for ( var panelName in packageObj.panels ) {
             var panelID = packageObj.name + '.' + panelName;
             delete _panel2info[panelID];
+        }
+    }
+
+    // unregister widget
+    if ( packageObj.widgets && typeof packageObj.widgets === 'object' ) {
+        for ( var widgetName in packageObj.widgets ) {
+            delete _widget2info[widgetName];
         }
     }
 
@@ -152,6 +173,10 @@ Package.reload = function ( path ) {
 
 Package.panelInfo = function ( panelID ) {
     return _panel2info[panelID];
+};
+
+Package.widgetInfo = function ( widgetName ) {
+    return _widget2info[widgetName];
 };
 
 // the path can be any files in this package

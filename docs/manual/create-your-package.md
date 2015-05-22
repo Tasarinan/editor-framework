@@ -37,6 +37,9 @@ it in your registered package path.
       - `profiles` Object [Optional] - The list of default profile settings.
         - `key` String - The profile type, by default it can be `local` and `global`. You can register more profile type through `Editor.registerProfilePath`
         - `value` Object - The default setting values.
+  - `widgets` Object [Optional] - The widget list.
+    - `key` String - Widget name, this name will be used as host name in `widgets://{host-name}/` protocol.
+    - `value` Object - The widget folder path
   - `dependencies` Object [Optional] - The dependencies list.
   - `npmDependencies??` Object [Optional] - The npm dependencies list.
   - `bowerDependencies??` Object [Optional] - The bower dependencies list.
