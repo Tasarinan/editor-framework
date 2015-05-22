@@ -18,7 +18,7 @@ it in your registered package path.
   - `menus` Object [Optional] - The menu list.
     - `key` String - Menu path, example: `foo/bar/foobar`
     - `value` Object - Menu options
-      - [Editor Menu Template](https://github.com/fireball-x/editor-framework/blob/master/docs/api/core/editor-menu.md)
+      - [Editor Menu Template](https://github.com/fireball-x/editor-framework/blob/master/docs/api/core/menu.md)
   - `panels` Object [Optional] - The panel list.
     - `key` String - Panel name, this name will be used with package name to create an ID (e.g. `PackageName.PanelName`).
     - `value` Object - Panel options.
