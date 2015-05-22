@@ -71,7 +71,7 @@ Panel.open = function ( panelID, argv ) {
 
     //
     var windowName = 'editor-window-' + new Date().getTime();
-    var options = {
+    var windowOptions = {
         'use-content-size': true,
         'width': parseInt(panelInfo.width),
         'height': parseInt(panelInfo.height),
@@ -84,22 +84,24 @@ Panel.open = function ( panelID, argv ) {
     // load layout-settings, and find windows by name
     var layoutProfile = Editor.loadProfile('layout.' + panelID, 'local' );
     if ( layoutProfile ) {
-        options.x = parseInt(layoutProfile.x);
-        options.y = parseInt(layoutProfile.y);
-        options.width = parseInt(layoutProfile.width);
-        options.height = parseInt(layoutProfile.height);
+        windowOptions.x = parseInt(layoutProfile.x);
+        windowOptions.y = parseInt(layoutProfile.y);
+        windowOptions.width = parseInt(layoutProfile.width);
+        windowOptions.height = parseInt(layoutProfile.height);
     }
 
-    options['window-type'] = panelInfo.type || 'dockable';
+    windowOptions['window-type'] = panelInfo.type || 'dockable';
 
     // NOTE: fixed-size window always use package.json settings
     if ( panelInfo.type === 'fixed-size' ) {
-        options.width = parseInt(panelInfo.width);
-        options.height = parseInt(panelInfo.height);
+        windowOptions.width = parseInt(panelInfo.width);
+        windowOptions.height = parseInt(panelInfo.height);
     }
 
-    if ( isNaN(options.width) ) options.width = 800;
-    if ( isNaN(options.height) ) options.height = 600;
+    if ( isNaN(windowOptions.width) ) windowOptions.width = 400;
+    if ( isNaN(windowOptions.height) ) windowOptions.height = 400;
+    if ( isNaN(windowOptions['min-width']) ) windowOptions['min-width'] = 200;
+    if ( isNaN(windowOptions['min-height']) ) windowOptions['min-height'] = 200;
 
     // create new window
     // DISABLE: currently, I don't want to support page
@@ -108,11 +110,11 @@ Panel.open = function ( panelID, argv ) {
     // }
 
     //
-    editorWin = new Editor.Window(windowName, options);
+    editorWin = new Editor.Window(windowName, windowOptions);
     _dock( panelID, editorWin );
 
     // BUG: https://github.com/atom/atom-shell/issues/1321
-    editorWin.nativeWin.setContentSize( options.width, options.height );
+    editorWin.nativeWin.setContentSize( windowOptions.width, windowOptions.height );
     editorWin.nativeWin.setMenuBarVisibility(false);
     editorWin.load(Panel.templateUrl, {
         panelID: panelID
