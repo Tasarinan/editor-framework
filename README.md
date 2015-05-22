@@ -22,11 +22,11 @@ widgets and panels, then refresh the page apply your changes.
 ## Install
 
 ```bash
-# Install npm packages
-npm install .
+# Install npm packages (A shell script help the gyp to build native module for electron)
+sh npm.sh install
 
 # Install bower packages
-bower install .
+bower install
 
 # Install electron
 gulp update-electron
@@ -34,6 +34,11 @@ gulp update-electron
 # run the demo app
 sh demo.sh
 ```
+
+**NOTE:** we use `npm.sh` instead of npm here, this is just a shell script follow the
+[electron way](https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md)
+for using native node modules.
+
 
 ## Features
 
