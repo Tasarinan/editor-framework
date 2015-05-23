@@ -46,7 +46,7 @@ Here are a list of recommended packages to install for developing editor-framewo
 
 ```bash
 # widgets
-git clone https://github.com/fireball-x/uikits
+git clone https://github.com/fireball-x/ui-kit
 git clone https://github.com/fireball-x/pixi-grid
 
 # panels
