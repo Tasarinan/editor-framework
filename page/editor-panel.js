@@ -393,7 +393,7 @@ Panel.focus = function ( panelID ) {
     var parentEL = Polymer.dom(frameEL).parentNode;
     if ( parentEL instanceof EditorUI.Panel ) {
         parentEL.select(frameEL);
-        parentEL.focus();
+        parentEL.setFocus();
     }
 };
 

@@ -5,6 +5,8 @@ Editor.registerPanel( 'grid-demo.panel', {
     listeners: {
         'resize': '_onResize',
         'panel-show': '_onPanelShow',
+        'keydown': '_onKeyDown',
+        'keyup': '_onKeyUp',
     },
 
     ready: function () {
@@ -35,42 +37,40 @@ Editor.registerPanel( 'grid-demo.panel', {
 
     _onMouseDown: function ( event ) {
         if ( event.which === 1 ) {
-            event.stopPropagation();
+            if ( event.shiftKey ) {
+                this.style.cursor = '-webkit-grabbing';
+                EditorUI.startDrag('-webkit-grab', event,
+                                   // move
+                                   function ( event, dx, dy, offsetx, offsety ) {
+                                       this.$.grid.pan( dx, dy );
+                                       this.$.grid.repaint();
+                                   }.bind(this),
 
-            var mousemoveHandle = function(event) {
-                event.stopPropagation();
+                                   // end
+                                   function ( event, dx, dy, offsetx, offsety ) {
+                                       if ( event.shiftKey )
+                                           this.style.cursor = '-webkit-grab';
+                                       else
+                                           this.style.cursor = '';
+                                   }.bind(this));
+                return;
+            }
+        }
+    },
 
-                var dx = event.clientX - this._lastClientX;
-                var dy = event.clientY - this._lastClientY;
+    _onKeyDown: function ( event ) {
+        event.stopPropagation();
 
-                this._lastClientX = event.clientX;
-                this._lastClientY = event.clientY;
+        if ( Editor.KeyCode(event.which) === 'shift' ) {
+            this.style.cursor = '-webkit-grab';
+        }
+    },
 
-                this.$.grid.pan( dx, dy );
-                this.$.grid.repaint();
-            }.bind(this);
+    _onKeyUp: function ( event ) {
+        event.stopPropagation();
 
-            var mouseupHandle = function(event) {
-                event.stopPropagation();
-
-                document.removeEventListener('mousemove', mousemoveHandle);
-                document.removeEventListener('mouseup', mouseupHandle);
-
-                EditorUI.removeDragGhost();
-                this.style.cursor = '';
-            }.bind(this);
-
-            //
-            this._lastClientX = event.clientX;
-            this._lastClientY = event.clientY;
-
-            //
-            EditorUI.addDragGhost('-webkit-grabbing');
-            this.style.cursor = '-webkit-grabbing';
-            document.addEventListener ( 'mousemove', mousemoveHandle );
-            document.addEventListener ( 'mouseup', mouseupHandle );
-
-            return;
+        if ( Editor.KeyCode(event.which) === 'shift' ) {
+            this.style.cursor = '';
         }
     },
 });

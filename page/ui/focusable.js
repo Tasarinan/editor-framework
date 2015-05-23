@@ -123,12 +123,10 @@ EditorUI.focusable = (function () {
         },
 
         _onFocusIn: function ( event ) {
-            event.stopPropagation();
             this.focused = true;
         },
 
         _onFocusOut: function ( event ) {
-            event.stopPropagation();
             this.focused = false;
         },
 
@@ -140,7 +138,7 @@ EditorUI.focusable = (function () {
             this.focused = false;
         },
 
-        focus: function () {
+        setFocus: function () {
             if ( this._disabledInHierarchy() )
                 return;
 
@@ -150,7 +148,7 @@ EditorUI.focusable = (function () {
             this.focused = true;
         },
 
-        blur: function () {
+        setBlur: function () {
             if ( this._disabledInHierarchy() )
                 return;
 

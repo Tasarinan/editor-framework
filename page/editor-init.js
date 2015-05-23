@@ -151,6 +151,7 @@ Editor.require('editor-framework://share/math');
 Editor.Easing = Editor.require('editor-framework://share/easing');
 Editor.require('editor-framework://page/ipc-init');
 Editor.Selection = Editor.require('editor-framework://share/selection');
+Editor.KeyCode = Editor.require('editor-framework://share/keycode');
 
 // ==========================
 // Layout API

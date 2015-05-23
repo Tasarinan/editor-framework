@@ -124,6 +124,7 @@ Editor.Utils = require('../share/editor-utils');
 require('../share/math');
 require('./ipc-init');
 Editor.Selection = require('../share/selection');
+Editor.KeyCode = require('../share/keycode');
 
 // ==========================
 // profiles API

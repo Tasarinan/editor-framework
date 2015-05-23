@@ -106,6 +106,64 @@
         return null;
     };
 
+    var _cancelDrag = null;
+    EditorUI.startDrag = function ( cursor, event, onMove, onEnd ) {
+        EditorUI.addDragGhost(cursor);
+
+        event.stopPropagation();
+
+        var pressx = event.clientX, lastx = event.clientX;
+        var pressy = event.clientY, lasty = event.clientY;
+        var dx = 0, offsetx = 0;
+        var dy = 0, offsety = 0;
+
+        var mousemoveHandle = function(event) {
+            event.stopPropagation();
+
+            dx = event.clientX - lastx;
+            dy = event.clientY - lasty;
+            offsetx = event.clientX - pressx;
+            offsety = event.clientY - pressy;
+
+            lastx = event.clientX;
+            lasty = event.clientY;
+
+            onMove( event, dx, dy, offsetx, offsety );
+        };
+
+        var mouseupHandle = function(event) {
+            event.stopPropagation();
+
+            document.removeEventListener('mousemove', mousemoveHandle);
+            document.removeEventListener('mouseup', mouseupHandle);
+
+            EditorUI.removeDragGhost();
+
+            dx = event.clientX - lastx;
+            dy = event.clientY - lasty;
+            offsetx = event.clientX - pressx;
+            offsety = event.clientY - pressy;
+
+            _cancelDrag = null;
+            onEnd( event, dx, dy, offsetx, offsety);
+        }.bind(this);
+
+        _cancelDrag = function () {
+            document.removeEventListener('mousemove', mousemoveHandle);
+            document.removeEventListener('mouseup', mouseupHandle);
+
+            EditorUI.removeDragGhost();
+        };
+
+        document.addEventListener ( 'mousemove', mousemoveHandle );
+        document.addEventListener ( 'mouseup', mouseupHandle );
+    };
+
+    EditorUI.cancelDrag = function () {
+        if ( _cancelDrag )
+            _cancelDrag();
+    };
+
     //
     var _dragGhost = null;
     EditorUI.addDragGhost = function ( cursor ) {

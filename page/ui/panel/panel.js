@@ -23,40 +23,40 @@ EditorUI.Panel = Polymer({
             if ( next >= this.tabCount )
                 next = 0;
             this.select(next);
-            this.focus();
+            this.setFocus();
         }.bind(this));
         mousetrap.bind(['command+shift+[','ctrl+shift+tab'], function () {
             var prev = this.activeIndex-1;
             if ( prev < 0 )
                 prev = this.tabCount-1;
             this.select(prev);
-            this.focus();
+            this.setFocus();
         }.bind(this));
 
         // grab mousedown in capture phase to make sure we focus on it
         this.addEventListener('mousedown', function (event) {
             if ( event.which === 1 ) {
-                this.focus();
+                this.setFocus();
             }
         }, true);
     },
 
-    _onMouseDown: function ( event ) {
-        if ( event.which === 1 ) {
-            event.stopPropagation();
-            this.focus();
-        }
-    },
-
-    focus: function () {
+    setFocus: function () {
         if ( this.activeTab ) {
             this.activeTab.frameEL.focus();
         }
     },
 
-    blur: function () {
+    setBlur: function () {
         if ( this.activeTab ) {
             this.activeTab.frameEL.blur();
+        }
+    },
+
+    _onMouseDown: function ( event ) {
+        if ( event.which === 1 ) {
+            event.stopPropagation();
+            this.setFocus();
         }
     },
 

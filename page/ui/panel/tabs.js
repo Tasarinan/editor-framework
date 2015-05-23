@@ -154,13 +154,13 @@ EditorUI.Tabs = Polymer({
 
     _onClick: function ( event ) {
         event.stopPropagation();
-        this.panelEL.focus();
+        this.panelEL.setFocus();
     },
 
     _onTabClick: function ( event ) {
         event.stopPropagation();
         this.select(event.target);
-        this.panelEL.focus();
+        this.panelEL.setFocus();
     },
 
     _onDropAreaEnter: function ( event ) {
