@@ -258,7 +258,10 @@ ConfirmableSelectionUnit.prototype.cancel = function () {
     }
 };
 
-// selection module
+/**
+ * Selection module
+ * @namespace Editor.Selection
+ */
 var Selection = {
     register: function ( type ) {
         if ( !Editor.isCoreLevel ) {
@@ -275,6 +278,7 @@ var Selection = {
     /**
      * Confirms all current selecting objects, no matter which type they are.
      * This operation may trigger deactivated and activated events.
+     * @memberof Editor.Selection
      */
     confirm: function () {
         for ( var p in _units ) {
@@ -285,6 +289,7 @@ var Selection = {
     /**
      * Cancels all current selecting objects, no matter which type they are.
      * This operation may trigger selected and unselected events.
+     * @memberof Editor.Selection
      */
     cancel: function () {
         for ( var p in _units ) {
@@ -298,9 +303,10 @@ var Selection = {
      * after that, if you confirm the selection, `activated` message will be sent, otherwise `unselected` message will be sent.
      * if confirm === true, the activated will be sent in the same time.
      * @param {string} type
-     * @param {string|string[]} id
+     * @param {(string|string[])} id
      * @param {boolean} [unselectOthers=true]
      * @param {boolean} [confirm=true]
+     * @memberof Editor.Selection
      */
     select: function ( type, id, unselectOthers, confirm ) {
         var selectionUnit = _units[type];
@@ -329,8 +335,9 @@ var Selection = {
 
     /**
      * @param {string} type
-     * @param {string|string[]} id
+     * @param {(string|string[])} id
      * @param {boolean} [confirm=true]
+     * @memberof Editor.Selection
      */
     unselect: function (type, id, confirm) {
         var selectionUnit = _units[type];
@@ -351,6 +358,7 @@ var Selection = {
     /**
      * @param {string} type
      * @param {string} id
+     * @memberof Editor.Selection
      */
     hover: function ( type, id ) {
         var selectionUnit = _units[type];
@@ -366,6 +374,7 @@ var Selection = {
     /**
      * @param {string} type
      * @param {string} id
+     * @memberof Editor.Selection
      */
     setContext: function ( type, id ) {
         var selectionUnit = _units[type];
@@ -379,6 +388,7 @@ var Selection = {
 
     /**
      * @param {string} type
+     * @memberof Editor.Selection
      */
     clear: function ( type ) {
         var selectionUnit = _units[type];
@@ -394,6 +404,7 @@ var Selection = {
     /**
      * @param {string} type
      * @return {string} hovering
+     * @memberof Editor.Selection
      */
     hovering: function ( type ) {
         var selectionUnit = _units[type];
@@ -408,6 +419,7 @@ var Selection = {
     /**
      * @param {string} type
      * @return {string} contexts
+     * @memberof Editor.Selection
      */
     contexts: function ( type ) {
         var selectionUnit = _units[type];
@@ -422,6 +434,7 @@ var Selection = {
     /**
      * @param {string} type
      * @return {string} current activated
+     * @memberof Editor.Selection
      */
     curActivate: function ( type ) {
         var selectionUnit = _units[type];
@@ -436,6 +449,7 @@ var Selection = {
     /**
      * @param {string} type
      * @return {string[]} selected list
+     * @memberof Editor.Selection
      */
     curSelection: function ( type ) {
         var selectionUnit = _units[type];
@@ -448,9 +462,10 @@ var Selection = {
     },
 
     /**
-     * @param {*[]} items - can be array of id, or any type else
+     * @param {string[]} items - an array of ids
      * @param {string} mode - ['top-level', 'deep', 'name']
      * @param {function} func
+     * @memberof Editor.Selection
      */
     filter: function ( items, mode, func ) {
         var results, item, i, j;
@@ -593,18 +608,20 @@ if ( Editor.isCoreLevel ) {
 }
 
 if ( Editor.isPageLevel ) {
-    var results = Ipc.sendSync('selection:get-registers');
-    for ( var i = 0; i < results.length; ++i ) {
-        var info = results[i];
-        if ( _units[info.type] )
-            return;
+    (function () {
+        var results = Ipc.sendSync('selection:get-registers');
+        for ( var i = 0; i < results.length; ++i ) {
+            var info = results[i];
+            if ( _units[info.type] )
+                return;
 
-        var selectionUnit = new ConfirmableSelectionUnit(info.type);
-        selectionUnit.selection = info.selection.slice();
-        selectionUnit.lastActive = info.lastActive;
-        selectionUnit.lastHover = info.lastHover;
-        selectionUnit._context = info.context;
+            var selectionUnit = new ConfirmableSelectionUnit(info.type);
+            selectionUnit.selection = info.selection.slice();
+            selectionUnit.lastActive = info.lastActive;
+            selectionUnit.lastHover = info.lastHover;
+            selectionUnit._context = info.context;
 
-        _units[info.type] = selectionUnit;
-    }
+            _units[info.type] = selectionUnit;
+        }
+    })();
 }

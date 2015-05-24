@@ -55,6 +55,36 @@ Editor.registerPanel( 'grid-demo.panel', {
                                    }.bind(this));
                 return;
             }
+            else {
+                var rect = this.$.grid.getBoundingClientRect();
+                var startx = event.clientX - rect.left;
+                var starty = event.clientY - rect.top;
+
+                EditorUI.startDrag('default', event,
+                                   // move
+                                   function ( event, dx, dy, offsetx, offsety ) {
+                                       var x = startx;
+                                       var y = starty;
+                                       if ( offsetx < 0.0 ) {
+                                           x += offsetx;
+                                           offsetx = -offsetx;
+                                       }
+                                       if ( offsety < 0.0 ) {
+                                           y += offsety;
+                                           offsety = -offsety;
+                                       }
+
+                                       this.$.grid.updateSelectRect( x, y, offsetx, offsety );
+                                       this.$.grid.repaint();
+                                   }.bind(this),
+
+                                   // end
+                                   function ( event, dx, dy, offsetx, offsety ) {
+                                       this.$.grid.clearSelectRect();
+                                       this.$.grid.repaint();
+                                   }.bind(this));
+                return;
+            }
         }
     },
 

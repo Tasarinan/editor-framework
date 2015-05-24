@@ -122,6 +122,19 @@ function _cloneMenuExcept ( newMenu, nativeMenu, exceptPath, curPath ) {
     return result;
 }
 
+/**
+ * @class
+ * @memberof Editor
+ * @alias Menu
+ * @param {object[]|object} template - Menu template for initialize. The template take the options of
+ * Electron's [Menu Item](https://github.com/atom/electron/blob/master/docs/api/menu-item.md)
+ * plus the following properties.
+ * @param {string} template.message - Ipc message name.
+ * @param {string} template.command - A global function in core level (e.g. Editor.foo.bar ).
+ * @param {array} template.params - The parameters passed through ipc.
+ * @param {string} template.panel - The panelID, if specified, the message will send to panel.
+ * @param {object} [webContents] - A [WebContents](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#class-webcontents) object.
+ */
 function EditorMenu ( template, webContents ) {
     if ( template ) {
         EditorMenu.parseTemplate(template, webContents);
@@ -132,18 +145,34 @@ function EditorMenu ( template, webContents ) {
     }
 }
 
+/**
+ * Dereference the native menu.
+ */
 EditorMenu.prototype.dispose = function () {
     this.nativeMenu = null;
 };
 
+/**
+ * Reset the menu from template.
+ * @param {object[]|object} template
+ */
 EditorMenu.prototype.reset = function (template) {
     this.nativeMenu = Menu.buildFromTemplate(template);
 };
 
+
+/**
+ * Clear all menu item in it.
+ */
 EditorMenu.prototype.clear = function () {
     this.nativeMenu = new Menu();
 };
 
+/**
+ * Add menu item at path with template
+ * @param {string} path - A menu path
+ * @param {object[]|object} template
+ */
 EditorMenu.prototype.add = function ( path, template ) {
     EditorMenu.parseTemplate(template);
 
@@ -194,6 +223,10 @@ EditorMenu.prototype.add = function ( path, template ) {
     return true;
 };
 
+/**
+ * Remove menu item at path.
+ * @param {string} path - A menu path
+ */
 // base on electron#527 said, there is no simple way to remove menu item
 // https://github.com/atom/electron/issues/527
 EditorMenu.prototype.remove = function ( path ) {
@@ -209,6 +242,15 @@ EditorMenu.prototype.remove = function ( path ) {
     return true;
 };
 
+/**
+ * Set menu options at path.
+ * @param {string} path - A menu path
+ * @param {object} [options]
+ * @param {NativeImage} [options.icon] - A [NativeImage](https://github.com/atom/electron/blob/master/docs/api/native-image.md) 
+ * @param {boolean} [options.enabled]
+ * @param {boolean} [options.visible]
+ * @param {boolean} [options.checked] - NOTE: You must set your menu-item type to 'checkbox' to make it work
+ */
 EditorMenu.prototype.set = function ( path, options ) {
     var menuItem = _getMenuItem( this.nativeMenu, path, false );
 
@@ -233,9 +275,6 @@ EditorMenu.prototype.set = function ( path, options ) {
 
     if ( options.checked !== undefined )
         menuItem.checked = options.checked;
-
-    if ( options.position !== undefined )
-        menuItem.position = options.position;
 
     return true;
 };

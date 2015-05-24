@@ -2,14 +2,11 @@
 // Source: http://jsfiddle.net/vWx8V/
 // http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
 
-
-
 /**
  * Conenience method returns corresponding value for given keyName or keyCode.
  *
  * @param {Mixed} keyCode {Number} or keyName {String}
  * @return {Mixed}
- * @api public
  */
 
 exports = module.exports = function(searchInput) {

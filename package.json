@@ -12,6 +12,11 @@
   "bugs": {
     "url": "https://github.com/fireball-x/editor-framework/issues"
   },
+  "scripts": {
+    "test": "TODO",
+    "api-core": "jsdoc -c ./jsdoc-core.conf.json",
+    "api-page": "jsdoc -c ./jsdoc-page.conf.json"
+  },
   "dependencies": {
     "async": "0.9.0",
     "browserify": "10.1.1",
@@ -38,7 +43,9 @@
     "gulp-watch": "4.2.4",
     "hydrolysis": "1.4.0",
     "jshint-stylish": "1.0.2",
-    "vulcanize": "1.5.1"
+    "vulcanize": "1.5.1",
+    "jaguarjs-jsdoc": "git+https://github.com/davidshimjs/jaguarjs-jsdoc.git",
+    "jsdoc": "3.3.0"
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.26.1",

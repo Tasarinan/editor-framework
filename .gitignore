@@ -23,6 +23,7 @@ bower_components/
 bin/
 ext/
 builtin/
+api/
 
 # webstorm
 .idea

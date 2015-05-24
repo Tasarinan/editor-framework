@@ -13,6 +13,11 @@ var Chokidar = require('chokidar');
 var _consoleConnected = false;
 var _logs = [];
 
+/**
+ * Log the normal message and show on the console.
+ * The method will send ipc message `console:log` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.log = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -23,6 +28,11 @@ Editor.log = function () {
     Editor.sendToWindows('console:log',text);
 };
 
+/**
+ * Log the success message and show on the console
+ * The method will send ipc message `console:success` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.success = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -33,6 +43,11 @@ Editor.success = function () {
     Editor.sendToWindows('console:success',text);
 };
 
+/**
+ * Log the failed message and show on the console
+ * The method will send ipc message `console:failed` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.failed = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -43,6 +58,11 @@ Editor.failed = function () {
     Editor.sendToWindows('console:failed',text);
 };
 
+/**
+ * Log the info message and show on the console
+ * The method will send ipc message `console:info` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.info = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -53,6 +73,12 @@ Editor.info = function () {
     Editor.sendToWindows('console:info',text);
 };
 
+/**
+ * Log the warnning message and show on the console,
+ * it also shows the call stack start from the function call it.
+ * The method will send ipc message `console:warn` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.warn = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -67,6 +93,12 @@ Editor.warn = function () {
     Editor.sendToWindows('console:warn',text);
 };
 
+/**
+ * Log the error message and show on the console,
+ * it also shows the call stack start from the function call it.
+ * The method will sends ipc message `console:error` to all windows.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.error = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -81,6 +113,11 @@ Editor.error = function () {
     Editor.sendToWindows('console:error',text);
 };
 
+/**
+ * Log the fatal message and show on the console,
+ * the app will quit immediately after that.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.fatal = function () {
     var text = Util.format.apply(Util, arguments);
 
@@ -95,10 +132,17 @@ Editor.fatal = function () {
     // NOTE: fatal error will close app immediately, no need for ipc.
 };
 
+/**
+ * Connect to console panel. Once the console connected, all logs will kept in `core-level` and display
+ * on the console panel in `page-level`.
+ */
 Editor.connectToConsole = function () {
     _consoleConnected = true;
 };
 
+/**
+ * Clear the logs
+ */
 Editor.clearLog = function () {
     _logs = [];
 };
@@ -131,14 +175,23 @@ Editor.KeyCode = require('../share/keycode');
 // ==========================
 
 var _path2profiles = {};
-
-// type: global, local, project
 function _saveProfile ( path, profile ) {
     var json = JSON.stringify(profile, null, 2);
     Fs.writeFileSync(path, json, 'utf8');
 }
 
-// type: global, local, project
+/**
+ * Load a profile based on the name and type you send in. You must register the type
+ * via {@link Editor.registerProfilePath}. If no profile found, the function will wrap and return
+ * the defaultProfile.
+ * @param {string} name - The name of the profile.
+ * @param {string} type - The type of the profile, make sure you register the type via {@link Editor.registerProfilePath}.
+ * @param {object} defaultProfile - The default profile to use if the profile is not found.
+ * @return {object} A profile object with two additional function:
+ *  - save: save the profile.
+ *  - clear: clear all properties in the profile.
+ * @see Editor.registerProfilePath
+ */
 Editor.loadProfile = function ( name, type, defaultProfile ) {
     var path = Editor._type2profilepath[type];
     if ( !path ) {
@@ -207,9 +260,14 @@ Editor.loadProfile = function ( name, type, defaultProfile ) {
 // misc API
 // ==========================
 
+var _packageWatcher;
+
+/**
+ * Quit the App
+ */
 Editor.quit = function () {
-    if ( packageWatcher ) {
-        packageWatcher.close();
+    if ( _packageWatcher ) {
+        _packageWatcher.close();
     }
 
     var winlist = Editor.Window.windows;
@@ -218,6 +276,10 @@ Editor.quit = function () {
     }
 };
 
+/**
+ * Search and load all packages from the path you registerred
+ * @see Editor.registerPackagePath
+ */
 Editor.loadPackages = function () {
     var i, src = [];
     for ( i = 0; i < Editor._packagePathList.length; ++i ) {
@@ -232,30 +294,32 @@ Editor.loadPackages = function () {
     Editor.watchPackages();
 };
 
-var packageWatcher;
+/**
+ * Watch packages
+ */
 Editor.watchPackages = function () {
     var src = [];
     for ( i = 0; i < Editor._packagePathList.length; ++i ) {
         src.push( Editor._packagePathList[i] );
     }
-    packageWatcher = Chokidar.watch(src, {
+    _packageWatcher = Chokidar.watch(src, {
         ignored: /[\/\\]\./,
         ignoreInitial: true,
         persistent: true,
     });
 
-    packageWatcher
+    _packageWatcher
     .on('add', function(path) {
-        packageWatcher.add(path);
+        _packageWatcher.add(path);
     })
     .on('addDir', function(path) {
-        packageWatcher.add(path);
+        _packageWatcher.add(path);
     })
     .on('unlink', function(path) {
-        packageWatcher.unwatch(path);
+        _packageWatcher.unwatch(path);
     })
     .on('unlinkDir', function(path) {
-        packageWatcher.unwatch(path);
+        _packageWatcher.unwatch(path);
     })
     .on('change', function (path) {
         var packageInfo = Editor.Package.packageInfo(path);
@@ -293,12 +357,23 @@ Editor.watchPackages = function () {
 // ==========================
 
 Editor._type2profilepath = {};
+Editor._packagePathList = [];
+
+/**
+ * Register profile type with the path you provide.
+ * @param {string} type - The type of the profile you want to register.
+ * @param {string} path - The path for the register type.
+ * @see Editor.loadProfile
+ */
 Editor.registerProfilePath = function ( type, path ) {
     Editor._type2profilepath[type] = path;
 };
 
-
-Editor._packagePathList = [];
+/**
+ * Register a path, when loading packages, it will search the path you registerred.
+ * @param {string} path - A absolute path for searching your packages.
+ * @see Editor.loadPackages
+ */
 Editor.registerPackagePath = function ( path ) {
     Editor._packagePathList.push(path);
 };

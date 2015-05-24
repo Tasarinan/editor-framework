@@ -14,7 +14,7 @@ EditorUI.MainDock = Polymer({
 
     lightDomReady: function () {
         EditorUI.DockUtils.root = this.$.root;
-        Editor.loadLayout( this, function () {
+        Editor.loadLayout( Polymer.dom(EditorUI.DockUtils.root).parentNode, function () {
             // TODO: if this is default layout, reset it
             // EditorUI.DockUtils.reset();
         });
