@@ -13,6 +13,11 @@ global.Editor = {};
         process.exit(1);
         return;
     }
+    /**
+     * The Editor.App is your app.js module. Read more details in
+     * [Define your application](https://github.com/fireball-x/editor-framework/blob/master/docs/manual/define-your-app.md).
+     * @type object
+     */
     Editor.App = __app;
 
     if ( !__app.path ) {
@@ -20,6 +25,10 @@ global.Editor = {};
         process.exit(1);
         return;
     }
+    /**
+     * The current app.js running directory.
+     * @type string
+     */
     Editor.cwd = __app.path;
 })();
 
@@ -48,17 +57,30 @@ process.on('uncaughtException', function(error) {
 // initialize minimal Editor
 // ---------------------------
 
+/**
+ * The name of your app. It is defined in the `name` field in package.json
+ * @type string
+ */
 Editor.name = App.getName();
 
-// mainEntry = absolute path of ./app.js
 var _packageJsonPath = Path.join( Editor.cwd, 'package.json' );
 var _packageJson = JSON.parse(Fs.readFileSync(_packageJsonPath));
+/**
+ * The absolute path of your main entry file. Usually it is `{your-app}/app.js`.
+ * @type string
+ */
 Editor.mainEntry = Path.join( Editor.cwd, _packageJson.main );
 
-// frameworkPath = ./editor-framework/
+/**
+ * The editor framework module path. Usually it is `{your-app}/editor-framework/`
+ * @type string
+ */
 Editor.frameworkPath = __dirname;
 
-// NOTE: Editor.dataPath = ~/.{app-name}
+/**
+ * Your application's data path. Usually it is `~/.{your-app-name}`
+ * @type string
+ */
 Editor.dataPath = Path.join( App.getPath('home'), '.' + Editor.name );
 
 // initialize ~/.{app-name}

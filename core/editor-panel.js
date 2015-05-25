@@ -2,7 +2,8 @@ var Ipc = require('ipc');
 var BrowserWindow = require('browser-window');
 
 /**
- * Redirect panel messages to its registered windows.
+ * Panel module for operating specific panel
+ * @namespace Editor.Panel
  */
 var Panel = {};
 var _panel2windows = {};
@@ -50,7 +51,13 @@ var _saveLayout = function ( editorWin, panelID ) {
     }
 };
 
-//
+/**
+ * Open a panel and pass argv to it. The argv will be sent as argument in `panel:open` message in page-level
+ * @param {string} panelID - a panelID
+ * @param {object} argv - argument store as key-value table, which will pass later
+ * @method open
+ * @memberof Editor.Panel
+ */
 Panel.open = function ( panelID, argv ) {
     var panelInfo = Editor.Package.panelInfo(panelID);
     if ( !panelInfo ) {
@@ -122,6 +129,12 @@ Panel.open = function ( panelID, argv ) {
     editorWin.focus();
 };
 
+/**
+ * Close a panel via panelID
+ * @param {string} panelID - a panelID
+ * @method close
+ * @memberof Editor.Panel
+ */
 Panel.close = function ( panelID ) {
     var editorWin = _undock(panelID);
     if ( editorWin ) {
@@ -145,10 +158,24 @@ Panel.close = function ( panelID ) {
     }
 };
 
+/**
+ * Find and return an editor window that contains the panelID
+ * @param {string} panelID - a panelID
+ * @return {Editor.Window}
+ * @method findWindow
+ * @memberof Editor.Panel
+ */
 Panel.findWindow = function ( panelID ) {
     return _panel2windows[panelID];
 };
 
+/**
+ * Find and return editor window list that contains panel defined in package via packageName
+ * @param {string} packageName
+ * @return {Editor.Window[]}
+ * @method findWindows
+ * @memberof Editor.Panel
+ */
 Panel.findWindows = function (packageName) {
     var wins = [];
 
@@ -169,6 +196,13 @@ Panel.findWindows = function (packageName) {
     return wins;
 };
 
+/**
+ * Find and return panel ID list that contains panel defined in package via packageName
+ * @param {string} packageName
+ * @return {string[]}
+ * @method findPanels
+ * @memberof Editor.Panel
+ */
 Panel.findPanels = function ( packageName ) {
     var panelIDs = [];
     for ( var p in _panel2windows ) {
@@ -186,6 +220,12 @@ Panel.findPanels = function ( packageName ) {
     return panelIDs;
 };
 
+/**
+ * Close all panels defined in package via packageName
+ * @param {string} packageName
+ * @method closeAll
+ * @memberof Editor.Panel
+ */
 Panel.closeAll = function (packageName) {
     var panelIDs = Panel.findPanels(packageName);
     for (var i = 0; i < panelIDs.length; ++i) {

@@ -1,8 +1,3 @@
-/**
- * @param {object} obj
- * @param {string} name
- * @return {object}
- */
 function _getPropertyDescriptor(obj, name) {
     if (obj) {
         var pd = Object.getOwnPropertyDescriptor(obj, name);
@@ -15,14 +10,26 @@ function _copyprop(name, source, target) {
     Object.defineProperty(target, name, pd);
 }
 
+/**
+ * @namespace Editor.JS
+ */
 module.exports = {
+    /**
+     * Copy property by name from source to target
+     * @method copyprop
+     * @memberof Editor.JS
+     * @param {string} name
+     * @param {object} source
+     * @param {object} target
+     */
     copyprop: _copyprop,
 
     /**
      * copy all properties not defined in obj from arguments[1...n]
      * @method addon
-     * @param {object} obj object to extend its properties
-     * @param {object} ...sourceObj source object to copy properties from
+     * @memberof Editor.JS
+     * @param {object} obj - object to extend its properties
+     * @param {...object} sourceObj - source object to copy properties from
      * @return {object} the result obj
      */
     addon: function (obj) {
@@ -39,6 +46,14 @@ module.exports = {
         return obj;
     },
 
+    /**
+     * Extract properties by `propNames` from `obj`
+     * @method extract
+     * @memberof Editor.JS
+     * @param {object} obj - object to extend its properties
+     * @param {string[]} propNames
+     * @return {object} - the result obj
+     */
     extract: function ( obj, propNames ) {
         'use strict';
         var newObj = {};
@@ -52,10 +67,11 @@ module.exports = {
     },
 
     /**
-     * copy all properties from arguments[1...n] to obj
+     * Copy all properties from arguments[1...n] to obj
      * @method mixin
+     * @memberof Editor.JS
      * @param {object} obj
-     * @param {object} ...sourceObj
+     * @param {...object} sourceObj
      * @return {object} the result obj
      */
     mixin: function (obj) {
@@ -78,25 +94,23 @@ module.exports = {
 
     /**
      * Derive the class from the supplied base class.
-     * Both classes are just native javascript constructors, not created by Editor.Class, so
-     * usually you will want to inherit using {% crosslink Editor.Class Editor.Class %} instead.
-     *
      * @method extend
+     * @memberof Editor.JS
      * @param {function} cls
      * @param {function} base - the baseclass to inherit
      * @return {function} the result class
      */
     extend: function (cls, base) {
-// @ifdef DEV
         if ( !base ) {
             Editor.error('The base class to extend from must be non-nil');
             return;
         }
+
         if ( !cls ) {
             Editor.error('The class to extend must be non-nil');
             return;
         }
-// @endif
+
         for (var p in base) if (base.hasOwnProperty(p)) cls[p] = base[p];
         function __() { this.constructor = cls; }
         __.prototype = base.prototype;
@@ -107,7 +121,8 @@ module.exports = {
     /**
      * Removes all enumerable properties from object
      * @method clear
-     * @param {any} obj
+     * @memberof Editor.JS
+     * @param {*} obj
      */
     clear: function (obj) {
         var keys = Object.keys(obj);

@@ -1,6 +1,10 @@
+/**
+ * @namespace Editor.Utils
+ */
 var Utils = {};
 
 /**
+ * @memberof Editor.Utils
  * @method padLeft
  * @param {string} text
  * @param {number} width
@@ -16,6 +20,13 @@ Utils.padLeft = function ( text, width, ch ) {
     return text;
 };
 
+/**
+ * @memberof Editor.Utils
+ * @method formatFrame
+ * @param {number} frame
+ * @param {number} frameRate
+ * @return {string}
+ */
 Utils.formatFrame = function ( frame, frameRate ) {
     var decimals = Math.floor(Math.log10(frameRate))+1;
     var text = '';
@@ -28,6 +39,13 @@ Utils.formatFrame = function ( frame, frameRate ) {
         Utils.padLeft(frame % frameRate, decimals, '0');
 };
 
+/**
+ * @memberof Editor.Utils
+ * @method smoothScale
+ * @param {number} curScale
+ * @param {number} delta
+ * @return {number}
+ */
 Utils.smoothScale = function ( curScale, delta ) {
     var scale = curScale;
     scale = Math.pow( 2, delta * 0.002) * scale;

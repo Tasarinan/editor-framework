@@ -68,6 +68,15 @@ var _urlToPath = function ( base ) {
     };
 };
 
+/**
+ * Convert a url by its protocol to a filesystem path. This function is useful when you try to
+ * get some internal file. You can use {@link Editor.registerProtocol} to register and map your filesystem
+ * path to url. By default, Editor Framework register `editor-framework://` and `app://` protocol.
+ * @param {string} url
+ * @example
+ * // it will return "{your-app-path}/foobar/foobar.js"
+ * Editor.url('app://foobar/foobar.js');
+ */
 Editor.url = function ( url ) {
     var urlInfo = Url.parse(url);
 
@@ -85,6 +94,25 @@ Editor.url = function ( url ) {
     return fn(urlInfo);
 };
 
+/**
+ * Register a protocol so that {@link Editor.url} can use it to convert an url to the filesystem path.
+ * The `fn` accept an url Object via [url.parse](https://iojs.org/api/url.html#url_url_parse_urlstr_parsequerystring_slashesdenotehost)
+ * @param {string} protocol
+ * @param {function} fn
+ * @example
+ * var Path = require('path');
+ *
+ * var _urlToPath = function ( base ) {
+ *     return function ( urlInfo ) {
+ *         if ( urlInfo.pathname ) {
+ *             return Path.join( base, urlInfo.host, urlInfo.pathname );
+ *         }
+ *         return Path.join( base, urlInfo.host );
+ *     };
+ * };
+ *
+ * Editor.registerProtocol('editor-framework', _urlToPath(Editor.frameworkPath));
+ */
 Editor.registerProtocol = function ( protocol, fn ) {
     Editor._protocol2fn[protocol+':'] = fn;
 };

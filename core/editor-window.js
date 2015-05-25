@@ -4,7 +4,21 @@ var Screen = require('screen');
 var Url = require('fire-url');
 var Ipc = require('ipc');
 
-//
+/**
+ * Window class for operating editor window
+ * @class
+ * @extends EventEmitter
+ * @memberof Editor
+ * @alias Window
+ * @param {string} name - The window name
+ * @param {object} options - The options use [BrowserWindow's options](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#new-browserwindowoptions)
+ * with the following additional field:
+ * @param {string} options.'window-type'] - Can be one of the list:
+ *  - `dockable`: Indicate the window contains a dockable panel
+ *  - `float`: Indicate the window is standalone, and float on top.
+ *  - `fixed-size`: Indicate the window is standalone, float on top and non-resizable.
+ *  - `quick`: Indicate the window will never destroyed, it only hides itself when it close which make it quick to show the next time.
+ */
 function EditorWindow ( name, options ) {
     this._loaded = false;
     this._nextSessionId = 0;
@@ -111,36 +125,64 @@ function EditorWindow ( name, options ) {
 }
 Editor.JS.extend(EditorWindow,EventEmitter);
 
+/**
+ * If this is a main window
+ * @member {boolean} isMainWindow
+ * @memberof Editor.Window.prototype
+ */
 Object.defineProperty(EditorWindow.prototype, 'isMainWindow', {
     get: function () {
         return Editor.mainWindow === this;
     }
 });
 
+/**
+ * If the window is focused
+ * @member {boolean} isFocused
+ * @memberof Editor.Window.prototype
+ */
 Object.defineProperty(EditorWindow.prototype, 'isFocused', {
     get: function () {
         return this.nativeWin.isFocused();
     }
 });
 
+/**
+ * If the window is minimized
+ * @member {boolean} isMinimized
+ * @memberof Editor.Window.prototype
+ */
 Object.defineProperty(EditorWindow.prototype, 'isMinimized', {
     get: function () {
         return this.nativeWin.isMinimized();
     }
 });
 
+/**
+ * If the window is loaded
+ * @member {boolean} isLoaded
+ * @memberof Editor.Window.prototype
+ */
 Object.defineProperty(EditorWindow.prototype, 'isLoaded', {
     get: function () {
         return this._loaded;
     }
 });
 
+/**
+ * Dereference the native window.
+ */
 EditorWindow.prototype.dispose = function () {
     // NOTE: Important to dereference the window object to allow for GC
     this.nativeWin = null;
 };
 
-//
+/**
+ * load page by url, and send argv in query property of the url. The page level will parse
+ * the argv when the page is ready and save it in Editor.argv in page level
+ * @param {string} url
+ * @param {object} argv
+ */
 EditorWindow.prototype.load = function ( editorUrl, argv ) {
     var resultUrl = Editor.url(editorUrl);
     if ( !resultUrl ) {
@@ -158,32 +200,58 @@ EditorWindow.prototype.load = function ( editorUrl, argv ) {
     this.nativeWin.loadUrl(url);
 };
 
+/**
+ * Show the window
+ */
 EditorWindow.prototype.show = function () {
     this.nativeWin.show();
 };
 
+/**
+ * Close the window
+ */
 EditorWindow.prototype.close = function () {
     this._loaded = false;
     this.nativeWin.close();
 };
 
+/**
+ * Focus on the window
+ */
 EditorWindow.prototype.focus = function () {
     this.nativeWin.focus();
 };
 
+/**
+ * Minimize the window
+ */
 EditorWindow.prototype.minimize = function () {
     this.nativeWin.minimize();
 };
 
+/**
+ * Restore the window
+ */
 EditorWindow.prototype.restore = function () {
     this.nativeWin.restore();
 };
 
-// { detach: Boolean -  opens devtools in a new window }
+/**
+ * Open the dev-tools
+ * @param {object} options
+ * @param {boolean} options.detach - If open the dev-tools in a new window
+ */
 EditorWindow.prototype.openDevTools = function (options) {
     this.nativeWin.openDevTools(options);
 };
 
+/**
+ * Try to adjust the window to fit the position and size we give
+ * @param {number} x
+ * @param {number} y
+ * @param {number} w
+ * @param {number} h
+ */
 EditorWindow.prototype.adjust = function ( x, y, w, h ) {
     var adjustToCenter = false;
     if ( typeof x !== 'number' ) {
@@ -215,6 +283,10 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
     }
 };
 
+/**
+ * Commit the current window state
+ * @param {object} layoutInfo
+ */
 EditorWindow.prototype.commitWindowState = function ( layoutInfo ) {
     var nativeWin = this.nativeWin;
     var winBounds = nativeWin.getBounds();
@@ -229,6 +301,9 @@ EditorWindow.prototype.commitWindowState = function ( layoutInfo ) {
     _windowLayouts[this.name] = winInfo;
 };
 
+/**
+ * Restore window's position and size from the `local` profile `layout.windows.json`
+ */
 EditorWindow.prototype.restorePositionAndSize = function () {
     // restore window size and position
     var size = this.nativeWin.getSize();
@@ -249,6 +324,11 @@ EditorWindow.prototype.restorePositionAndSize = function () {
 var _windows = [];
 var _windowLayouts = {};
 
+/**
+ * Return the window list of all opened windows
+ * @member {Editor.Window[]} windows
+ * @memberof Editor.Window
+ */
 Object.defineProperty(EditorWindow, 'windows', {
     get: function () {
         return _windows.slice();
@@ -269,6 +349,12 @@ EditorWindow.loadLayouts = function () {
     }
 };
 
+/**
+ * Find window by name or by BrowserWindow instance
+ * @static
+ * @param {string|BrowserWindow} param
+ * @return {Editor.Window}
+ */
 EditorWindow.find = function ( param ) {
     var i, win;
 
@@ -293,10 +379,20 @@ EditorWindow.find = function ( param ) {
     return null;
 };
 
+/**
+ * Add an editor window
+ * @static
+ * @param {Editor.Window} win
+ */
 EditorWindow.addWindow = function ( win ) {
     _windows.push(win);
 };
 
+/**
+ * Remove an editor window
+ * @static
+ * @param {Editor.Window} win
+ */
 EditorWindow.removeWindow = function ( win ) {
     var idx = _windows.indexOf(win);
     if ( idx === -1 ) {
@@ -308,6 +404,10 @@ EditorWindow.removeWindow = function ( win ) {
     win.dispose();
 };
 
+/**
+ * Commit all opened window states
+ * @static
+ */
 EditorWindow.commitWindowStates = function () {
     for ( var i = 0; i < _windows.length; ++i ) {
         var editorWin = _windows[i];
@@ -315,6 +415,10 @@ EditorWindow.commitWindowStates = function () {
     }
 };
 
+/**
+ * Save current windows' states to profile `layout.windows.json` at `local`
+ * @static
+ */
 EditorWindow.saveWindowStates = function () {
     // we've quit the app, do not save layout after that.
     if ( !Editor.mainWindow )
@@ -333,6 +437,11 @@ EditorWindow.saveWindowStates = function () {
 // Ipc
 // ========================================
 
+/**
+ * Send ipc messages to page
+ * @param {string} channel
+ * @param {...*} [arg] - whatever arguments the request needs
+ */
 EditorWindow.prototype.sendToPage = function () {
     var webContents = this.nativeWin.webContents;
     if (webContents) {
@@ -345,11 +454,12 @@ EditorWindow.prototype.sendToPage = function () {
 };
 
 /**
- * @method sendRequestToPage
+ * Send request to page and wait for the reply
  * @param {string} request - the request to send
  * @param {...*} [arg] - whatever arguments the request needs
  * @param {function} reply - the callback used to handle replied arguments
- * @return {number} - session id, can be used in Editor.cancelRequestToCore
+ * @return {number} The session id can be used in Editor.Window.cancelRequestToCore
+ * @see Editor.Window.cancelRequestToPage
  */
 EditorWindow.prototype.sendRequestToPage = function (request) {
     'use strict';
@@ -376,6 +486,10 @@ EditorWindow.prototype.sendRequestToPage = function (request) {
     return -1;
 };
 
+/**
+ * Cancel request via sessionId
+ * @param {number} sessionId
+ */
 EditorWindow.prototype.cancelRequestToPage = function (sessionId) {
     'use strict';
     var key = "" + sessionId;

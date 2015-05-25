@@ -228,29 +228,67 @@ function getDefaultMainMenu () {
 
 var _mainMenu = new Editor.Menu( getDefaultMainMenu() );
 
+/**
+ * The main menu module for manipulating main menu items
+ * @namespace Editor.MainMenu
+ */
 var MainMenu = {};
 
+/**
+ * Apply main menu changes
+ * @memberof Editor.MainMenu
+ * @method apply
+ */
 MainMenu.apply = function () {
     Menu.setApplicationMenu(_mainMenu.nativeMenu);
 };
 
+/**
+ * Reset main menu to its default template
+ * @memberof Editor.MainMenu
+ * @method reset
+ */
 MainMenu.reset = function () {
     _mainMenu.reset( getDefaultMainMenu() );
     MainMenu.apply();
 };
 
+/**
+ * Build a template into menu item and add it to path
+ * @memberof Editor.MainMenu
+ * @method add
+ * @param {string} path - A menu path
+ * @param {object[]|object} template
+ */
 MainMenu.add = function ( path, template ) {
     if ( _mainMenu.add( path, template ) ) {
         MainMenu.apply();
     }
 };
 
+/**
+ * Remove menu item at path.
+ * @memberof Editor.MainMenu
+ * @method remove
+ * @param {string} path - A menu path
+ */
 MainMenu.remove = function ( path ) {
     if ( _mainMenu.remove( path ) ) {
         MainMenu.apply();
     }
 };
 
+/**
+ * Set menu options at path.
+ * @memberof Editor.MainMenu
+ * @method set
+ * @param {string} path - A menu path
+ * @param {object} [options]
+ * @param {NativeImage} [options.icon] - A [NativeImage](https://github.com/atom/electron/blob/master/docs/api/native-image.md) 
+ * @param {boolean} [options.enabled]
+ * @param {boolean} [options.visible]
+ * @param {boolean} [options.checked] - NOTE: You must set your menu-item type to 'checkbox' to make it work
+ */
 MainMenu.set = function ( path, options ) {
     if ( _mainMenu.set( path, options ) ) {
         MainMenu.apply();

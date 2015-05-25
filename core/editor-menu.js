@@ -153,7 +153,7 @@ EditorMenu.prototype.dispose = function () {
 };
 
 /**
- * Reset the menu from template.
+ * Reset the menu from the template.
  * @param {object[]|object} template
  */
 EditorMenu.prototype.reset = function (template) {
@@ -169,9 +169,16 @@ EditorMenu.prototype.clear = function () {
 };
 
 /**
- * Add menu item at path with template
+ * Build a template into menu item and add it to path
  * @param {string} path - A menu path
  * @param {object[]|object} template
+ * @example
+ * var editorMenu = new Editor.Menu();
+ * editorMenu.add( 'foo/bar', {
+ *     label: foobar,
+ *     message: 'foobar:say',
+ *     params: ['foobar: hello!']
+ * });
  */
 EditorMenu.prototype.add = function ( path, template ) {
     EditorMenu.parseTemplate(template);
@@ -280,8 +287,10 @@ EditorMenu.prototype.set = function ( path, options ) {
 };
 
 /**
- * Parse the menu template to process additional keyword we added for electron.
+ * Parse the menu template to process additional keyword we added for Electron.
+ * If webContents provided, the `template.message` will send to the target webContents.
  * @param {object[]|object} template
+ * @param {object} [webContents] - A [WebContents](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#class-webcontents) object.
  */
 EditorMenu.parseTemplate = function ( template, webContents ) {
     if ( Array.isArray(template) ) {

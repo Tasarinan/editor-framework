@@ -21,6 +21,7 @@ Editor.requireIpcEvent = {
 /**
  * IpcListener for easily manage ipc events
  * @class IpcListener
+ * @memberof Editor
  * @constructor
  */
 function IpcListener () {

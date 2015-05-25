@@ -2,12 +2,22 @@ var Ipc = require('ipc');
 var Path = require('fire-path');
 var Fs = require('fire-fs');
 
+/**
+ * Package module for manipulating packages
+ * @namespace Editor.Package
+ */
 var Package = {};
 var _path2package = {};
 var _name2packagePath = {};
 var _panel2info = {};
 var _widget2info = {};
 
+/**
+ * Load a package at path
+ * @param {string} path - An absolute path point to a package folder
+ * @method load
+ * @memberof Editor.Package
+ */
 Package.load = function ( path ) {
     if ( _path2package[path] )
         return;
@@ -113,6 +123,12 @@ Package.load = function ( path ) {
     Editor.sendToWindows('package:loaded', packageObj.name);
 };
 
+/**
+ * Unload a package at path
+ * @param {string} path - An absolute path point to a package folder
+ * @method unload
+ * @memberof Editor.Package
+ */
 Package.unload = function ( path ) {
     var packageObj = _path2package[path];
     if ( !packageObj )
@@ -170,20 +186,48 @@ Package.unload = function ( path ) {
     Editor.sendToWindows('package:unloaded', packageObj.name);
 };
 
+/**
+ * Reload a package at path
+ * @param {string} path - An absolute path point to a package folder
+ * @method reload
+ * @memberof Editor.Package
+ */
 Package.reload = function ( path ) {
     Package.unload(path);
     Package.load(path);
 };
 
+/**
+ * Find and get panel info via panelID, the panel info is the json object
+ * that defined in `panels.{panel-name}` in your package.json
+ * @param {string} panelID
+ * @return {object}
+ * @method panelInfo
+ * @memberof Editor.Package
+ */
 Package.panelInfo = function ( panelID ) {
     return _panel2info[panelID];
 };
 
+/**
+ * Find and get panel info via widgetName, the widget info is the json object
+ * that defined in `widgets.{widget-name}` in your package.json
+ * @param {string} widgetName
+ * @return {object}
+ * @method widgetInfo
+ * @memberof Editor.Package
+ */
 Package.widgetInfo = function ( widgetName ) {
     return _widget2info[widgetName];
 };
 
-// the path can be any files in this package
+/**
+ * Find and get package info via path, the package info is the json object of your package.json file
+ * @param {string} path - The path can be any files in this package
+ * @return {object}
+ * @method packageInfo
+ * @memberof Editor.Package
+ */
 Package.packageInfo = function ( path ) {
     for ( var p in _path2package ) {
         if ( Path.contains( p, path )  ) {
@@ -193,6 +237,13 @@ Package.packageInfo = function ( path ) {
     return null;
 };
 
+/**
+ * Return the path of the package by name
+ * @param {string} packageName
+ * @return {string}
+ * @method packagePath
+ * @memberof Editor.Package
+ */
 Package.packagePath = function ( packageName ) {
     return _name2packagePath[packageName];
 };

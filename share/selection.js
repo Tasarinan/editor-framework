@@ -302,11 +302,11 @@ var Selection = {
      * in this state, the `selected` messages will be broadcasted, but the `activated` messages will not.
      * after that, if you confirm the selection, `activated` message will be sent, otherwise `unselected` message will be sent.
      * if confirm === true, the activated will be sent in the same time.
+     * @memberof Editor.Selection
      * @param {string} type
      * @param {(string|string[])} id
      * @param {boolean} [unselectOthers=true]
      * @param {boolean} [confirm=true]
-     * @memberof Editor.Selection
      */
     select: function ( type, id, unselectOthers, confirm ) {
         var selectionUnit = _units[type];
@@ -334,10 +334,10 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @param {(string|string[])} id
      * @param {boolean} [confirm=true]
-     * @memberof Editor.Selection
      */
     unselect: function (type, id, confirm) {
         var selectionUnit = _units[type];
@@ -356,9 +356,9 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @param {string} id
-     * @memberof Editor.Selection
      */
     hover: function ( type, id ) {
         var selectionUnit = _units[type];
@@ -372,9 +372,9 @@ var Selection = {
 
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @param {string} id
-     * @memberof Editor.Selection
      */
     setContext: function ( type, id ) {
         var selectionUnit = _units[type];
@@ -387,8 +387,8 @@ var Selection = {
     },
 
     /**
-     * @param {string} type
      * @memberof Editor.Selection
+     * @param {string} type
      */
     clear: function ( type ) {
         var selectionUnit = _units[type];
@@ -402,9 +402,9 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @return {string} hovering
-     * @memberof Editor.Selection
      */
     hovering: function ( type ) {
         var selectionUnit = _units[type];
@@ -417,9 +417,9 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @return {string} contexts
-     * @memberof Editor.Selection
      */
     contexts: function ( type ) {
         var selectionUnit = _units[type];
@@ -432,9 +432,9 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @return {string} current activated
-     * @memberof Editor.Selection
      */
     curActivate: function ( type ) {
         var selectionUnit = _units[type];
@@ -447,9 +447,9 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string} type
      * @return {string[]} selected list
-     * @memberof Editor.Selection
      */
     curSelection: function ( type ) {
         var selectionUnit = _units[type];
@@ -462,10 +462,10 @@ var Selection = {
     },
 
     /**
+     * @memberof Editor.Selection
      * @param {string[]} items - an array of ids
      * @param {string} mode - ['top-level', 'deep', 'name']
      * @param {function} func
-     * @memberof Editor.Selection
      */
     filter: function ( items, mode, func ) {
         var results, item, i, j;

@@ -133,6 +133,12 @@ Ipc.on ( 'editor:sendreq2core', function (event, request, args, sessionId) {
 
 // initialize messages APIs
 
+/**
+ * Send `args...` to windows except the excluded
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ * @param {object} excluded - A [WebContents](https://github.com/atom/electron/blob/master/docs/api/browser-window.md#class-webcontents) object.
+ */
 Editor.sendToWindowsExclude = function (args, excluded) {
     // NOTE: duplicate windows list since window may close during events
     var winlist = Editor.Window.windows.slice();
@@ -144,6 +150,33 @@ Editor.sendToWindowsExclude = function (args, excluded) {
     }
 };
 
+/**
+ * Send `args...` to all opened windows via `channel` in asynchronous message. The `page-level`
+ * can handle it by listening to the channel event of the ipc module.
+ *
+ * In `core-level`:
+ *
+ * ```javascript
+ * Editor.sendToWindows('foo:bar', 'Hello World!');
+ * ```
+ *
+ * In `page-level`:
+ *
+ * ```html
+ * // index.html
+ * <html>
+ * <body>
+ *   <script>
+ *     require('ipc').on('foo:bar', function(message) {
+ *       console.log(message);  // Prints "Hello World!"
+ *     });
+ *   </script>
+ * </body>
+ * </html>
+ * ```
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ */
 Editor.sendToWindows = function () {
     // NOTE: duplicate windows list since window may close during events
     var winlist = Editor.Window.windows.slice();
@@ -153,12 +186,22 @@ Editor.sendToWindows = function () {
     }
 };
 
+/**
+ * Send `args...` to core itself via `channel` in asynchronous message.
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ */
 Editor.sendToCore = function () {
     if ( Ipc.emit.apply ( Ipc, arguments ) === false ) {
         Editor.failed( 'sendToCore ' + arguments[0] + ' failed, not responded.' );
     }
 };
 
+/**
+ * Send `args...` to all opened window and core via `channel` in asynchronous message.
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ */
 Editor.sendToAll = function () {
     if (arguments.length > 1) {
         var toSelf = true;
@@ -195,7 +238,14 @@ Editor.sendToAll = function () {
 //     }
 // };
 
-// example: Editor.sendToPanel( 'package.panel', 'ipc-foo-bar', arguments... )
+/**
+ * Send `args...` to specific panel via `channel` in asynchronous message.
+ * @param {string} panelID
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ * @example
+ * Editor.sendToPanel( 'package.panel', 'ipc-foo-bar', 'arg1', 'arg2', ... );
+ */
 Editor.sendToPanel = function ( panelID, message ) {
     var win = Editor.Panel.findWindow( panelID );
     if ( !win ) {
@@ -208,6 +258,11 @@ Editor.sendToPanel = function ( panelID, message ) {
     win.sendToPage.apply( win, args );
 };
 
+/**
+ * Send `args...` to main window via `channel` in asynchronous message.
+ * @param {string} channel
+ * @param {...*} [args] - whatever arguments the message needs
+ */
 Editor.sendToMainWindow = function () {
     var mainWin = Editor.mainWindow;
     if (mainWin) {

@@ -5,6 +5,7 @@ var utils = require('./tasks/utils');
 require('./tasks/download-shell');
 require('./tasks/build');
 require('./tasks/build-min');
+require('./tasks/build-api');
 
 gulp.task('update-config', function ( done ) {
     var Fs = require('fs');

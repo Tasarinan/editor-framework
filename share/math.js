@@ -5,40 +5,39 @@
     /**
      * Extends the JavaScript built-in object that has properties and methods for mathematical constants and functions.
      * See [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)
-     * @module Math
-     * @class Math
+     *
+     * @namespace Math
      * @static
      */
     Editor.JS.mixin ( Math, {
 
         /**
-         * @property TWO_PI
-         * @type number
+         * @memberof Math
+         * @property {number} TWO_PI - Two Pi
          */
         TWO_PI: 2.0 * Math.PI,
 
         /**
-         * @property HALF_PI
-         * @type number
+         * @memberof Math
+         * @property {number} HALF_PI - Half Pi
          */
         HALF_PI: 0.5 * Math.PI,
 
         /**
-         * degree to radius
-         * @property D2R
-         * @type number
+         * @memberof Math
+         * @property {number} D2R - degree to radius
          */
         D2R: _d2r,
 
         /**
-         * radius to degree
-         * @property R2D
-         * @type number
+         * @memberof Math
+         * @property {number} R2D - radius to degree
          */
         R2D: _r2d,
 
         /**
          * degree to radius
+         * @memberof Math
          * @method deg2rad
          * @param {number} degree
          * @return {number} radius
@@ -49,6 +48,7 @@
 
         /**
          * radius to degree
+         * @memberof Math
          * @method rad2deg
          * @param {number} radius
          * @return {number} degree
@@ -59,6 +59,7 @@
 
         /**
          * let radius in -pi to pi
+         * @memberof Math
          * @method rad180
          * @param {number} radius
          * @return {number} clamped radius
@@ -72,6 +73,7 @@
 
         /**
          * let radius in 0 to 2pi
+         * @memberof Math
          * @method rad360
          * @param {number} radius
          * @return {number} clamped radius
@@ -86,6 +88,7 @@
 
         /**
          * let degree in -180 to 180
+         * @memberof Math
          * @method deg180
          * @param {number} degree
          * @return {number} clamped degree
@@ -100,6 +103,7 @@
 
         /**
          * let degree in 0 to 360
+         * @memberof Math
          * @method deg360
          * @param {number} degree
          * @return {number} clamped degree
@@ -114,6 +118,7 @@
 
         /**
          * Returns a floating-point random number between min (inclusive) and max (exclusive).
+         * @memberof Math
          * @method randomRange
          * @param {number} min
          * @param {number} max
@@ -125,6 +130,7 @@
 
         /**
          * Returns a random integer between min (inclusive) and max (exclusive).
+         * @memberof Math
          * @method randomRangeInt
          * @param {number} min
          * @param {number} max
@@ -136,6 +142,7 @@
 
         /**
          * Clamps a value between a minimum float and maximum float value.
+         * @memberof Math
          * @method clamp
          * @param {number} val
          * @param {number} min
@@ -160,6 +167,7 @@
 
         /**
          * Clamps a value between 0 and 1.
+         * @memberof Math
          * @method clamp01
          * @param {number} val
          * @param {number} min
@@ -171,6 +179,7 @@
         },
 
         /**
+         * @memberof Math
          * @method calculateMaxRect
          * @param {Rect} out
          * @param {Vec2} p0
@@ -192,6 +201,7 @@
         },
 
         /**
+         * @memberof Math
          * @method lerp
          * @param {number} from
          * @param {number} to

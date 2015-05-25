@@ -4,9 +4,10 @@
 
 /**
  * Conenience method returns corresponding value for given keyName or keyCode.
- *
- * @param {Mixed} keyCode {Number} or keyName {String}
- * @return {Mixed}
+ * @method KeyCode
+ * @memberof Editor
+ * @param {number|string} key - Can be number(key-code) or string(key-name)
+ * @return {number|string}
  */
 
 exports = module.exports = function(searchInput) {

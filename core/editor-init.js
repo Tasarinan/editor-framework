@@ -16,7 +16,7 @@ var _logs = [];
 /**
  * Log the normal message and show on the console.
  * The method will send ipc message `console:log` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.log = function () {
     var text = Util.format.apply(Util, arguments);
@@ -31,7 +31,7 @@ Editor.log = function () {
 /**
  * Log the success message and show on the console
  * The method will send ipc message `console:success` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.success = function () {
     var text = Util.format.apply(Util, arguments);
@@ -46,7 +46,7 @@ Editor.success = function () {
 /**
  * Log the failed message and show on the console
  * The method will send ipc message `console:failed` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.failed = function () {
     var text = Util.format.apply(Util, arguments);
@@ -61,7 +61,7 @@ Editor.failed = function () {
 /**
  * Log the info message and show on the console
  * The method will send ipc message `console:info` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.info = function () {
     var text = Util.format.apply(Util, arguments);
@@ -77,7 +77,7 @@ Editor.info = function () {
  * Log the warnning message and show on the console,
  * it also shows the call stack start from the function call it.
  * The method will send ipc message `console:warn` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.warn = function () {
     var text = Util.format.apply(Util, arguments);
@@ -97,7 +97,7 @@ Editor.warn = function () {
  * Log the error message and show on the console,
  * it also shows the call stack start from the function call it.
  * The method will sends ipc message `console:error` to all windows.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.error = function () {
     var text = Util.format.apply(Util, arguments);
@@ -116,7 +116,7 @@ Editor.error = function () {
 /**
  * Log the fatal message and show on the console,
  * the app will quit immediately after that.
- * @param {...*} [arg] - whatever arguments the message needs
+ * @param {...*} [args] - whatever arguments the message needs
  */
 Editor.fatal = function () {
     var text = Util.format.apply(Util, arguments);
@@ -181,9 +181,9 @@ function _saveProfile ( path, profile ) {
 }
 
 /**
- * Load a profile based on the name and type you send in. You must register the type
- * via {@link Editor.registerProfilePath}. If no profile found, the function will wrap and return
- * the defaultProfile.
+ * Load profile via `name` and `type`, if no profile found, it will use the `defaultProfile` and save it to the disk.
+ * You must register your profile path with `type` via {@link Editor.registerProfilePath} before you
+ * can use it. The Editor Framework will search a profile under your register path with the `name`.
  * @param {string} name - The name of the profile.
  * @param {string} type - The type of the profile, make sure you register the type via {@link Editor.registerProfilePath}.
  * @param {object} defaultProfile - The default profile to use if the profile is not found.
@@ -191,6 +191,19 @@ function _saveProfile ( path, profile ) {
  *  - save: save the profile.
  *  - clear: clear all properties in the profile.
  * @see Editor.registerProfilePath
+ * @example
+ * // register a project profile
+ * Editor.registerProfilePath( 'project', '~/foo/bar');
+ *
+ * // load the profile at ~/foo/bar/foobar.json
+ * var foobarProfile = Editor.loadProfile( 'foobar', 'project', {
+ *   foo: 'foo',
+ *   bar: 'bar',
+ * });
+ *
+ * // change and save your profile
+ * foobarProfile.foo = 'hello foo';
+ * foobarProfile.save();
  */
 Editor.loadProfile = function ( name, type, defaultProfile ) {
     var path = Editor._type2profilepath[type];

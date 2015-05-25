@@ -137,8 +137,10 @@ var nextSessionId = 0;
 var replyCallbacks = {};
 
 /**
+ * Send `args...` to core via `channel` in asynchronous message, and waiting for the `core-level`
+ * to reply the message through `callback`.
  * @method sendRequestToCore
- * @param {string} request - the request to send
+ * @param {string} channel - the request message channel
  * @param {...*} [arg] - whatever arguments the request needs
  * @param {function} reply - the callback used to handle replied arguments
  * @return {number} - session id, can be used in Editor.cancelRequestToCore
