@@ -13,7 +13,8 @@ body {
     border: 0px;
 
     font-size: 13px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+    font-family: 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
     overflow: hidden;
 
     color: #ddd;
