@@ -259,6 +259,19 @@ Editor.registerPanel = function ( panelID, obj ) {
     window[panelID] = Polymer(obj);
 };
 
+Editor.registerWidget = function ( widgetName, obj ) {
+    if ( !window.widgets ) {
+        window.widgets = {};
+    }
+
+    if ( window.widgets[widgetName] ) {
+        Editor.error('Failed to register widget %s, already exists.', widgetName );
+        return;
+    }
+
+    window.widgets[widgetName] = Polymer(obj);
+};
+
 // ==========================
 // load modules
 // ==========================
