@@ -279,6 +279,10 @@ EditorMenu.prototype.set = function ( path, options ) {
     return true;
 };
 
+/**
+ * Parse the menu template to process additional keyword we added for electron.
+ * @param {object[]|object} template
+ */
 EditorMenu.parseTemplate = function ( template, webContents ) {
     if ( Array.isArray(template) ) {
         for ( var i = 0; i < template.length; ++i ) {

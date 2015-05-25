@@ -20,7 +20,6 @@ Editor.requireIpcEvent = {
 
 /**
  * IpcListener for easily manage ipc events
- * @module Editor
  * @class IpcListener
  * @constructor
  */
@@ -30,7 +29,6 @@ function IpcListener () {
 
 /**
  * Register ipc message and respond it with the callback function
- * @method on
  * @param {string} ipc message name
  * @param {function} callback
  */
@@ -41,7 +39,6 @@ IpcListener.prototype.on = function (message, callback) {
 
 /**
  * Register ipc message and respond it once with the callback function
- * @method once
  * @param {string} ipc message name
  * @param {function} callback
  */
@@ -52,7 +49,6 @@ IpcListener.prototype.once = function (message, callback) {
 
 /**
  * Clear all registered ipc messages in this ipc listener
- * @method clear
  */
 IpcListener.prototype.clear = function () {
     for (var i = 0; i < this.listeningIpcs.length; i++) {

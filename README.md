@@ -55,6 +55,15 @@ git clone https://github.com/fireball-x/package-manager
 git clone https://github.com/fireball-x/ipc-debugger
 ```
 
+## Develop
+
+To generate the document, just run
+
+```bash
+npm run api-core # for core-level docs
+npm run api-page # for page-level docs
+```
+
 ## Features
 
  - Package Management

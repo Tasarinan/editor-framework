@@ -7,6 +7,9 @@ var Path = require('fire-path');
 var Url = require('fire-url');
 var Async = require('async');
 
+/**
+ * Page Level Editor
+ */
 window.Editor = window.Editor || {};
 Editor.require = function ( path ) {
     return require( Editor.url(path) );
@@ -58,6 +61,11 @@ Editor.url = function (url) {
 // console log API
 // ==========================
 
+/**
+ * Log the normal message and show on the console.
+ * The method will send ipc message `console:log` to core.
+ * @param {...*} [arg] - whatever arguments the message needs
+ */
 Editor.log = function ( text ) {
     'use strict';
 

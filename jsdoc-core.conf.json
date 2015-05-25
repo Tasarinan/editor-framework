@@ -4,6 +4,7 @@
   },
   "source": {
     "include": [
+      "./init.js",
       "./core/",
       "./share/"
     ],

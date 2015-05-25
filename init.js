@@ -1,22 +1,27 @@
+/**
+ * @namespace Editor
+ */
 global.Editor = {};
 
 // ---------------------------
 // precheck
 // ---------------------------
 
-if ( !__app ) {
-    console.error( '\'global.__app\' is undefined.');
-    process.exit(1);
-    return;
-}
-Editor.App = __app;
+(function () {
+    if ( !__app ) {
+        console.error( '\'global.__app\' is undefined.');
+        process.exit(1);
+        return;
+    }
+    Editor.App = __app;
 
-if ( !__app.path ) {
-    console.error( '\'__app.path\' is undefined. please set `path: __dirname` manually in your __app structure.');
-    process.exit(1);
-    return;
-}
-Editor.cwd = __app.path;
+    if ( !__app.path ) {
+        console.error( '\'__app.path\' is undefined. please set `path: __dirname` manually in your __app structure.');
+        process.exit(1);
+        return;
+    }
+    Editor.cwd = __app.path;
+})();
 
 // ---------------------------
 // load modules

@@ -1,22 +1,29 @@
 /**
  * indicates whether executes in node.js application
- * @property isNode
  * @type {boolean}
  */
 Editor.isNode = !!(typeof process !== 'undefined' && process.versions && process.versions.node);
+
+/**
+ * indicates whether executes in electron
+ * @type {boolean}
+ */
 Editor.isElectron = !!(Editor.isNode && ('electron' in process.versions));
+
+/**
+ * indicates whether executes in native environment (compare to web-browser)
+ * @type {boolean}
+ */
 Editor.isNative = Editor.isElectron;
 
 /**
  * indicates whether executes in common web browser
- * @property isPureWeb
  * @type {boolean}
  */
 Editor.isPureWeb = !Editor.isNode && !Editor.isNative; // common web browser
 
 /**
- * indicates whether executes in common web browser, or editor's window process(atom-shell's renderer context)
- * @property isPageLevel
+ * indicates whether executes in common web browser, or editor's window process(electron's renderer context)
  * @type {boolean}
  */
 if (Editor.isElectron) {
@@ -26,8 +33,7 @@ if (Editor.isElectron) {
 }
 
 /**
- * indicates whether executes in editor's core process(atom-shell's browser context)
- * @property isEditorCore
+ * indicates whether executes in editor's core process(electron's browser context)
  * @type {boolean}
  */
 Editor.isCoreLevel = typeof process !== 'undefined' && process.type === 'browser';
@@ -35,14 +41,12 @@ Editor.isCoreLevel = typeof process !== 'undefined' && process.type === 'browser
 if (Editor.isNode) {
     /**
      * indicates whether executes in OSX
-     * @property isDarwin
      * @type {boolean}
      */
     Editor.isDarwin = process.platform === 'darwin';
 
     /**
      * indicates whether executes in Windows
-     * @property isWin32
      * @type {boolean}
      */
     Editor.isWin32 = process.platform === 'win32';
@@ -56,7 +60,6 @@ if (Editor.isNode) {
 
 /**
  * Check if running in retina display
- * @property isRetina
  * @type boolean
  */
 Object.defineProperty(Editor, 'isRetina', {
