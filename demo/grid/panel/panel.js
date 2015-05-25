@@ -74,14 +74,14 @@ Editor.registerPanel( 'grid-demo.panel', {
                                            offsety = -offsety;
                                        }
 
-                                       this.$.grid.updateSelectRect( x, y, offsetx, offsety );
-                                       this.$.grid.repaint();
+                                       // this.$.grid.updateSelectRect( x, y, offsetx, offsety );
+                                       // this.$.grid.repaint();
                                    }.bind(this),
 
                                    // end
                                    function ( event, dx, dy, offsetx, offsety ) {
-                                       this.$.grid.clearSelectRect();
-                                       this.$.grid.repaint();
+                                       // this.$.grid.clearSelectRect();
+                                       // this.$.grid.repaint();
                                    }.bind(this));
                 return;
             }
