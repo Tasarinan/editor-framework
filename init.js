@@ -81,15 +81,15 @@ Editor.frameworkPath = __dirname;
  * Your application's data path. Usually it is `~/.{your-app-name}`
  * @type string
  */
-Editor.dataPath = Path.join( App.getPath('home'), '.' + Editor.name );
+Editor.appHome = Path.join( App.getPath('home'), '.' + Editor.name );
 
 // initialize ~/.{app-name}
-if ( !Fs.existsSync(Editor.dataPath) ) {
-    Fs.makeTreeSync(Editor.dataPath);
+if ( !Fs.existsSync(Editor.appHome) ) {
+    Fs.makeTreeSync(Editor.appHome);
 }
 
 // initialize ~/.{app-name}/settings/
-var settingsPath = Path.join(Editor.dataPath, 'settings');
+var settingsPath = Path.join(Editor.appHome, 'settings');
 if ( !Fs.existsSync(settingsPath) ) {
     Fs.mkdirSync(settingsPath);
 }
@@ -349,13 +349,13 @@ App.on('ready', function() {
     Editor.MainMenu.apply();
 
     // register profile path
-    var defaultProfilePath = Path.join( Editor.dataPath, 'settings' );
+    var defaultProfilePath = Path.join( Editor.appHome, 'settings' );
     Editor.registerProfilePath( 'global', defaultProfilePath );
     Editor.registerProfilePath( 'local', defaultProfilePath );
 
     // register package path
     Editor.registerPackagePath( Path.join( Editor.frameworkPath, 'builtin' ) );
-    Editor.registerPackagePath( Path.join( Editor.dataPath, 'packages' ) );
+    Editor.registerPackagePath( Path.join( Editor.appHome, 'packages' ) );
 
     // init user App
     if ( !Editor.App.init ) {

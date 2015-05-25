@@ -5,7 +5,7 @@
   - `Editor.cwd`: The current app.js running directory.
   - `Editor.mainEntry`: Your main entry file. Usually it is `{your-app}/app.js`.
   - `Editor.frameworkPath`: The editor framework module path. Usually it is `{your-app}/editor-framework/`
-  - `Editor.dataPath`: Your application's data path. Usually it is `~/.{your-app-name}`
+  - `Editor.appHome`: Your application's home path. Usually it is `~/.{your-app-name}`
 
 ## Protocols
   - `editor-framework://`: Map to the editor framework module path.
