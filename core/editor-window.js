@@ -274,11 +274,11 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
         adjustToCenter = true;
         y = 0;
     }
-    if ( typeof w !== 'number' ) {
+    if ( typeof w !== 'number' || w <= 0 ) {
         adjustToCenter = true;
         w = 800;
     }
-    if ( typeof h !== 'number' ) {
+    if ( typeof h !== 'number' || h <= 0 ) {
         adjustToCenter = true;
         h = 600;
     }
@@ -302,6 +302,14 @@ EditorWindow.prototype.adjust = function ( x, y, w, h ) {
 EditorWindow.prototype.commitWindowState = function ( layoutInfo ) {
     var nativeWin = this.nativeWin;
     var winBounds = nativeWin.getBounds();
+    if ( !winBounds.width ) {
+        Editor.warn('Failed to commit window state. Invalid window width: %s', winBounds.width);
+        winBounds.width = 800;
+    }
+    if ( !winBounds.height ) {
+        Editor.warn('Failed to commit window state. Invalid window height %s', winBounds.height);
+        winBounds.height = 600;
+    }
 
     // store windows layout
     var winInfo = _windowLayouts[this.name];
