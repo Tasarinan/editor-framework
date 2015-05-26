@@ -10,15 +10,15 @@
     "test"
   ],
   "dependencies": {
-    "fontawesome": "",
-    "pace": "",
+    "fontawesome": "4.3.0",
+    "layout": "Polymer/layout",
     "mousetrap": "ccampbell/mousetrap#1.5.2",
     "numeral": "1.5.3",
+    "pace": "1.0.2",
     "pixi": "3.0.6",
+    "polymer": "Polymer/polymer#^0.9.2",
     "svg.js": "1.0.1",
-    "web-animations-js": "web-animations/web-animations-js#master",
-    "layout": "Polymer/layout",
-    "polymer": "Polymer/polymer#^0.9.2"
+    "web-animations-js": "web-animations/web-animations-js#master"
   },
   "devDependencies": {}
 }

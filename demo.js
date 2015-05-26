@@ -57,6 +57,22 @@ global.__app = {
     unload: function () {
         // TODO
     },
+
+    // TODO: try to create a worker
+    // 'app:worker': function () {
+    //     var BrowserWindow = require('browser-window');
+    //     var workerWin = new BrowserWindow({
+    //         show: false,
+    //     });
+
+    //     var Url = require('fire-url');
+    //     var url = Url.format( {
+    //         protocol: 'file',
+    //         pathname: Editor.url('editor-framework://static/worker.html' ),
+    //         slashes: true,
+    //     } );
+    //     workerWin.loadUrl(url);
+    // },
 };
 
 require('./init');
