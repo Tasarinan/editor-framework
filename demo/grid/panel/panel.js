@@ -39,7 +39,7 @@ Editor.registerPanel( 'grid-demo.panel', {
         if ( event.which === 1 ) {
             if ( event.shiftKey ) {
                 this.style.cursor = '-webkit-grabbing';
-                EditorUI.startDrag('-webkit-grab', event,
+                EditorUI.startDrag('-webkit-grabbing', event,
                                    // move
                                    function ( event, dx, dy, offsetx, offsety ) {
                                        this.$.grid.pan( dx, dy );

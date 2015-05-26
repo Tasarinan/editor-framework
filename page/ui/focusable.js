@@ -1,3 +1,4 @@
+// REF: http://webaim.org/techniques/keyboard/tabindex
 EditorUI.focusable = (function () {
 
     //
@@ -44,6 +45,12 @@ EditorUI.focusable = (function () {
                 reflectToAttribute: true,
                 observer: '_disabledChanged',
             },
+
+            noNavigate: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
+            },
         },
 
         listeners: {
@@ -73,9 +80,19 @@ EditorUI.focusable = (function () {
             if ( !this.focusEls )
                 return;
 
-            for ( var i = 0; i < this.focusEls.length; ++i ) {
-                var el = this.focusEls[i];
-                el.tabIndex = EditorUI.getParentTabIndex(this) + 1;
+            var el, i;
+
+            if ( this.noNavigate ) {
+                for ( i = 0; i < this.focusEls.length; ++i ) {
+                    el = this.focusEls[i];
+                    el.tabIndex = -1;
+                }
+            }
+            else {
+                for ( i = 0; i < this.focusEls.length; ++i ) {
+                    el = this.focusEls[i];
+                    el.tabIndex = EditorUI.getParentTabIndex(this) + 1;
+                }
             }
         },
 
@@ -85,9 +102,7 @@ EditorUI.focusable = (function () {
 
             for ( var i = 0; i < this.focusEls.length; ++i ) {
                 var el = this.focusEls[i];
-                // NOTE: this is better than el.removeAttribute('tabindex'),
-                // because <input> only not get focused when tabIndex=-1
-                el.tabIndex = -1;
+                el.removeAttribute('tabindex');
             }
         },
 

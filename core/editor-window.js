@@ -58,7 +58,8 @@ function EditorWindow ( name, options ) {
         this.nativeWin.setAlwaysOnTop(true);
     }
 
-    // init events
+    // BrowserWindow events
+
     this.nativeWin.on ( 'focus', function ( event ) {
         if ( !Editor.focused ) {
             Editor.focused = true;
@@ -113,6 +114,17 @@ function EditorWindow ( name, options ) {
             EditorWindow.removeWindow(this);
         }
     }.bind(this) );
+
+    // WebContents events
+    // order: dom-ready -> did-frame-finish-load -> did-finish-load
+
+    // this.nativeWin.webContents.on('dom-ready', function ( event ) {
+    //     Editor.log('dom-ready');
+    // });
+
+    // this.nativeWin.webContents.on('did-frame-finish-load', function() {
+    //     Editor.log('did-frame-finish-load');
+    // }.bind(this) );
 
     this.nativeWin.webContents.on('did-finish-load', function() {
         this._loaded = true;

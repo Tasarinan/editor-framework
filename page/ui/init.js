@@ -57,10 +57,9 @@
     EditorUI.getParentTabIndex = function ( element ) {
         var parent = Polymer.dom(element).parentNode;
         while ( parent ) {
-            if ( parent.tabIndex !== null &&
-                 parent.tabIndex !== undefined &&
-                 parent.tabIndex !== -1 )
+            if ( parent.tabIndex !== null && parent.tabIndex !== undefined ) {
                 return parent.tabIndex;
+            }
 
             parent = Polymer.dom(parent).parentNode;
         }
@@ -81,10 +80,7 @@
 
     //
     EditorUI.getFirstFocusableChild = function ( element ) {
-        if ( element.tabIndex !== null &&
-             element.tabIndex !== undefined &&
-             element.tabIndex !== -1 )
-        {
+        if ( element.tabIndex !== null && element.tabIndex !== undefined ) {
             return element;
         }
 
