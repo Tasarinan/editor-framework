@@ -247,7 +247,9 @@ Editor.loadProfile = function ( name, type, defaultProfile ) {
                         delete profile[p];
                 }
                 for ( p in defaultProfile ) {
-                    if ( profile[p] === undefined ) {
+                    if ( profile[p] === undefined ||
+                         typeof(profile[p]) !== typeof(defaultProfile[p]) )
+                    {
                         profile[p] = defaultProfile[p];
                     }
                 }
