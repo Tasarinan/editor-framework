@@ -17,21 +17,36 @@ EditorUI.Panel = Polymer({
         this._initResizable();
         this._initTabs();
 
-        var mousetrap = new Mousetrap(this);
-        mousetrap.bind(['command+shift+]','ctrl+tab'], function () {
-            var next = this.activeIndex+1;
-            if ( next >= this.tabCount )
-                next = 0;
-            this.select(next);
-            this.setFocus();
-        }.bind(this));
-        mousetrap.bind(['command+shift+[','ctrl+shift+tab'], function () {
-            var prev = this.activeIndex-1;
-            if ( prev < 0 )
-                prev = this.tabCount-1;
-            this.select(prev);
-            this.setFocus();
-        }.bind(this));
+        // NOTE: we do this in capture phase to make sure it has the highest priority
+        this.addEventListener('keydown', function ( event ) {
+            // 'command+shift+]' || 'ctrl+tab'
+            if ( (event.shiftKey && event.metaKey && event.keyCode === 221) ||
+                 (event.ctrlKey && event.keyCode === 9))
+            {
+                    var next = this.activeIndex+1;
+                    if ( next >= this.tabCount )
+                        next = 0;
+                    this.select(next);
+                    this.setFocus();
+
+                    event.stopPropagation();
+                    return;
+            }
+
+            // 'command+shift+[' || 'ctrl+shift+tab'
+            if ( (event.shiftKey && event.metaKey && event.keyCode === 219) ||
+                 (event.ctrlKey && event.shiftKey && event.keyCode === 9))
+            {
+                var prev = this.activeIndex-1;
+                if ( prev < 0 )
+                    prev = this.tabCount-1;
+                this.select(prev);
+                this.setFocus();
+
+                event.stopPropagation();
+                return;
+            }
+        }, true);
 
         // grab mousedown in capture phase to make sure we focus on it
         this.addEventListener('mousedown', function (event) {
