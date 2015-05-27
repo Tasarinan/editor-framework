@@ -31,6 +31,9 @@ bower install
 # Install electron
 gulp update-electron
 
+# Install builtin packages
+sh utils/install-builtin.sh
+
 # run the demo app
 sh demo.sh
 ```
@@ -39,23 +42,17 @@ sh demo.sh
 [electron way](https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md)
 for using native node modules.
 
-## Install Builtin Packages
+## Builtin Packages
 
-To install builtin packages, just create a folder named builtin, and git clone your packages in it.
-Here are a list of recommended packages to install for developing editor-framework:
+The `utils/install-builtin.sh` will install these builtin packages:
 
-```bash
-# builtin panels
-git clone https://github.com/fireball-x/console
-git clone https://github.com/fireball-x/package-manager
-git clone https://github.com/fireball-x/ipc-debugger
-git clone https://github.com/fireball-x/tester
+ - https://github.com/fireball-x/console
+ - https://github.com/fireball-x/package-manager
+ - https://github.com/fireball-x/ipc-debugger
+ - https://github.com/fireball-x/tester
+ - https://github.com/fireball-x/ui-kit
+ - https://github.com/fireball-x/pixi-grid
 
-# builtin widgets
-git clone https://github.com/fireball-x/ui-kit
-git clone https://github.com/fireball-x/pixi-grid
-
-```
 
 ## Develop
 
