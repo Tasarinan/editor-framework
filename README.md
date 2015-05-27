@@ -46,12 +46,14 @@ for using native node modules.
 
 The `utils/install-builtin.sh` will install these builtin packages:
 
- - https://github.com/fireball-x/console
- - https://github.com/fireball-x/package-manager
- - https://github.com/fireball-x/ipc-debugger
- - https://github.com/fireball-x/tester
- - https://github.com/fireball-x/ui-kit
- - https://github.com/fireball-x/pixi-grid
+ - Developer Tools
+   - [console](https://github.com/fireball-x/console)
+   - [ipc-debugger](https://github.com/fireball-x/ipc-debugger)
+   - [package-manager](https://github.com/fireball-x/package-manager)
+   - [tester](https://github.com/fireball-x/tester)
+ - Widgets
+   - [ui-kit](https://github.com/fireball-x/ui-kit)
+   - [pixi-grid](https://github.com/fireball-x/pixi-grid)
 
 
 ## Develop
