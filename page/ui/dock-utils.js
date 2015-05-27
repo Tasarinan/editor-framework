@@ -204,6 +204,10 @@ EditorUI.DockUtils = (function () {
 
     DockUtils.reset = function () {
         Polymer.dom.flush();
+
+        if ( !DockUtils.root )
+            return;
+
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeSizeRecursively(true);
             this.root._finalizeMinMaxRecursively();
@@ -218,6 +222,9 @@ EditorUI.DockUtils = (function () {
         this.root._collapseRecursively();
         Polymer.dom.flush();
 
+        if ( !DockUtils.root )
+            return;
+
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeSizeRecursively(false);
             this.root._finalizeMinMaxRecursively();
@@ -230,6 +237,10 @@ EditorUI.DockUtils = (function () {
 
     DockUtils.flush = function () {
         Polymer.dom.flush();
+
+        if ( !DockUtils.root )
+            return;
+
         if ( DockUtils.root['ui-dockable'] ) {
             this.root._finalizeMinMaxRecursively();
             this.root._finalizeStyleRecursively();
@@ -240,6 +251,9 @@ EditorUI.DockUtils = (function () {
     };
 
     DockUtils.reflow = function () {
+        if ( !DockUtils.root )
+            return;
+
         if ( DockUtils.root['ui-dockable'] ) {
             DockUtils.root._reflowRecursively();
             DockUtils.root._notifyResize();

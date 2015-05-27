@@ -29,6 +29,18 @@ Protocol.registerProtocol('app', function(request) {
     return new Protocol.RequestFileJob(file);
 });
 
+// register protocol bower://
+Protocol.registerProtocol('bower', function(request) {
+    var url = decodeURIComponent(request.url);
+    var data = Url.parse(url);
+    var relativePath = data.hostname;
+    if ( data.pathname ) {
+        relativePath = Path.join( relativePath, data.pathname );
+    }
+    var file = Path.join( Editor.cwd, 'bower_components', relativePath );
+    return new Protocol.RequestFileJob(file);
+});
+
 // register protocol packages://
 Protocol.registerProtocol('packages', function(request) {
     var url = decodeURIComponent(request.url);
