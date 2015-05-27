@@ -1,3 +1,4 @@
+var NativeImage = require('native-image');
 var Ipc = require('ipc');
 var Path = require('fire-path');
 var Fs = require('fire-fs');
@@ -71,9 +72,17 @@ Package.load = function ( path ) {
                 continue;
             }
 
+            var menuOpts = packageObj.menus[menuPath];
             var template = Editor.JS.mixin( {
                 label: Path.basename(menuPath),
-            }, packageObj.menus[menuPath] );
+            }, menuOpts );
+
+            // create NativeImage for icon
+            if ( menuOpts.icon ) {
+                var icon = NativeImage.createFromPath( Path.join(path, menuOpts.icon) );
+                template.icon = icon;
+            }
+
             Editor.MainMenu.add( parentMenuPath, template );
         }
     }
