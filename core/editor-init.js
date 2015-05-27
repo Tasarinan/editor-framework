@@ -305,14 +305,12 @@ Editor.loadPackages = function () {
     for ( i = 0; i < paths.length; ++i ) {
         Editor.Package.load( Path.dirname(paths[i]) );
     }
-
-    Editor.watchPackages();
 };
 
 /**
  * Watch packages
  */
-Editor.watchPackages = function () {
+Editor.watchPackages = function ( cb ) {
     var src = [];
     for ( i = 0; i < Editor._packagePathList.length; ++i ) {
         src.push( Editor._packagePathList[i] );
@@ -362,7 +360,9 @@ Editor.watchPackages = function () {
     .on('error', function (error) {
         Editor.error('Package Watcher Error: %s', error.message);
     })
-    // .on('ready', function() { Editor.log('Initial scan complete. Ready for changes.'); })
+    .on('ready', function() {
+        if ( cb ) cb ();
+    })
     // .on('raw', function(event, path, details) { Editor.log('Raw event info:', event, path, details); })
     ;
 };

@@ -386,21 +386,26 @@ App.on('ready', function() {
     Winston.normal('Loading packages');
     Editor.loadPackages();
 
-    // connect to console to sending ipc to it
-    Editor.connectToConsole();
+    Winston.normal('Prepare for watching packages');
+    Editor.watchPackages( function () {
+        Editor.success('Watch ready');
 
-    // run user App
-    if ( !Editor.App.run ) {
-        Winston.error('Can not find function "run" in your App');
-        App.terminate();
-        return;
-    }
+        // connect to console to sending ipc to it
+        Editor.connectToConsole();
 
-    try {
-        Editor.App.run();
-    } catch ( error ) {
-        Winston.error(error.stack || error);
-        App.terminate();
-        return;
-    }
+        // run user App
+        if ( !Editor.App.run ) {
+            Winston.error('Can not find function "run" in your App');
+            App.terminate();
+            return;
+        }
+
+        try {
+            Editor.App.run();
+        } catch ( error ) {
+            Winston.error(error.stack || error);
+            App.terminate();
+            return;
+        }
+    });
 });

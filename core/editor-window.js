@@ -591,4 +591,14 @@ Ipc.on('window:focus', function ( event ) {
     }
 });
 
+Ipc.on('window:inspect-at', function ( event, x, y ) {
+    var nativeWin = BrowserWindow.fromWebContents( event.sender );
+    if ( !nativeWin ) {
+        Editor.warn('Failed to inspect at %d, %d, can not find the window.', x, y );
+        return;
+    }
+
+    nativeWin.inspectElement( x, y );
+});
+
 module.exports = EditorWindow;
