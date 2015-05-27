@@ -84,7 +84,9 @@ global.__app = {
             protocol: 'file',
             pathname: Editor.url('editor-framework://static/tester.html' ),
             slashes: true,
-            query: { url: 'packages://console/test/console.html' },
+            hash: encodeURIComponent(JSON.stringify({
+                url: 'packages://console/test/console.html'
+            })),
         } );
         Editor.testerWin.loadUrl(url);
     },

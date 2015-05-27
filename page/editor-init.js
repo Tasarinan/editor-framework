@@ -15,19 +15,27 @@ Editor.require = function ( path ) {
     return require( Editor.url(path) );
 };
 
-// init argument list sending from core by url?queries
-// format: '?foo=bar&hell=world'
-// skip '?'
-var queryString = decodeURIComponent(location.search.substr(1));
-var queryList = queryString.split('&');
-var queries = {};
-for ( var i = 0; i < queryList.length; ++i ) {
-    var pair = queryList[i].split('=');
-    if ( pair.length === 2) {
-        queries[pair[0]] = pair[1];
-    }
+// DISABLE: use hash instead
+// // init argument list sending from core by url?queries
+// // format: '?foo=bar&hell=world'
+// // skip '?'
+// var queryString = decodeURIComponent(location.search.substr(1));
+// var queryList = queryString.split('&');
+// var queries = {};
+// for ( var i = 0; i < queryList.length; ++i ) {
+//     var pair = queryList[i].split('=');
+//     if ( pair.length === 2) {
+//         queries[pair[0]] = pair[1];
+//     }
+// }
+// NOTE: hash is better than query from semantic, it means this is client data.
+if ( window.location.hash ) {
+    var hash = window.location.hash.slice(1);
+    Editor.argv = Object.freeze(JSON.parse(decodeURIComponent(hash)));
 }
-Editor.argv = queries;
+else {
+    Editor.argv = {};
+}
 
 // init & cache remote
 Editor.remote = Remote.getGlobal('Editor');

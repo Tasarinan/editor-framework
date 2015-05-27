@@ -207,7 +207,7 @@ EditorWindow.prototype.load = function ( editorUrl, argv ) {
         protocol: 'file',
         pathname: resultUrl,
         slashes: true,
-        query: argv,
+        hash: argv ? encodeURIComponent(JSON.stringify(argv)) : undefined
     } );
     this.nativeWin.loadUrl(url);
 };
