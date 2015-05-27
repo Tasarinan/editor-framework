@@ -45,14 +45,16 @@ To install builtin packages, just create a folder named builtin, and git clone y
 Here are a list of recommended packages to install for developing editor-framework:
 
 ```bash
-# widgets
-git clone https://github.com/fireball-x/ui-kit
-git clone https://github.com/fireball-x/pixi-grid
-
-# panels
+# builtin panels
 git clone https://github.com/fireball-x/console
 git clone https://github.com/fireball-x/package-manager
 git clone https://github.com/fireball-x/ipc-debugger
+git clone https://github.com/fireball-x/tester
+
+# builtin widgets
+git clone https://github.com/fireball-x/ui-kit
+git clone https://github.com/fireball-x/pixi-grid
+
 ```
 
 ## Develop
