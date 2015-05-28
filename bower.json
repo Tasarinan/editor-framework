@@ -18,7 +18,7 @@
     "numeral": "1.5.3",
     "pace": "1.0.2",
     "pixi": "3.0.6",
-    "polymer": "Polymer/polymer#^0.9.4",
+    "polymer": "Polymer/polymer#^1.0.0",
     "svg.js": "1.0.1",
     "web-animations-js": "web-animations/web-animations-js#master"
   },

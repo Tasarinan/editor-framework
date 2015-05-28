@@ -337,6 +337,13 @@ Editor.watchPackages = function ( cb ) {
     .on('change', function (path) {
         var packageInfo = Editor.Package.packageInfo(path);
         if ( packageInfo ) {
+            // reload test
+            var testPath = Path.join(packageInfo._path, 'test');
+            if ( Path.contains(testPath , path) ) {
+                // Editor.sendToPanel( 'tester:test-changed', packageInfo.name );
+                return;
+            }
+
             // reload panel
             var panelPath = Path.join(packageInfo._path, 'panel');
             if ( Path.contains(panelPath, path) ) {
@@ -347,9 +354,9 @@ Editor.watchPackages = function ( cb ) {
                 return;
             }
 
-            // reload element
-            var elementPath = Path.join(packageInfo._path, 'element');
-            if ( Path.contains(elementPath, path) ) {
+            // reload widget
+            var widgetPath = Path.join(packageInfo._path, 'widget');
+            if ( Path.contains(widgetPath, path) ) {
                 return;
             }
 

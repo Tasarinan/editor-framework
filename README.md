@@ -58,6 +58,18 @@ The `utils/install-builtin.sh` will install these builtin packages:
 
 ## Develop
 
+### Test Environment
+
+ - Mocha
+ - Chai
+
+**Note:** We need to install mocha, chai in both core and page, that's why we put them
+in both bower and npm. The core level tests only runs during develop phase, and will not
+go into the final product. The page level test environment has integrated with
+[tester](https://github.com/fireball-x/tester) packages and share with developers.
+
+### Generate Documentation
+
 To generate the document, just run
 
 ```bash

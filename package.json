@@ -33,6 +33,7 @@
     "winston": "1.0.0"
   },
   "devDependencies": {
+    "chai": "2.3.0",
     "del": "1.1.1",
     "gulp": "3.8.11",
     "gulp-changed": "1.2.1",
@@ -43,10 +44,11 @@
     "gulp-stylus": "2.0.1",
     "gulp-watch": "4.2.4",
     "hydrolysis": "1.8.0",
-    "jshint-stylish": "1.0.2",
-    "vulcanize": "1.5.1",
     "jaguarjs-jsdoc": "git+https://github.com/davidshimjs/jaguarjs-jsdoc.git",
-    "jsdoc": "3.3.0"
+    "jsdoc": "3.3.0",
+    "jshint-stylish": "1.0.2",
+    "mocha": "2.2.5",
+    "vulcanize": "1.5.1"
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.26.1",
