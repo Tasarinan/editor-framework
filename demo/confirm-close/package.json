@@ -1,0 +1,23 @@
+{
+  "name": "confirm-close",
+  "version": "0.0.1",
+  "description": "Confirm Close Demo",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Demos/Confirm Close": {
+      "message": "confirm-close:open"
+    }
+  },
+  "panels": {
+    "panel": {
+      "frame": "panel/panel.html",
+      "type": "dockable",
+      "title": "Simple",
+      "width": 800,
+      "height": 600,
+      "messages": [
+      ]
+    }
+  }
+}

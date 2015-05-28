@@ -1,0 +1,59 @@
+<dom-module id="confirm-close">
+    <style>
+        :host {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            flex-direction: column;
+
+            padding: 10px;
+            color: #0b0;
+        }
+    </style>
+
+    <template>
+        Close or refresh the panel will pop-up a dialog for confirm.
+    </template>
+</dom-module>
+
+<script>
+Editor.registerPanel( 'confirm-close.panel', {
+    is: 'confirm-close',
+
+    // TODO: I should add panel:close message for close
+
+    ready: function () {
+        window.onbeforeunload = function ( event ) {
+            var res = this.confirmCloseScene();
+            switch ( res ) {
+            // save
+            case 0:
+                Editor.log('save and quit');
+                return true;
+
+            // cancel
+            case 1:
+                Editor.log('cancel');
+                return false;
+
+            // don't save
+            case 2:
+                Editor.log('do not save');
+                return true;
+            }
+        }.bind(this);
+    },
+
+    confirmCloseScene: function () {
+        var Remote = require('remote');
+        var dialog = Remote.require('dialog');
+        return dialog.showMessageBox( Remote.getCurrentWindow(), {
+            type: "warning",
+            buttons: ["Save","Cancel","Don't Save"],
+            title: "Save Scene Confirm",
+            message: "Something changed, do you want to save it?",
+            detail: "Your changes will be lost if you close this item without saving."
+        } );
+    },
+});
+</script>

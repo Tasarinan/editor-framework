@@ -10,6 +10,7 @@
     "test"
   ],
   "dependencies": {
+    "chai": "2.3.0",
     "fontawesome": "4.3.0",
     "layout": "Polymer/layout",
     "mocha": "2.2.5",

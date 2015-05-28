@@ -90,6 +90,11 @@ function EditorWindow ( name, options ) {
             event.preventDefault();
             this.nativeWin.hide();
         }
+
+        // NOTE: I can not put these in 'closed' event. In Windows, the getBounds will return
+        //       zero width and height in 'closed' event
+        EditorWindow.commitWindowStates();
+        EditorWindow.saveWindowStates();
     }.bind(this) );
 
     this.nativeWin.on ( 'closed', function () {
@@ -104,8 +109,6 @@ function EditorWindow ( name, options ) {
         }
 
         if ( this.isMainWindow ) {
-            EditorWindow.commitWindowStates();
-            EditorWindow.saveWindowStates();
             EditorWindow.removeWindow(this);
             Editor.mainWindow = null;
             Editor.quit();
