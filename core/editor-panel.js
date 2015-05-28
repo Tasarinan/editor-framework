@@ -233,12 +233,22 @@ Panel.closeAll = function (packageName) {
     }
 };
 
-// NOTE: this only invoked in fire-window on-closed event
-Panel._onWindowClosed = function ( editorWin ) {
+// NOTE: this only invoked in editor-window on-close event
+// NOTE: please go to read core/editor-window.js 'on-close' event comment for more detail about why we do _saveLayout here
+Panel._onWindowClose = function ( editorWin ) {
     for ( var id in _panel2windows ) {
         var win = _panel2windows[id];
         if ( win === editorWin ) {
             _saveLayout( editorWin, id );
+        }
+    }
+};
+
+// NOTE: this only invoked in editor-window on-closed event
+Panel._onWindowClosed = function ( editorWin ) {
+    for ( var id in _panel2windows ) {
+        var win = _panel2windows[id];
+        if ( win === editorWin ) {
             delete _panel2windows[id];
         }
     }

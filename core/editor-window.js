@@ -93,6 +93,7 @@ function EditorWindow ( name, options ) {
 
         // NOTE: I can not put these in 'closed' event. In Windows, the getBounds will return
         //       zero width and height in 'closed' event
+        Editor.Panel._onWindowClose(this);
         EditorWindow.commitWindowStates();
         EditorWindow.saveWindowStates();
     }.bind(this) );
