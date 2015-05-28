@@ -90,7 +90,7 @@ function _cloneMenuExcept ( newMenu, nativeMenu, exceptPath, curPath ) {
 
     for ( var i = 0; i < nativeMenu.items.length; ++i ) {
         var menuItem = nativeMenu.items[i];
-        var path = Path.join( curPath, menuItem.label );
+        var path = Path.posix.join( curPath, menuItem.label );
 
         if ( Path.contains( path, exceptPath ) ) {
             if ( path === exceptPath ) {
@@ -217,7 +217,7 @@ EditorMenu.prototype.add = function ( path, template ) {
         if ( menuItem.submenu.items.some( checkMenuItemLabel(newSubMenuItem.label) ) ) {
             Editor.error('Failed to add menu to %s, A menu item %s you try to add already exists.',
                          path,
-                         Path.join( path, newSubMenuItem.label ) );
+                         Path.posix.join( path, newSubMenuItem.label ) );
             return false;
         }
     }
