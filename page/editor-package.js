@@ -1,5 +1,9 @@
 var Package = {};
 
+Package.runTests = function ( name ) {
+    Editor.sendToCore( 'package:run-tests', name );
+};
+
 Package.reload = function ( name ) {
     Editor.sendToCore( 'package:reload', name );
 };

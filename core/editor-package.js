@@ -285,4 +285,14 @@ Ipc.on('package:reload', function ( name ) {
     Package.reload(path);
 });
 
+Ipc.on('package:run-tests', function ( name ) {
+    var path = _name2packagePath[name];
+    var info = Package.packageInfo(path);
+
+    Editor.Panel.open( 'tester.panel', {
+        name: name,
+        tests: info.tests || []
+    });
+});
+
 module.exports = Package;
