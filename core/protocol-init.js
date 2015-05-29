@@ -42,6 +42,7 @@ Protocol.registerProtocol('bower', function(request) {
 });
 
 // register protocol packages://
+
 Protocol.registerProtocol('packages', function(request) {
     var url = decodeURIComponent(request.url);
     var data = Url.parse(url);
@@ -71,14 +72,22 @@ Protocol.registerProtocol('widgets', function(request) {
 
 Editor._protocol2fn = {};
 
-var _urlToPath = function ( base ) {
+function _url2path ( base ) {
     return function ( urlInfo ) {
         if ( urlInfo.pathname ) {
             return Path.join( base, urlInfo.host, urlInfo.pathname );
         }
         return Path.join( base, urlInfo.host );
     };
-};
+}
+
+function _packages2path ( urlInfo ) {
+    var packagePath = Editor.Package.packagePath(urlInfo.hostname);
+    if ( packagePath ) {
+        return Path.join( packagePath, urlInfo.pathname );
+    }
+    return '';
+}
 
 /**
  * Convert a url by its protocol to a filesystem path. This function is useful when you try to
@@ -114,7 +123,7 @@ Editor.url = function ( url ) {
  * @example
  * var Path = require('path');
  *
- * var _urlToPath = function ( base ) {
+ * var _url2path = function ( base ) {
  *     return function ( urlInfo ) {
  *         if ( urlInfo.pathname ) {
  *             return Path.join( base, urlInfo.host, urlInfo.pathname );
@@ -123,11 +132,12 @@ Editor.url = function ( url ) {
  *     };
  * };
  *
- * Editor.registerProtocol('editor-framework', _urlToPath(Editor.frameworkPath));
+ * Editor.registerProtocol('editor-framework', _url2path(Editor.frameworkPath));
  */
 Editor.registerProtocol = function ( protocol, fn ) {
     Editor._protocol2fn[protocol+':'] = fn;
 };
 
-Editor.registerProtocol('editor-framework', _urlToPath(Editor.frameworkPath));
-Editor.registerProtocol('app', _urlToPath(Editor.cwd));
+Editor.registerProtocol('editor-framework', _url2path(Editor.frameworkPath));
+Editor.registerProtocol('app', _url2path(Editor.cwd));
+Editor.registerProtocol('packages', _packages2path);
