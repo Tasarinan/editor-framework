@@ -1,6 +1,18 @@
 var _inspecting = false;
 var _maskEL;
 
+var _webviewEL = function ( el ) {
+    if ( !el ) return null;
+
+    if ( el.tagName === 'WEBVIEW' )
+        return el;
+
+    if ( el.parentNode.host && el.parentNode.host.tagName === 'WEBVIEW' )
+        return el.parentNode.host;
+
+    return null;
+};
+
 var _inspectOFF = function () {
     _inspecting = false;
     _maskEL.remove();
@@ -44,6 +56,16 @@ var _mousemove = function ( event ) {
     var el = document.elementFromPoint( event.clientX, event.clientY );
     rect = el.getBoundingClientRect();
 
+    // if we are in web-view, show red color
+    if ( _webviewEL(el) ) {
+        _maskEL.style.backgroundColor = 'rgba( 128, 0, 0, 0.4)';
+        _maskEL.style.outline = '1px solid #f00';
+    } else {
+        _maskEL.style.backgroundColor = 'rgba( 0, 128, 255, 0.5)';
+        _maskEL.style.outline = '1px solid #09f';
+    }
+
+    //
     document.body.appendChild(_maskEL);
     _maskEL.style.top = rect.top + 'px';
     _maskEL.style.left = rect.left + 'px';
@@ -57,7 +79,13 @@ var _mousedown = function ( event ) {
 
     _inspectOFF ();
 
-    Editor.sendToCore( 'window:inspect-at', event.clientX, event.clientY, Editor.requireIpcEvent );
+    var el = document.elementFromPoint( event.clientX, event.clientY );
+    var webviewEL = _webviewEL(el);
+    if ( webviewEL ) {
+        webviewEL.openDevTools();
+    } else {
+        Editor.sendToCore( 'window:inspect-at', event.clientX, event.clientY, Editor.requireIpcEvent );
+    }
 };
 
 var _keydown = function ( event ) {
