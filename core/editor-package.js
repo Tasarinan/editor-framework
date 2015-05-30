@@ -261,7 +261,7 @@ Package.packagePath = function ( packageName ) {
 // Ipc
 // ========================================
 
-Ipc.on('package:query', function ( reply ) {
+Ipc.on('package:query-infos', function ( reply ) {
     var results = [];
     for ( var path in _path2package ) {
         results.push({
@@ -275,6 +275,18 @@ Ipc.on('package:query', function ( reply ) {
     reply(results);
 });
 
+Ipc.on('package:query-info', function ( reply, name ) {
+    var path = _name2packagePath[name];
+    var info = _path2package[path];
+
+    reply({
+        path: path,
+        builtin: false, // TODO:
+        enabled: true, // TODO:
+        info: info,
+    });
+});
+
 Ipc.on('package:reload', function ( name ) {
     var path = _name2packagePath[name];
     if ( !path ) {
@@ -283,16 +295,6 @@ Ipc.on('package:reload', function ( name ) {
     }
 
     Package.reload(path);
-});
-
-Ipc.on('package:run-tests', function ( name ) {
-    var path = _name2packagePath[name];
-    var info = Package.packageInfo(path);
-
-    Editor.Panel.open( 'tester.panel', {
-        name: name,
-        tests: info.tests || []
-    });
 });
 
 module.exports = Package;

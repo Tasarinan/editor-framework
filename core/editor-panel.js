@@ -91,10 +91,10 @@ Panel.open = function ( panelID, argv ) {
     // load layout-settings, and find windows by name
     var layoutProfile = Editor.loadProfile('layout.' + panelID, 'local' );
     if ( layoutProfile ) {
-        windowOptions.x = parseInt(layoutProfile.x);
-        windowOptions.y = parseInt(layoutProfile.y);
-        windowOptions.width = parseInt(layoutProfile.width);
-        windowOptions.height = parseInt(layoutProfile.height);
+        if ( layoutProfile.x ) windowOptions.x = parseInt(layoutProfile.x);
+        if ( layoutProfile.y ) windowOptions.y = parseInt(layoutProfile.y);
+        if ( layoutProfile.width ) windowOptions.width = parseInt(layoutProfile.width);
+        if ( layoutProfile.height ) windowOptions.height = parseInt(layoutProfile.height);
     }
 
     windowOptions['window-type'] = panelInfo.type || 'dockable';

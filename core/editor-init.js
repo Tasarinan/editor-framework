@@ -337,10 +337,14 @@ Editor.watchPackages = function ( cb ) {
     .on('change', function (path) {
         var packageInfo = Editor.Package.packageInfo(path);
         if ( packageInfo ) {
+            var testerWin = Editor.Panel.findWindow('tester.panel');
+
             // reload test
             var testPath = Path.join(packageInfo._path, 'test');
             if ( Path.contains(testPath , path) ) {
-                // Editor.sendToPanel( 'tester:test-changed', packageInfo.name );
+                if ( testerWin ) {
+                    testerWin.sendToPage('tester:run-tests', packageInfo.name);
+                }
                 return;
             }
 
@@ -351,12 +355,19 @@ Editor.watchPackages = function ( cb ) {
                     var panelID = packageInfo.name + '.' + panelName;
                     Editor.sendToWindows( 'panel:out-of-date', panelID );
                 }
+
+                if ( testerWin ) {
+                    testerWin.sendToPage('tester:run-tests', packageInfo.name);
+                }
                 return;
             }
 
             // reload widget
             var widgetPath = Path.join(packageInfo._path, 'widget');
             if ( Path.contains(widgetPath, path) ) {
+                if ( testerWin ) {
+                    testerWin.sendToPage('tester:run-tests', packageInfo.name);
+                }
                 return;
             }
 

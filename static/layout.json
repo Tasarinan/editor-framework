@@ -6,10 +6,11 @@
                     "active": 0,
                     "height": 519,
                     "panels": [
+                        "tester.panel",
                         "ipc-debugger.panel"
                     ],
                     "type": "panel",
-                    "width": 507
+                    "width": 350
                 },
                 {
                     "active": 0,
@@ -18,7 +19,7 @@
                         "package-manager.panel"
                     ],
                     "type": "panel",
-                    "width": 557
+                    "width": 580
                 }
             ],
             "height": 519,
