@@ -1,12 +1,12 @@
 {
-  "name": "grid-demo",
+  "name": "demo-grid",
   "version": "0.0.1",
   "description": "Grid Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Grid": {
-      "message": "grid-demo:open"
+      "message": "demo-grid:open"
     }
   },
   "panels": {

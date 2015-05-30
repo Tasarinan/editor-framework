@@ -13,14 +13,14 @@
           "type": "panel",
           "height": 300,
           "panels": [
-            "layout-demo.hierarchy"
+            "demo-layout.hierarchy"
           ]
         },
         {
           "active": 0,
           "type": "panel",
           "panels": [
-            "layout-demo.assets"
+            "demo-layout.assets"
           ]
         }
       ]
@@ -31,7 +31,7 @@
       "width": 300,
       "min-width": 240,
       "panels": [
-        "layout-demo.inspector"
+        "demo-layout.inspector"
       ]
     },
     {
@@ -41,8 +41,8 @@
           "active": 0,
           "type": "panel",
           "panels": [
-            "layout-demo.scene",
-            "layout-demo.game"
+            "demo-layout.scene",
+            "demo-layout.game"
           ]
         },
         {
@@ -50,7 +50,7 @@
           "type": "panel",
           "height": 200,
           "panels": [
-            "layout-demo.console"
+            "demo-layout.console"
           ]
         }
       ]

@@ -1,12 +1,12 @@
 {
-  "name": "confirm-close",
+  "name": "demo-confirm-close",
   "version": "0.0.1",
   "description": "Confirm Close Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Confirm Close": {
-      "message": "confirm-close:open"
+      "message": "demo-confirm-close:open"
     }
   },
   "panels": {

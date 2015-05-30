@@ -1,6 +1,6 @@
 // pixi-grid config
-Editor.registerPanel( 'grid-demo.panel', {
-    is: 'grid-demo',
+Editor.registerPanel( 'demo-grid.panel', {
+    is: 'demo-grid',
 
     listeners: {
         'resize': '_onResize',

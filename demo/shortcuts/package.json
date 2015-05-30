@@ -1,12 +1,12 @@
 {
-  "name": "shortcuts-demo",
+  "name": "demo-shortcuts",
   "version": "0.0.1",
   "description": "Shortcuts Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Shortcuts": {
-      "message": "shortcuts-demo:open"
+      "message": "demo-shortcuts:open"
     }
   },
   "panels": {

@@ -1,12 +1,12 @@
 {
-  "name": "layout-demo",
+  "name": "demo-layout",
   "version": "0.0.1",
   "description": "Layout Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Layout": {
-      "message": "layout-demo:reset"
+      "message": "demo-layout:reset"
     }
   },
   "panels": {

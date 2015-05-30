@@ -6,8 +6,8 @@ module.exports = {
     unload: function () {
     },
 
-    'selection-demo:open': function () {
-        Editor.Panel.open('selection-demo.panel1');
-        Editor.Panel.open('selection-demo.panel2');
+    'demo-selection:open': function () {
+        Editor.Panel.open('demo-selection.panel1');
+        Editor.Panel.open('demo-selection.panel2');
     },
 };

@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'lifecycle-demo:open': function () {
-        Editor.Panel.open('lifecycle-demo.panel');
+    'demo-lifecycle:open': function () {
+        Editor.Panel.open('demo-lifecycle.panel');
     },
 };

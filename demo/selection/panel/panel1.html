@@ -1,23 +1,23 @@
 <style>
-    selection-demo-panel1 svg rect.node {
+    demo-selection-panel1 svg rect.node {
         fill: #09f;
         stroke-width: 2;
         stroke: #fff;
         cursor: pointer;
     }
-    selection-demo-panel1 svg rect.node.selected {
+    demo-selection-panel1 svg rect.node.selected {
         fill: black;
         stroke: #0f0;
     }
 
-    selection-demo-panel1 svg .rect-select {
+    demo-selection-panel1 svg .rect-select {
         fill: rgba( 0, 128, 255, 0.4 );
         stroke-width: 1;
         stroke: #09f;
     }
 </style>
 
-<dom-module id="selection-demo-panel1">
+<dom-module id="demo-selection-panel1">
     <style>
         :host {
             display: flex;
@@ -71,8 +71,8 @@
 
 <script type="text/javascript" src="bower://svg.js/dist/svg.min.js"></script>
 <script>
-Editor.registerPanel( 'selection-demo.panel1', {
-    is: 'selection-demo-panel1',
+Editor.registerPanel( 'demo-selection.panel1', {
+    is: 'demo-selection-panel1',
 
     ready: function () {
         this.list = [

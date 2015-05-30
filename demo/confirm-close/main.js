@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'confirm-close:open': function () {
-        Editor.Panel.open('confirm-close.panel');
+    'demo-confirm-close:open': function () {
+        Editor.Panel.open('demo-confirm-close.panel');
     },
 };

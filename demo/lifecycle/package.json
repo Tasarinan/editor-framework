@@ -1,12 +1,12 @@
 {
-  "name": "lifecycle-demo",
+  "name": "demo-lifecycle",
   "version": "0.0.1",
   "description": "Lifecycle Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Lifecycle": {
-      "message": "lifecycle-demo:open"
+      "message": "demo-lifecycle:open"
     }
   },
   "panels": {

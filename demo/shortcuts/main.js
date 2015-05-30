@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'shortcuts-demo:open': function () {
-        Editor.Panel.open('shortcuts-demo.panel');
+    'demo-shortcuts:open': function () {
+        Editor.Panel.open('demo-shortcuts.panel');
     },
 };

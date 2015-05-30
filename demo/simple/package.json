@@ -1,12 +1,12 @@
 {
-  "name": "simple-demo",
+  "name": "demo-simple",
   "version": "0.0.1",
   "description": "Simple Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Simple": {
-      "message": "simple-demo:open"
+      "message": "demo-simple:open"
     }
   },
   "panels": {

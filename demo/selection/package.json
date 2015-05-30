@@ -1,12 +1,12 @@
 {
-  "name": "selection-demo",
+  "name": "demo-selection",
   "version": "0.0.1",
   "description": "Selection Demo",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Demos/Selection": {
-      "message": "selection-demo:open"
+      "message": "demo-selection:open"
     }
   },
   "panels": {
