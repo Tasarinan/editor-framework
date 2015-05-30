@@ -210,8 +210,17 @@ function getDefaultMainMenu () {
                 },
                 { type: 'separator' },
                 {
-                    label: 'Test',
+                    label: 'Run Tests (editor-framework)',
+                    accelerator: 'CmdOrCtrl+Alt+T',
+                    click: function() {
+                        var path = Editor.url('editor-framework://test/');
+                        Editor.Test.run(path);
+                    }
+                },
+                {
+                    label: 'Human Tests',
                     submenu: [
+                        { type: 'separator' },
                         {
                             label: 'Throw an Uncaught Exception',
                             click: function() {
