@@ -1,17 +1,17 @@
 # Editor Framework
 
 [Documentation](https://github.com/fireball-x/editor-framework/tree/master/docs) |
-[Downloads](http://github.com/fireball-x/releases/) |
+[Downloads](http://github.com/fireball-x/editor-framework/releases/) |
 [Install](https://github.com/fireball-x/editor-framework#install) |
 [Features](https://github.com/fireball-x/editor-framework#features)
 
 The `Editor Framework` lets you easily write professional IDE like desktop tools just in HTML5 and
 io.js.
 
-The Framework is based on top of Electron and Polymer. It is heavily designed with the Electron's
-main and renderer process architecture. To make multiple window communicate easily, `Editor Framework`
-extends the Ipc API provided from Electron, make it easily to send and recieve callback amongs main
-and renderers process.
+The Framework is based on top of [Electron](http://github.com/atom/electron) and [Polymer](http://github.com/polymer/polymer).
+It is heavily designed with the Electron's main and renderer process architecture.
+To make multiple window communicate easily, `Editor Framework` extends the Ipc API provided
+from Electron, make it easily to send and recieve callback amongs main and renderers process.
 
 It is designed for fully extends. In the core-level ( main process ), we doing this
 by introduce a package management module and several register API. User can load or unload packages
@@ -47,13 +47,13 @@ for using native node modules.
 The `utils/install-builtin.sh` will install these builtin packages:
 
  - Developer Tools
-   - [console](https://github.com/fireball-x/console)
-   - [ipc-debugger](https://github.com/fireball-x/ipc-debugger)
-   - [package-manager](https://github.com/fireball-x/package-manager)
-   - [tester](https://github.com/fireball-x/tester)
+   - [console](https://github.com/fireball-packages/console)
+   - [ipc-debugger](https://github.com/fireball-packages/ipc-debugger)
+   - [package-manager](https://github.com/fireball-packages/package-manager)
+   - [tester](https://github.com/fireball-packages/tester)
  - Widgets
-   - [ui-kit](https://github.com/fireball-x/ui-kit)
-   - [pixi-grid](https://github.com/fireball-x/pixi-grid)
+   - [ui-kit](https://github.com/fireball-packages/ui-kit)
+   - [pixi-grid](https://github.com/fireball-packages/pixi-grid)
 
 
 ## Develop
