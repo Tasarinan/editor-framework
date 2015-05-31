@@ -68,9 +68,15 @@ in both bower and npm. The core level tests only runs during develop phase, and 
 go into the final product. The page level test environment has integrated with
 [tester](https://github.com/fireball-x/tester) packages and share with developers.
 
+To test the editor-framework itself, just run:
+
+```bash
+npm test
+```
+
 ### Generate Documentation
 
-To generate the document, just run
+To generate the document, just run:
 
 ```bash
 npm run api-core # for core-level docs

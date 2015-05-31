@@ -217,6 +217,7 @@ Winston.add( Winston.transports.Console, {
 Commander
     .version(App.getVersion())
     .option('--dev', 'Run in development mode')
+    .option('--test <path>', 'Run tests in path' )
     .option('--show-devtools', 'Open devtools automatically when main window loaded')
     .option('--debug <port>', 'Open in browser context debug mode', parseInt )
     .option('--debug-brk <port>', 'Open in browser context debug mode, and break at first.', parseInt)
@@ -247,6 +248,7 @@ Commander.parse(process.argv);
 // apply argv to Editor
 Editor.isDev = Commander.dev;
 Editor.showDevtools = Commander.showDevtools;
+Editor.test = Commander.test;
 
 // ---------------------------
 // Define Editor.App APIs
@@ -339,6 +341,13 @@ App.on('will-finish-launching', function() {
 
 //
 App.on('ready', function() {
+    if ( Commander.test ) {
+        var Test = require('./core/test-runner');
+        Test.run(Commander.test);
+
+        return;
+    }
+
     Winston.normal( 'Initializing protocol' );
     require('./core/protocol-init');
 

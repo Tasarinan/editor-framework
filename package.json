@@ -13,7 +13,7 @@
     "url": "https://github.com/fireball-x/editor-framework/issues"
   },
   "scripts": {
-    "test": "TODO",
+    "test": "node run-tests.js",
     "api-core": "jsdoc -c ./jsdoc-core.conf.json",
     "api-page": "jsdoc -c ./jsdoc-page.conf.json"
   },

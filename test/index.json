@@ -1,0 +1,7 @@
+var Path = require('fire-path');
+
+module.exports = [
+    'menu.js',
+].forEach( function ( file ) {
+    return Path.join( __dirname, file );
+});

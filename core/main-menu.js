@@ -213,8 +213,8 @@ function getDefaultMainMenu () {
                     label: 'Run Tests (editor-framework)',
                     accelerator: 'CmdOrCtrl+Alt+T',
                     click: function() {
-                        var path = Editor.url('editor-framework://test/');
-                        Editor.Test.run(path);
+                        var testRunner = require('./test-runner');
+                        testRunner.liveRun( Editor.url('editor-framework://test/') );
                     }
                 },
                 {
