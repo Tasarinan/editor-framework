@@ -12,7 +12,6 @@
   "dependencies": {
     "chai": "2.3.0",
     "fontawesome": "4.3.0",
-    "layout": "Polymer/layout",
     "mocha": "2.2.5",
     "mousetrap": "ccampbell/mousetrap#1.5.2",
     "numeral": "1.5.3",

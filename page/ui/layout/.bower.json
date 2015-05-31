@@ -1,0 +1,28 @@
+{
+  "name": "layout",
+  "homepage": "https://github.com/Polymer/layout",
+  "description": "A declarative layout system built on top of CSS flexbox.",
+  "main": "layout.html",
+  "keywords": [
+    "layout",
+    "flexbox"
+  ],
+  "authors": [
+    "The Polymer Project Authors"
+  ],
+  "license": "https://polymer.github.io/LICENSE.txt",
+  "private": true,
+  "ignore": [],
+  "dependencies": {
+    "polymer": "Polymer/polymer#0.8-preview"
+  },
+  "_release": "ee6be1215c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ee6be1215c9ea0e910acdd8fdd1eb393b6ffdd6f"
+  },
+  "_source": "git://github.com/Polymer/layout.git",
+  "_target": "*",
+  "_originalSource": "Polymer/layout"
+}
