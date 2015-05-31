@@ -10,6 +10,10 @@ var Chalk = require('chalk');
 var Mocha = require('mocha');
 var Chai = require('chai');
 
+//
+global.assert = Chai.assert;
+global.expect = Chai.expect;
+
 var Test = {};
 Test.liveRun = function ( path ) {
     var SpawnSync = require('child_process').spawnSync;

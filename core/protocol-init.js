@@ -116,6 +116,14 @@ Editor.url = function ( url ) {
 };
 
 /**
+ * Require module through url path
+ * @param {string} url
+ */
+Editor.require = function ( url ) {
+    return require( Editor.url(url) );
+};
+
+/**
  * Register a protocol so that {@link Editor.url} can use it to convert an url to the filesystem path.
  * The `fn` accept an url Object via [url.parse](https://iojs.org/api/url.html#url_url_parse_urlstr_parsequerystring_slashesdenotehost)
  * @param {string} protocol

@@ -11,6 +11,11 @@ var Async = require('async');
  * Page Level Editor
  */
 window.Editor = window.Editor || {};
+
+/**
+ * Require module through url path
+ * @param {string} url
+ */
 Editor.require = function ( path ) {
     return require( Editor.url(path) );
 };

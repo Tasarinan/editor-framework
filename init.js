@@ -341,18 +341,18 @@ App.on('will-finish-launching', function() {
 
 //
 App.on('ready', function() {
+    Winston.normal( 'Initializing protocol' );
+    require('./core/protocol-init');
+
+    Winston.normal( 'Initializing editor' );
+    require('./core/editor-init');
+
     if ( Commander.test ) {
         var Test = require('./core/test-runner');
         Test.run(Commander.test);
 
         return;
     }
-
-    Winston.normal( 'Initializing protocol' );
-    require('./core/protocol-init');
-
-    Winston.normal( 'Initializing editor' );
-    require('./core/editor-init');
 
     // apply default main menu
     Editor.MainMenu.apply();
