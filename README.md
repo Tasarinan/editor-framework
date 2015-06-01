@@ -14,6 +14,9 @@ To make multiple window communicate easily, Editor Framework extends Electron's 
 It is designed for fully extendibility. In the core-level ( main process ), we fulfill this by introducing a package management module and several register API. User can load or unload packages on the fly without close or restart the app. In the page-level ( renderer process ), we use HTML5 Web-Component standards and include the Polymer solution by default. User can extends the
 widgets and panels, then refresh the page to apply the changes.
 
+![screen shot 2015-06-01 at 5 25 52 pm](https://cloud.githubusercontent.com/assets/174891/7909981/4c0c0472-0883-11e5-8660-ff6ad8f24b9e.png)
+
+
 ## Install
 
 ```bash
