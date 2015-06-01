@@ -1,6 +1,6 @@
 {
   "name": "editor-framework",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A simple framework for making panel based applications.",
   "homepage": "http://fireball-x.com",
   "repository": {
@@ -51,6 +51,6 @@
     "vulcanize": "1.5.1"
   },
   "fire-shell-version": "0.24.0",
-  "electron-version": "0.26.1",
+  "electron-version": "0.27.2",
   "main": "demo.js"
 }
