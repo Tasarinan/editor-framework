@@ -19,6 +19,9 @@ lively without close or restart the app. In the page-level ( renderer process ),
 Web-Component standards and includes the Polymer solution by default. User can extends the
 widgets and panels, then refresh the page apply your changes.
 
+![screen shot 2015-06-01 at 5 25 52 pm](https://cloud.githubusercontent.com/assets/174891/7909981/4c0c0472-0883-11e5-8660-ff6ad8f24b9e.png)
+
+
 ## Install
 
 ```bash
