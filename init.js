@@ -363,7 +363,7 @@ App.on('ready', function() {
     Editor.registerProfilePath( 'local', defaultProfilePath );
 
     // register package path
-    Editor.registerPackagePath( Path.join( Editor.frameworkPath, 'builtin' ) );
+    Editor.registerPackagePath( Path.join( Editor.App.path, 'builtin' ) );
     Editor.registerPackagePath( Path.join( Editor.appHome, 'packages' ) );
 
     // init user App
