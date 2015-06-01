@@ -2,7 +2,7 @@
 
 ## Paths
 
-  - `Editor.cwd`: The current app.js running directory.
+  - `Editor.cwd`: The current app.js working directory path.
   - `Editor.mainEntry`: Your main entry file. Usually it is `{your-app}/app.js`.
   - `Editor.frameworkPath`: The editor framework module path. Usually it is `{your-app}/editor-framework/`
   - `Editor.appHome`: Your application's home path. Usually it is `~/.{your-app-name}`
@@ -15,8 +15,8 @@
 
 ## Options
 
-  - `Editor.isDev`: Indicate if the application run with `--dev`
-  - `Editor.showDevtools`: Indicate if the application run with `--show-devtools`
+  - `Editor.isDev`: Indicate if the application running with `--dev` option.
+  - `Editor.showDevtools`: Indicate if the application running with `--show-devtools`.
 
 ## Editor.App
 
