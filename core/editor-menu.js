@@ -45,7 +45,8 @@ function _getMenuItem ( nativeMenu, path, createIfNotExists ) {
             // if this is the first one
             if ( i === 0 ) {
                 // HACK: we assume last menuItem always be 'Help'
-                nextMenu.insert(nextMenu.items.length-1,menuItem);
+                var pos = Math.max( nextMenu.items.length-1, 0 );
+                nextMenu.insert(pos,menuItem);
             }
             else {
                 nextMenu.append(menuItem);
