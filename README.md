@@ -5,6 +5,9 @@
 [Install](https://github.com/fireball-x/editor-framework#install) |
 [Features](https://github.com/fireball-x/editor-framework#features)
 
+[![Dependency Status](https://david-dm.org/fireball-x/editor-framework.svg)](https://david-dm.org/fireball-x/editor-framework)
+[![devDependency Status](https://david-dm.org/fireball-x/editor-framework/dev-status.svg)](https://david-dm.org/fireball-x/editor-framework#info=devDependencies)
+
 Editor Framework gives you power to easily write professional multi-panel desktop software in HTML5 and io.js.
 
 The framework is based on top of [Electron](http://github.com/atom/electron) and [Polymer](http://github.com/polymer/polymer).
