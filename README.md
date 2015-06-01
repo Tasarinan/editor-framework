@@ -5,19 +5,14 @@
 [Install](https://github.com/fireball-x/editor-framework#install) |
 [Features](https://github.com/fireball-x/editor-framework#features)
 
-The `Editor Framework` lets you easily write professional IDE like desktop tools just in HTML5 and
-io.js.
+Editor Framework gives you power to easily write professional multi-panel desktop software in HTML5 and io.js.
 
-The Framework is based on top of [Electron](http://github.com/atom/electron) and [Polymer](http://github.com/polymer/polymer).
-It is heavily designed with the Electron's main and renderer process architecture.
-To make multiple window communicate easily, `Editor Framework` extends the Ipc API provided
-from Electron, make it easily to send and recieve callback amongs main and renderers process.
+The framework is based on top of [Electron](http://github.com/atom/electron) and [Polymer](http://github.com/polymer/polymer).
+It is designed conforming to Electron's main and renderer process architecture.
+To make multiple window communicate easily, Editor Framework extends Electron's Ipc message API, making it easier to send and receive callback between main and renderer processes.
 
-It is designed for fully extends. In the core-level ( main process ), we doing this
-by introduce a package management module and several register API. User can load or unload packages
-lively without close or restart the app. In the page-level ( renderer process ), we use HTML5
-Web-Component standards and includes the Polymer solution by default. User can extends the
-widgets and panels, then refresh the page apply your changes.
+It is designed for fully extendibility. In the core-level ( main process ), we fulfill this by introducing a package management module and several register API. User can load or unload packages on the fly without close or restart the app. In the page-level ( renderer process ), we use HTML5 Web-Component standards and include the Polymer solution by default. User can extends the
+widgets and panels, then refresh the page to apply the changes.
 
 ## Install
 
@@ -38,9 +33,7 @@ sh utils/install-builtin.sh
 sh demo.sh
 ```
 
-**NOTE:** we use `npm.sh` instead of npm here, this is just a shell script follow the
-[electron way](https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md)
-for using native node modules.
+**NOTE:** we use `npm.sh` instead of npm here, this is just a shell script follow the [electron way](https://github.com/atom/electron/blob/master/docs/tutorial/using-native-node-modules.md) for using native node modules.
 
 ## Builtin Packages
 
@@ -63,10 +56,7 @@ The `utils/install-builtin.sh` will install these builtin packages:
  - Mocha
  - Chai
 
-**Note:** We need to install mocha, chai in both core and page, that's why we put them
-in both bower and npm. The core level tests only runs during develop phase, and will not
-go into the final product. The page level test environment has integrated with
-[tester](https://github.com/fireball-x/tester) packages and share with developers.
+**Note:** We need to install mocha, chai in both core and page, that's why we put them in both bower and npm dependencies. The core level tests only run during develop phase, and will not go into the final product. The page level test environment has integrated with [tester](https://github.com/fireball-x/tester) package and every developer can use it to test your panels.
 
 To test the editor-framework itself, just run:
 
@@ -88,13 +78,13 @@ npm run api-page # for page-level docs
  - Package Management
    - Dynamically load and unload packages
    - Watch package changes and reload or notify changes immediately
-   - Manage your packages in package manager Window
+   - Manage your packages in package manager window
  - Panel Management
-   - Freely docking panel in multiple window
+   - Freely docks panel anywhere in multiple windows
    - Dynamically load user define panels from package
-   - Easily register and respond ipc messages for your panel
-   - Easily register shortcuts(hotkeys) for your panel
-   - Save and load panels layout in json
+   - Easily register and respond to ipc messages for your panel
+   - Easily register shortcut(hotkeys) for your panel
+   - Save and load layout in json
    - Save and load panel profiles
  - Menu Extends
    - Dynamically add and remove menu item
@@ -104,16 +94,16 @@ npm run api-page # for page-level docs
    - Register and customize commands for your App
    - A powerful command window (CmdP) for searching and executing your commands
  - Profiles
-   - Allow user register different type of profile in demand ( global, local, project, ... )
+   - Allow user to register different types of profile to their need ( global, local, project, ... )
    - Load and save profiles through unified API
  - Logs
    - Use Winston for low level logs
    - Log to file
    - A powerful console window for display and query your logs
  - Global Selection
-   - Selection cached and synced amongs windows
+   - Selection cached and synced among windows
    - User can register his own selection type
-   - Automatically filter selections
+   - Automatically filtering selections
  - Global Undo and Redo
  - Enhance the native Dialog
    - Remember dialog last edit position

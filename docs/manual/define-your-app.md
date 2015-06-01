@@ -1,7 +1,8 @@
 ## Define Your App
 
-To run your app with editor-framework, you should download and put `editor-framework` under your app
-folder. You also need to create a `package.json` file, and set its main to your app.js. like this:
+To run your app with editor-framework, you should download and put `editor-framework` into your app folder. You also need to create a `package.json` file in your app's root folder, and set its main to your app.js.
+
+Your project structure should look like this:
 
 ```
 your-app-path/
@@ -10,7 +11,7 @@ your-app-path/
 └── app.js
 ```
 
-The `package.json` like this:
+The `package.json` should look like this:
 
 ```json
 {
@@ -18,7 +19,7 @@ The `package.json` like this:
   "version": "0.0.1",
   "description": "A simple app based on editor-framework.",
   "dependencies": {},
-  "main": "app.js" <== Important!!! Must have.
+  "main": "app.js" //<== Important!!! Must have.
 }
 ```
 
@@ -85,21 +86,20 @@ global.__app = {
 // must have, important
 require('./editor-framework/init');
 ```
-An example repo also available here: https://github.com/fireball-x/editor-framework-app
+
+An example project can be checked out here: https://github.com/fireball-x/editor-framework-app
 
 ## Class Method: initCommander(commander)
 
  - `commander` An instance of [commander.js](https://github.com/tj/commander.js)
 
-Invoked at the very beginning of the app, before Editor module inited. There is no `Editor`
-method can be used in this function.
+Invoked at the very beginning of the app, before Editor module initialization. No method in `Editor` module can be used in this function.
 
 ## Class Method: init(options)
 
  - `options` The options parsed from `process.argv`
 
-Invoked after `Editor` and its sub modules initialized. It is recommended to put your register
-code in this function:
+Invoked after `Editor` and its sub modules initialization. It is recommended to put following register work in this function:
 
  - register your protocol
  - register your profile path
@@ -108,12 +108,11 @@ code in this function:
 
 ## Class Method: run()
 
-Invoked after all packages loaded. Basically you should open your main window in this function.
+Invoked after finish loading all packages. Basically you should open your main window in this function.
 
 ## Define ipc messages in your App
 
-You can define ipc messages in your app script. Just add a function that use `app:` as prefix, the
-editor-framework will detect and load it before your app run.
+You can define ipc messages in your app script. Just add a function that use `app:` as prefix, the editor-framework will detect and load it before your app run.
 
 Example:
 
@@ -125,9 +124,9 @@ global.__app = {
     },
 };
 ```
+
 ## Reload your App
 
-You can reload your App by calling `Editor.App.reload()`. This is useful if you have any changes
-in your app code, especially when you add or remove ipc messages.
+You can reload your App by calling `Editor.App.reload()`. This is useful if you have any changes in your app code, especially when you add or remove ipc messages.
 
-The Editor Framework also add a menu item `Developer/Reload Editor.App` to help you ease this task.
+The Editor Framework also add a menu item `Developer/Reload Editor.App` to help you with this task.

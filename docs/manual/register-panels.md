@@ -1,8 +1,8 @@
 ## Register Your Panels
 
-Panel is the docking unit in Editor Framework. Each panel contains a panel frame.
-You can define a polymer element as your panel frame, and register it in `package.json`. The
-Editor Framework will dynamically load your polymer element when the panel opened.
+Panel is the dockable "mini-windows" unit in Editor Framework. Each panel contains a panel frame.
+
+You can define a polymer element as your panel frame, and register it in `package.json`. The Editor Framework will dynamically load your polymer element when the panel is opened.
 
 To define a panel frame, just create a html file like this:
 
@@ -28,7 +28,8 @@ To define a panel frame, just create a html file like this:
     });
 </script>
 ```
-Then save it in your package's panel folder. After that register the html file in `package.json`:
+
+Then save it to your package's `panel` folder. After that register the html file in `package.json`:
 
 ```json
 {
@@ -45,12 +46,11 @@ Then save it in your package's panel folder. After that register the html file i
 }
 ```
 
-Once your package loaded, you can use `Editor.Panel.open('simple.panel')` to open your panel.
+Once your package is loaded, you can use `Editor.Panel.open('simple.panel')` to open your panel.
 
 ## Panel ID
 
-A panel id is a string equals to `{package-name}.{panel-name}`. It is used in most of
-the functions in `Editor.Panel` that needs to operate a specific panel.
+A panelID is a string equals to `{package-name}.{panel-name}`. It is used in most of the functions in `Editor.Panel` that needs to operate on a specific panel.
 
 Suppose we have the following `package.json` file:
 
@@ -68,8 +68,7 @@ Suppose we have the following `package.json` file:
 }
 ```
 
-The file register two panels `bar` and `bar02`, so that we will have two panel ID
-whiches are `foo.bar` and `foo.bar02`.
+The file registers two panels `bar` and `bar02`, so that we will have two panelID which are `foo.bar` and `foo.bar02`.
 
 ## Messages
 
@@ -86,8 +85,7 @@ TODO:
 
 ## Message: 'panel:open (argv)'
 
-Invoke when panel open or panel show up. The argv is an `Object` that you send
-through `Editor.Panel.open`.
+Invoked when panel opens or panel shows up. The `argv` is an `Object` that you send through `Editor.Panel.open`.
 
 Example:
 
