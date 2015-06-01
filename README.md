@@ -126,3 +126,8 @@ npm run api-page # for page-level docs
    - Allow sending ipc message to specific window
    - Allow sending ipc request and waiting for the reply in callback function
    - An ipc-debugger to help you writing better ipc code
+
+## License
+
+MIT
+
